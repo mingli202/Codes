@@ -1,3 +1,15 @@
 {
-    "python.analysis.typeCheckingMode": "off"
+    "python.analysis.typeCheckingMode": "off",
+    "files.associations": {
+        "__availability": "c",
+        "string": "c",
+        "__hash_table": "c",
+        "__split_buffer": "c",
+        "array": "c",
+        "bitset": "c",
+        "initializer_list": "c",
+        "string_view": "c",
+        "unordered_map": "c",
+        "vector": "c"
+    }
 }
