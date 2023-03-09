@@ -10,6 +10,9 @@
         "initializer_list": "c",
         "string_view": "c",
         "unordered_map": "c",
-        "vector": "c"
-    }
+        "vector": "c",
+        "stdio.h": "c"
+    },
+    "C_Cpp.default.cStandard": "c23",
+    "C_Cpp.default.cppStandard": "c++23"
 }
