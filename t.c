@@ -69,7 +69,7 @@ void prime_divisors(long n){
     
 // }
 
-
+// 10001th prime (P5)
 void nth_prime(int num){
     int *prime = malloc(num * sizeof(int));
     prime[0] = 2;
@@ -89,11 +89,11 @@ void nth_prime(int num){
         }
         n++;
     }
-    printf("The %ith prime number is %i", num, prime[num-1]);
+    printf("The %ith prime number is %i", num, prime[num - 1]);
     free(prime);
 }
 
-// Special Pythagorean triplet
+// Special Pythagorean triplet (P6)
 int special_pythagorean_triplet(void){
     float c = 0;
     float sum = 0;
@@ -110,6 +110,19 @@ int special_pythagorean_triplet(void){
     }
     printf("There are not triplets that satisfy the condition\n");
     return 1;
+}
+
+int divisors(int num){
+    int *div = malloc(sizeof(int));
+    int *div2;
+    int ind = 0;
+    for (int i = 1; i <= num; i++){
+        if (num % i == 0){
+            div[ind] = i;
+            ind++;
+        }
+    }
+    free(div);
 }
 
 
