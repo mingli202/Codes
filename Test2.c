@@ -77,7 +77,7 @@ void nth_prime(int num){
     prime[num - 1] = 0;
 
     int n = 3;
-    while (prime[num-1] == 0){
+    while (prime[num - 1] == 0){
         for (int i = 0; i < num; i++){
             if (n % prime[i] == 0){
                 break;
@@ -89,14 +89,33 @@ void nth_prime(int num){
         }
         n++;
     }
-    printf("%i", prime[num-1]);
+    printf("The %ith prime number is %i", num, prime[num-1]);
     free(prime);
+}
+
+// Special Pythagorean triplet
+int special_pythagorean_triplet(void){
+    float c = 0;
+    float sum = 0;
+    for (int a = 1; a < 999; a++){
+        for (int b = 1; b < 999; b++){
+            c = sqrtf(a*a + b*b);
+            sum = a + b + c;
+            if (sum == 1000){
+                printf("(a, b, c) = (%i, %i, %f)\n", a, b, c);
+                printf("Product = %f", a * b * c);
+                return 0;
+            }
+        }
+    }
+    printf("There are not triplets that satisfy the condition\n");
+    return 1;
 }
 
 
 int main(void){
 
-    nth_prime(10001);
+    special_pythagorean_triplet();
     printf("\n");
 
 }

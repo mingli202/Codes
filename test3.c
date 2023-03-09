@@ -5,12 +5,9 @@
 
 
 int main(void){
-    int a = 10;
-    int *b = &a;
+    float a = 5.000000;
 
-    printf("%i\n", a);
-    printf("%i", *b);
-
-
-    printf("\n");
+    if (a == 5){
+        printf("They are equal\n");
+    }
 }
