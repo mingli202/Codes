@@ -1,3 +1,6 @@
+import numpy as np
+from matplotlib import pyplot as plt
+
 
 def divisors(n):
     l = []
@@ -56,4 +59,4 @@ def nth_prime(num):
 
 
 if __name__ == "__main__":
-    nth_prime(10001)
+    print(divisors(74378325))

@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 
 // Fibonacci problem (problem 2)
-int fibo(void){
+void fibo(void){
     long a = 0;
     long b = 1;
     long c = 1;
@@ -27,10 +28,10 @@ int fibo(void){
 
         if (a > 4000000 || b > 4000000 || c > 4000000){
             printf("%li\n", sum);
-            return 0;
+            return;
         }
     }
-    return 0;
+    return;
 }
 
 // Largest prime factor (P3)
@@ -69,6 +70,16 @@ void prime_divisors(long n){
     
 // }
 
+// Is prime
+bool is_prime(num){
+    for (int i = 2; i < num; i++){
+        if (num % i == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
 // 10001th prime (P5)
 void nth_prime(int num){
     int *prime = malloc(num * sizeof(int));
@@ -93,8 +104,8 @@ void nth_prime(int num){
     free(prime);
 }
 
-// Special Pythagorean triplet (P6)
-int special_pythagorean_triplet(void){
+// Special Pythagorean triplet (P9)
+void special_pythagorean_triplet(void){
     float c = 0;
     float sum = 0;
     for (int a = 1; a < 999; a++){
@@ -104,31 +115,62 @@ int special_pythagorean_triplet(void){
             if (sum == 1000){
                 printf("(a, b, c) = (%i, %i, %f)\n", a, b, c);
                 printf("Product = %f", a * b * c);
-                return 0;
+                return;
             }
         }
     }
     printf("There are not triplets that satisfy the condition\n");
-    return 1;
+    return;
 }
 
-int divisors(int num){
-    int *div = malloc(sizeof(int));
-    int *div2;
+void divisors(int num){
+    int *div = malloc(0);
     int ind = 0;
     for (int i = 1; i <= num; i++){
         if (num % i == 0){
+            div = (int*)realloc(div, (ind + 1) * sizeof(int));
             div[ind] = i;
             ind++;
         }
     }
+    printf("Divisors of %i are: ", num);
+    for (int k = 0; k < ind; k++){
+        printf("%i ", div[k]);
+    }
+
     free(div);
 }
+
+// Summation of primes (P10)
+void sum_of_primes(n){
+    int size = 2;
+    long *primes = malloc(size * sizeof(long));
+    primes[0] = 2;
+    primes[1] = 3;
+    long long sum;
+
+    for (int i = 4; i < n; i++){
+        for (int j = 0; j < size; j++){
+            if (i % primes[j] == 0){
+                break;
+            }
+            if (j == size - 1){
+                primes = (long*)realloc(primes, (size + 1) * sizeof(long));
+                primes[size] = i;
+                size++;
+                sum += i;
+            }
+        }
+    }
+    printf("%lli", sum);
+    
+}
+
 
 
 int main(void){
 
-    nth_prime(10001);
+    divisors(74378325);
     printf("\n");
 
 }

@@ -2,7 +2,7 @@
 
 int i = 0;
 
-int * divisors(n){
+int* divisors(n){
     static int div[] = {};
     for (int j = 1; j < n + 1; j++){
         if (n % j == 0){
@@ -14,8 +14,10 @@ int * divisors(n){
 }
 
 int main(void){
-
-    int * d = divisors(48);
+    int n;
+    printf("Divisors for: ");
+    scanf("%i", &n);
+    int* d = divisors(n);
     int size = i;
     printf("All the divisors: ");
     for (int k = 0; k < size; k++){
