@@ -18,11 +18,11 @@ void fibo(void){
         }
         b = a + c;
         if (b % 2 == 0){
-            sum += a;
+            sum += b;
         }
         c = a + b;
         if (c % 2 == 0){
-            sum += a;
+            sum += c;
         }
 
 
@@ -32,6 +32,45 @@ void fibo(void){
         }
     }
     return;
+}
+
+void nth_fibo(int num){
+    long a = 0;
+    long b = 1;
+    long c = 1;
+
+    if (num <= 0){
+        printf("There is no number at this position.");
+        return;
+    }
+
+    if (num == 1 || num == 2){
+        printf("%li", b);
+        return;
+    }
+
+    for (int i = 3;;){
+        a = b + c;
+        if (i == num){
+            printf("%li", a);
+            return;
+        }
+        i++;
+
+        b = a + c;
+        if (i == num){
+            printf("%li", b);
+            return;;
+        }
+        i++;
+        
+        c = a + b;
+        if (i == num){
+            printf("%li", c);
+            return;
+        }
+        i++;   
+    }
 }
 
 // Largest prime factor (P3)
@@ -123,7 +162,8 @@ void special_pythagorean_triplet(void){
     return;
 }
 
-void divisors(int num){
+// Divisors
+void divisors_with_m(int num){
     int *div = malloc(0);
     int ind = 0;
     for (int i = 1; i <= num; i++){
@@ -139,6 +179,15 @@ void divisors(int num){
     }
 
     free(div);
+}
+
+void divisors(int num){
+    printf("Divisors of %i are:", num);
+    for (int i = 1; i <= num; i++){
+        if (num % i == 0){
+            printf(" %i", i);
+        }
+    }
 }
 
 // Summation of primes (P10)
@@ -166,11 +215,54 @@ void sum_of_primes(n){
     
 }
 
+// Highly divisible triangular number (P12) output: 76576500
+long nb_divisors(long n){
+    int nb = 0;
+    long previous = 0;
+    bool check = false;
+    for (long i = 1; i < n/2; i++){
+        if (n % i == 0){
+            if (i == sqrt(n)){
+                check = true;
+                break;
+            }
+            if (previous ==  n / i){
+                break;
+            }
+            previous = i;
+            nb++;
+        }
+    }
+    nb = nb * 2;
+    if (check){
+        nb++;
+    }
+    return nb;
+}
+
+void nb_divisors_triangular(int n){
+    long tria_n;
+    long num_of_div;
+    for (long i = 0;; i++){
+        tria_n = (i * (i + 1))/2;
+        num_of_div = nb_divisors(tria_n);
+        if (num_of_div >= n){
+            printf("The first triangular number to have over %i divisors is %li", n, tria_n);
+            return;
+        }
+    }
+}
 
 
 int main(void){
 
-    divisors(74378325);
+    int h;
+    printf("Number of divisors: ");
+    scanf("%i", &h);
+    nb_divisors_triangular(h);
+
+
+    
     printf("\n");
 
 }
