@@ -143,7 +143,7 @@ void nth_prime(int num){
     free(prime);
 }
 
-// Special Pythagorean triplet (P9)
+// Special Pythagorean triplet (P9) output: (a, b, c) = (200, 375, 425.000000) \n Product = 31875000.000000
 void special_pythagorean_triplet(void){
     float c = 0;
     float sum = 0;
@@ -253,16 +253,48 @@ void nb_divisors_triangular(int n){
     }
 }
 
+// Collatz sequence (P14) output: 837799
+long counter = 0;
+long collatz(long start, long n){
+    counter++;
+    // printf("%i ", n); // Print a collatz sequence startinng with n
+    if (n == 1){
+        // printf("; %i Numbers", counter); Print how many numbers in collatz sequence
+        return counter;
+    }
+    if (n % 2 == 0){
+        if (n / 2 == start){
+            return 0;
+        }
+        collatz(start, n/2);
+    }
+    else{
+        if (n / 2 == start){
+            return 0;
+        }
+        collatz(start, 3*n+1);
+    }return counter;
+}
+
+void longest_collatz_chain(void){
+    long max = 0;
+    long c_max = 0;
+    long num;
+    for (int i = 1000000; i > 0; i--){
+        counter = 0;
+        num = collatz(i, i);
+        if (num > c_max){
+            c_max = num;
+            max = i;
+        }
+    }
+    printf("%li", max);
+}
 
 int main(void){
-
-    int h;
-    printf("Number of divisors: ");
-    scanf("%i", &h);
-    nb_divisors_triangular(h);
-
-
     
+    longest_collatz_chain();
+ 
     printf("\n");
 
 }
