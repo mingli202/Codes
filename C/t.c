@@ -293,7 +293,7 @@ void longest_collatz_chain(void){
 
 int main(void){
     
-    longest_collatz_chain();
+    
  
     printf("\n");
 

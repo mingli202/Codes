@@ -2,10 +2,11 @@
 using namespace std;
 #include <string>
 #include <cmath>
+#include <array>
 
 void hello(void){
     int x;
-    cout << "Input your first number: ";
+    cout << "Input your first number: ";  
     cin >> x;
 
     int y;
@@ -68,13 +69,30 @@ void the_switch_operator(void){
     cin >> a;
 
     switch(a){
-        case 1: cout << "Monday"; break;
-        case 2: cout << "Tuesday"; break;
-        case 3: cout << "Wednesday"; break;
-        case 4: cout << "Thursday"; break;
-        case 5: cout << "Friday"; break;
-        case 6: cout << "Saterday"; break;
-        case 7: cout << "Sunday"; break;
+        case 1:
+            cout << "Monday";
+            break;
+        case 2: 
+            cout << "Tuesday";
+            break;
+        case 3:
+            cout << "Wednesday";
+            break;
+        case 4:
+            cout << "Thursday";
+            break;
+        case 5:
+            cout << "Friday";
+            break;
+        case 6:
+            cout << "Saterday";
+            break;
+        case 7:
+            cout << "Sunday";
+            break;
+        default:
+            cout << "There is no match";
+            break;
     }
 }
 
@@ -83,17 +101,51 @@ void sum_of_primes(void){
     for (int i = 0; i < 0;){
         cout << i;
     }
-
 }
 
-int main() {
-    int a[] = {1, 2, 3, 4};
+void for_each_function(void){
+    string arr[] = {"Hello", "I", "Am", "Gary"};
     
-    string s = "Hello";
-    string t = "World";
-    s.append(t);
-    cout << s;
+    // for (string i : arr){
+    //     cout << i << endl;
+    // }
+}
+
+void TwoD_array(void){
+    int k[2][6] = {
+        {1, 2, 3, 4, 5, 6},
+        {1, 2, 3, 4, 5, 6}
+    };
+
+    for (int i = 0; i < 6; i++){
+        cout << k[0][i] << endl;
+    }
+}
+
+void average(void){
+    int score;
+    cout << "What are your scores? ";
+    int num_of_scores = 0;
+    int total = 0;
+    while(cin >> score){
+        cout << "(Enter a letter to stop) What are your scores? ";
+        total = total + score;
+        num_of_scores++;
+    }
+    float avg = (float)total/num_of_scores;
+    cout << "Your average is: " << avg;
+}
+
+
+// main
+int main(){
+
+    array <int, 5> myArray = {1, 2, 3, 4, 5};
+    for (const auto& i : myArray){
+        cout << i << " ";
+    }
     
-    cout << sizeof(a) / sizeof(a[0]);
-    cout << "\n";
+
+
+    cout << endl;
 }
