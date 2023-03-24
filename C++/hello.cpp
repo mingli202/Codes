@@ -3,6 +3,9 @@ using namespace std;
 #include <string>
 #include <cmath>
 #include <array>
+#include <algorithm>
+#include <vector>
+#include <limits>
 
 void hello(void){
     int x;
@@ -106,9 +109,9 @@ void sum_of_primes(void){
 void for_each_function(void){
     string arr[] = {"Hello", "I", "Am", "Gary"};
     
-    // for (string i : arr){
-    //     cout << i << endl;
-    // }
+    for (string i : arr){
+        cout << i << endl;
+    }
 }
 
 void TwoD_array(void){
@@ -136,15 +139,78 @@ void average(void){
     cout << "Your average is: " << avg;
 }
 
+void wtf(void){
+    array <int, 6> myArray = {1, 2, 3, 4, 5, 0};
+    for (const auto& i : myArray){
+        cout << i << " ";
+    }
+
+    // lambda shit
+    auto check = [](int x){
+        return (x == 0);
+    };
+    // algorithm shit
+    if (any_of(myArray.begin(), myArray.end(), check)){
+        cout << "There is at least one zero\n";
+    }
+    else{
+        cout << "There is no zero\n";
+    }
+
+}
+
+void vector_shit(void){
+    vector<int> myVector = {5432, 3456, 6543};
+    myVector.push_back(12345672);
+    myVector.push_back(50);
+    cout << myVector[0] << endl;
+    cout << myVector.size() << endl << myVector.capacity();
+
+    for (int i : myVector){
+        cout << i << endl;
+    }
+
+    vector<vector<int>> the_vector{
+        {1, 2, 3, 4, 5},
+        {2, 3, 4, 5, 6}
+    };
+
+    cout << endl;
+
+    array<array<int, 5>, 5> myArray;
+    
+    for (array<int, 5> i : myArray){
+        for (int j : i){
+            cout << j << " ";
+        }
+    }
+    cout << endl;
+
+    for (vector<int> i : the_vector){
+        for (int j : i){
+            cout << j << " ";
+        }
+    }
+}
 
 // main
 int main(){
 
-    array <int, 5> myArray = {1, 2, 3, 4, 5};
-    for (const auto& i : myArray){
-        cout << i << " ";
-    }
-    
+
+    cout << "Enter to continue";
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+
+    // vector<vector<int>> myVector{
+    //     {1, 2, 3},
+    //     {4, 5, 6},
+    //     {7, 8, 9}
+    // };
+    // cout << myVector[0][-1];
+
+    srand((unsigned) time(NULL));
+    int x = rand() % 3;
+    int y = rand() % 3;
+    cout << x << " " << y;
 
 
     cout << endl;

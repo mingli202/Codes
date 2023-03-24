@@ -3,11 +3,12 @@ using namespace std;
 #include <string>
 #include <cmath>
 #include <algorithm>
-#include <initializer_list>
+#include <vector>
+#include <array>
 
 class Player{
     private:
-        int map[5][5] = {
+        vector<vector<int>> map{
             {0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0},
@@ -54,7 +55,7 @@ class Player{
                 cout << "x-coordinate start: ";
                 cin >> xi;
                 xi = xi - 97;
-                cout << "y-coordinate end: ";
+                cout << "x-coordinate end: ";
                 cin >> xf;
                 xf = xf - 97;
 
@@ -109,26 +110,12 @@ class Player{
         }
 
         void attack(void){
-            // bool found = false;
-            // for (int i = 0; i < 5; i++){
-            //     for (int j = 0; j < 5; j++){
-            //         if (map[i][j] == 1){
-            //             found = true;
-            //             break;
-            //         }
-            //     }
-            //     if (found){
-            //         break;
-            //     }
-            // }
-            // if (!found){
-            //     cout << "You have set no battle ship\n";
-            //     return;
-            // }
-
-
-            if (all_of(map[0][0], map[4][4], [](int x){return (x == 0);})){
-                cout << "You have no battleship set";
+            
+            auto check = [](vector<int> v){
+                return all_of(v.begin(), v.end(), [](int x){return x == 0;});
+            };
+            if (all_of(map.begin(), map.end(), check)){
+                cout << "You have not battle ship set!\n";
                 return;
             }
 
@@ -140,10 +127,19 @@ class Player{
 
             if (map[y_atk][x_atk] == 1){
                 cout << "Hit!\n";
+                map[y_atk][x_atk] = 0;
             }
             else{
                 cout << "Miss!\n";
             }
+        }
+};
+
+class AI : public Player{
+    public:
+        
+        void write_map(void){
+
         }
 };
 

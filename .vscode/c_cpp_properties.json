@@ -19,7 +19,8 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "cStandard": "c23",
-            "cppStandard": "c++23"
+            "cppStandard": "c++23",
+            "configurationProvider": "ms-vscode.makefile-tools"
         },
         {
             "name": "for cpp",

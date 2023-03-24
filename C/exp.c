@@ -9,42 +9,34 @@ typedef struct node{
     struct node* next;
 }node;
 
-void divisors(num){
-    node* cursor;
-    node* list = malloc(sizeof(node));
-    list->number = 1;
-    list->next = NULL;
-
-    for (int i = 2; i <= num; i++){
-        if (num % i == 0){
-            node* n = malloc(sizeof(node));
-            if (n == NULL){
-                printf("No more memory\n");
-                return;
-            }
-            if (list->next == NULL){
-                list = n;
-            }
-            else{
-                cursor = list;
-                while (cursor->next != NULL){
-                    cursor = cursor->next;
-                }
-                cursor->next = n;
-            }
-
-            free(n);
-        }
-    }
-    printf("The divisors are: ");
-    for (node* tmp = list; tmp->next != NULL; tmp = tmp->next){
-        printf("%i ", tmp->number);
+void free_list(node* list){
+    while (list != NULL){
+        node* tmp = list->next;
+        free(list);
+        list = tmp;
     }
 }
 
 int main(void){
 
-    // divisors(48);
+    node* ptr_list = NULL;
+
+    // Add number
+    node* ptr_n;
+    node* ptr_cursor;
+
+    // Add 1 to 10
+    for (int i = 1; i <= 10; i++){
+        ptr_n = malloc(sizeof(node));
+        ptr_n->number = i;
+        ptr_n->next = NULL;
+
+        ptr_cursor = ptr_n;
+    }
+
+    printf("%i", ptr_list->next->number);
+    
+    free_list(ptr_list);
 
     printf("\n");
 }

@@ -12,7 +12,8 @@
             "compilerPath": "/usr/bin/clang",
             "intelliSenseMode": "macos-clang-arm64",
             "cStandard": "c23",
-            "cppStandard": "c++23"
+            "cppStandard": "c++23",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
