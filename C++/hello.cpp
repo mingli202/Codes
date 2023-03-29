@@ -193,12 +193,17 @@ void vector_shit(void){
     }
 }
 
+typedef struct myStruct{
+    int a;
+    int b;
+}myStruct;
+
 // main
 int main(){
 
 
-    cout << "Enter to continue";
-    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    // cout << "Enter to continue";
+    // cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
     // vector<vector<int>> myVector{
     //     {1, 2, 3},
@@ -207,10 +212,23 @@ int main(){
     // };
     // cout << myVector[0][-1];
 
-    srand((unsigned) time(NULL));
-    int x = rand() % 3;
-    int y = rand() % 3;
-    cout << x << " " << y;
+
+    vector<myStruct> p;
+
+    myStruct tmp;
+    tmp.a = 12;
+    tmp.b = 12;
+    p.push_back(tmp);
+
+    for (int i = 1; i < 9; i++){
+        tmp.a = i;
+        tmp.b = i;
+        p.push_back(tmp);
+    }
+
+    for (myStruct i : p){
+        cout << i.a << "" << i.b << endl;
+    }
 
 
     cout << endl;
