@@ -15,9 +15,9 @@
                 "-I/Library/Frameworks/SDL2.framework/Headers",
                 "-F/Library/Frameworks",
                 "-framework", "SDL2",
-                "-framework", "OpenGL",
-                "-framework", "GLUT",
-                "-Wno-deprecated-declarations"
+                // "-framework", "OpenGL",
+                // "-framework", "GLUT",
+                // "-Wno-deprecated-declarations"
             ],
             "options": {
                 "cwd": "${fileDirname}"
