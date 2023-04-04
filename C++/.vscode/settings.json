@@ -48,5 +48,6 @@
         "cstdlib": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++23",
-    "C_Cpp.default.cStandard": "c23"
+    "C_Cpp.default.cStandard": "c23",
+    "cmake.sourceDirectory": "${workspaceFolder}/SDL2_ttf-2.20.2"
 }

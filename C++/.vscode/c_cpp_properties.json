@@ -4,7 +4,8 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/Library/Frameworks/SDL2.framework/Headers"
+                "/Library/Frameworks/SDL2.framework/Headers",
+                "/Library/Frameworks/SDL2_ttf.framework/Headers"
             ],
             "defines": [],
             "macFrameworkPath": [

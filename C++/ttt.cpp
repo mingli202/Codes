@@ -8,14 +8,17 @@ using namespace std;
 #include <limits>
 #include <random>
 #include <SDL2/SDL.h>
-#include <OpenGL/gl.h>
-#include <GLUT/glut.h>
 
 typedef struct win_coor{
     string player;
     string orientation;
     int coor;
 }win_coor;
+
+typedef struct x_y{
+    int x;
+    int y;
+}x_y;
 
 void update_board(SDL_Renderer* renderer, int x, int y, vector<vector<int>> m, int turn, bool& pressed, int dir, bool& enter, win_coor win){
     SDL_RenderClear(renderer);
@@ -125,8 +128,9 @@ void update_board(SDL_Renderer* renderer, int x, int y, vector<vector<int>> m, i
                 break;
         }
     }
+    // Draw moving player
     if (enter){
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
         SDL_Rect square = {200 * x + 60, 200 * y + 60, 180, 180};
         SDL_RenderFillRect(renderer, &square);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -183,7 +187,8 @@ void update_board(SDL_Renderer* renderer, int x, int y, vector<vector<int>> m, i
             SDL_RenderDrawLine(renderer, 235, 700, 235, 725);
         }
 
-        // Draw THE line
+        // Draw winning line
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         if (win.orientation == "horizontal"){
             SDL_RenderDrawLine(renderer, 50, 200 * win.coor + 150, 650, 200 * win.coor + 150);
         }
@@ -197,6 +202,7 @@ void update_board(SDL_Renderer* renderer, int x, int y, vector<vector<int>> m, i
             SDL_RenderDrawLine(renderer, 50, 650, 650, 50);
         }
 
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         if (win.player == "draw"){
             // Draw D
             SDL_RenderDrawLine(renderer, 250, 675, 250, 725);
@@ -308,7 +314,6 @@ int main()
         {0, 0, 0}
     };
 
-
     // Variable initialization
     int turn = 1;
     bool pressed = false;
@@ -319,6 +324,8 @@ int main()
     winner.coor = -1;
     winner.player = "NULL";
     winner.orientation = "NULL";
+    bool ai = false;
+    vector<x_y> xy;
 
     // SDL
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -343,16 +350,20 @@ int main()
     int i_x;
     int i_y;
     int steps;
+    int steps_ai;
 
     // Main loop
     bool quit = false;
+    bool exit = false;
     while(!quit){
         SDL_Event event;
         while(SDL_PollEvent(&event)){
             if(event.type == SDL_QUIT){
                 quit = true;
+                exit = true;
             }
 
+            // Mouse Motion
             if(event.type == SDL_MOUSEMOTION && event.motion.x < 650 && event.motion.y < 650 && !pressed){
                 i_x = floor((event.motion.x - 50) / 200);
                 i_y = floor((event.motion.y - 50) / 200);
@@ -361,17 +372,52 @@ int main()
             if (event.type == SDL_MOUSEBUTTONDOWN && map[i_y][i_x] == 0 && !pressed){
                 pressed = true;
             }
+
+            // ai
+            if (event.key.keysym.sym == SDLK_a){
+                if (event.type == SDL_KEYUP){
+                    ai = true;
+                    pressed = true;
+                    x_y tmp;
+
+                    for (int i = 0; i < 3; i++){
+                        for (int j = 0; j < 3; j++){
+                            if (map[i][j] == 0){
+                                tmp.x = j;
+                                tmp.y = i;
+                                xy.push_back(tmp);
+                            }
+                        }
+                    }
+
+                    srand((unsigned) time(NULL));
+                    steps_ai = rand() % (xy.size() - 1);
+
+                    i_x = xy[steps_ai].x;
+                    i_y = xy[steps_ai].y;
+                    xy.clear();
+                }
+            }
+
+            // Direction choice
             if (pressed){
-                if (event.key.keysym.sym == SDLK_LEFT){
+                if (event.key.keysym.sym == SDLK_LEFT && !ai){
                     if (event.type == SDL_KEYUP){
                         dir--;
                     }
                 }
-                if (event.key.keysym.sym == SDLK_RIGHT){
+                if (event.key.keysym.sym == SDLK_RIGHT && !ai){
                     if (event.type == SDL_KEYUP){
                         dir++;
                     }
                 }
+                if (ai){
+                    srand((unsigned) time(NULL));
+                    dir = rand() % 8;
+                    update_board(renderer, i_x, i_y, map, turn, pressed, dir, enter, winner);
+                    SDL_Delay(1000);
+                }
+
                 if (dir < 0){
                     dir = 7;
                 }
@@ -379,7 +425,8 @@ int main()
                     dir = 0;
                 }
 
-                if (event.key.keysym.sym == SDLK_SPACE){
+                // Direction chosen, display steps
+                if (event.key.keysym.sym == SDLK_SPACE || ai){
                     srand((unsigned) time(NULL));
                     steps = rand() % 3 + 1;
                     pressed = false;
@@ -424,6 +471,7 @@ int main()
                     else if (turn == 2){
                         turn = 1;
                     }
+                    ai = false;
                 }
             }
         }
@@ -433,7 +481,7 @@ int main()
             quit = true;
         }
     }
-    bool exit = false;
+
     while (!exit){
         SDL_Event e;
         while (SDL_PollEvent(&e)){
