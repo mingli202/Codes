@@ -1,3 +1,5 @@
+// Finished on April 2 2023
+
 #include <iostream>
 using namespace std;
 #include <string>
@@ -491,7 +493,6 @@ int main()
         }
         update_board(renderer, i_x, i_y, map, turn, pressed, dir, enter, winner);
     }
-
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
