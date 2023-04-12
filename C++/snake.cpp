@@ -1,3 +1,6 @@
+// Finished on April 4 2023
+// Update April 11 2023: optimized key press
+
 #include <iostream>
 using namespace std;
 #include <string>
@@ -61,7 +64,7 @@ bool check_collision(vector<info> snake){
     return false;
 }
 
-void display_score(SDL_Renderer* renderer, TTF_Font* font, SDL_Surface* surface, SDL_Texture* texture){
+void display_score(SDL_Renderer* renderer, TTF_Font* font, SDL_Texture* texture){
     int texW = 0;
     int texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
@@ -69,7 +72,7 @@ void display_score(SDL_Renderer* renderer, TTF_Font* font, SDL_Surface* surface,
     SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 }
 
-void display_death_screen(SDL_Renderer* renderer, TTF_Font* font, SDL_Surface* surface, SDL_Texture* texture){
+void display_death_screen(SDL_Renderer* renderer, TTF_Font* font, SDL_Texture* texture){
     int texW = 0;
     int texH = 0;
     SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
@@ -99,6 +102,7 @@ int main(){
 
     // font
     TTF_Font* font = TTF_OpenFont("/Users/vincentliu/Codes/open-sans/OpenSans-Bold.ttf", 24);
+    
     SDL_Surface* surface = TTF_RenderText_Solid(font, "Score: 0", {255, 255, 255, 255}); // white text
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
@@ -131,38 +135,36 @@ int main(){
         SDL_RenderClear(renderer);
         bg(renderer);
 
-        display_score(renderer, font, surface, texture);
+        display_score(renderer, font, texture);
 
         // input
         SDL_Event e;
         while (SDL_PollEvent(&e)){
-            if (e.type == SDL_QUIT){
-                quit = true;
-            }
-
-            if (e.key.keysym.sym == SDLK_LEFT){
-                if (e.type == SDL_KEYUP){
-                    snake[0].vx = -1;
-                    snake[0].vy = 0;
-                }
-            }
-            else if (e.key.keysym.sym == SDLK_RIGHT){
-                if (e.type == SDL_KEYUP){
-                    snake[0].vx = 1;
-                    snake[0].vy = 0;
-                }
-            }
-            else if (e.key.keysym.sym == SDLK_UP){
-                if (e.type == SDL_KEYUP){
-                    snake[0].vx = 0;
-                    snake[0].vy = -1;
-                }
-            }
-            else if (e.key.keysym.sym == SDLK_DOWN){
-                if (e.type == SDL_KEYUP){
-                    snake[0].vx = 0;
-                    snake[0].vy = 1;
-                }
+            switch (e.type){
+                case (SDL_QUIT):
+                    quit = true;
+                    break;
+                case (SDL_KEYDOWN):
+                    if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_a){
+                        snake[0].vx = -1;
+                        snake[0].vy = 0;
+                        break;
+                    }
+                    else if (e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_d){
+                        snake[0].vx = 1;
+                        snake[0].vy = 0; 
+                        break;  
+                    }
+                    else if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w){
+                        snake[0].vx = 0;
+                        snake[0].vy = -1;
+                        break;
+                    }
+                    else if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s){
+                        snake[0].vx = 0;
+                        snake[0].vy = 1;
+                        break;
+                    }
             }
         }
 
@@ -245,7 +247,7 @@ int main(){
                 surface = TTF_RenderText_Blended_Wrapped(font, death_msg.c_str(), {0, 0, 0, 255}, 0); // white text
                 texture = SDL_CreateTextureFromSurface(renderer, surface);
                 SDL_FreeSurface(surface);
-                display_death_screen(renderer, font, surface, texture);
+                display_death_screen(renderer, font, texture);
 
                 SDL_RenderPresent(renderer);
             }

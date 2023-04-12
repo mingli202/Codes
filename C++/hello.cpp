@@ -7,6 +7,11 @@ using namespace std;
 #include <vector>
 #include <limits>
 
+typedef struct myStruct{
+    int a;
+    int b;
+}myStruct;
+
 void hello(void){
     int x;
     cout << "Input your first number: ";  
@@ -191,34 +196,29 @@ void vector_shit(void){
             cout << j << " ";
         }
     }
-}
 
-typedef struct myStruct{
-    int a;
-    int b;
-}myStruct;
+    cout << "Enter to continue";
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
 
-// main
-int main(){
-
-
-    // cout << "Enter to continue";
-    // cin.ignore(numeric_limits<streamsize>::max(),'\n');
-
-    // vector<vector<int>> myVector{
-    //     {1, 2, 3},
-    //     {4, 5, 6},
-    //     {7, 8, 9}
-    // };
-    // cout << myVector[0][-1];
+    vector<vector<int>> aVector{
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+    cout << aVector[0][-1];
 
 
     vector<myStruct> p;
 
     myStruct tmp;
-    tmp.a = 12;
-    tmp.b = 12;
-    p.push_back(tmp);
+
+    auto print_vector = [](vector<myStruct> p){
+        for (myStruct i : p){
+            cout << i.a << i.b << " ";
+        }
+        cout << endl;
+    };
+
 
     for (int i = 1; i < 9; i++){
         tmp.a = i;
@@ -226,10 +226,29 @@ int main(){
         p.push_back(tmp);
     }
 
-    for (myStruct i : p){
-        cout << i.a << "" << i.b << endl;
-    }
+    print_vector(p);
+
+    p.erase(p.begin());
+
+    print_vector(p);
+    cout << p[0].a;
+
+    tmp.a = 123;
+    tmp.b = 456;
+    p.push_back(tmp);
+
+    print_vector(p);
 
 
     cout << endl;
+}
+
+// main
+int main(){
+
+    cout << "Helo world";
+    int a;
+    cin >> a;
+    cout << a;
+    
 }
