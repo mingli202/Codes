@@ -37,21 +37,44 @@ vector<int> climbingLeaderboard(vector<int> ranked, vector<int> player) {
     return answer;
 }
 
+// alternating harmonic seris
+void alt_harmonic_series(long n){
+    double sum = 0;
+    double a_n;
+    for (double i = 1; i < n + 1; i++){
+        a_n = pow(-1, i + 1) * (1 / i);
+        sum += a_n;
+    }
+    cout << sum;
+}
+
+void some_series(long n){
+    double sum;
+    for (long i = 1; i < n + 1; i++){
+        sum += (double) cos(i)/i;
+    }
+    cout << sum;
+}
 
 int main(){
-    vector<int> myVector{1, 1, 2, 2, 3, 4, 4, 12, 6, 8, 5, 4, 1};
-    set<int> mySet(myVector.begin(), myVector.end());
+    // vector<int> myVector{1, 1, 2, 2, 3, 4, 4, 12, 6, 8, 5, 4, 1};
+    // set<int> mySet(myVector.begin(), myVector.end());
 
-    for (auto i : mySet){
-        cout << i << endl;
-    }
+    // for (auto i : mySet){
+    //     cout << i << endl;
+    // }
 
-    vector<int> ranked{100, 100, 50, 40, 40, 20, 10};
-    vector<int> player{5, 25, 50, 120};
-    for (int i : climbingLeaderboard(ranked, player)){
-        cout << i << " ";
-    }
+    // vector<int> ranked{100, 100, 50, 40, 40, 20, 10};
+    // vector<int> player{5, 25, 50, 120};
+    // for (int i : climbingLeaderboard(ranked, player)){
+    //     cout << i << " ";
+    // }
     
+    // alt_harmonic_series(999999999);
+    for (long i = 1; i < 1000000; i += 100000){
+        some_series(i);
+        cout << "\n";
+    }
 
     cout << endl;
     return 0;

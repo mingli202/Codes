@@ -1,3 +1,27 @@
-p{
-    color:blueviolet;
+p {
+    color:rgb(50, 85, 59);
+    border: rgb(16, 35, 103) solid 2px;
+    padding: 5px 2px; /*Padding defines the space btw the text and the border*/
+    margin: 2px; /*defines space outside border*/
+    text-decoration: none;
+}
+a:link {
+    color:lightseagreen;
+    background-color: transparent;
+    text-decoration: none;
+}
+a:hover {
+    color:blanchedalmond;
+    background-color:darkblue;
+}
+body {
+    background-image: url("Images/abstract-blue-geometric-circles-overlapping-background-with-light-blue-free-vector.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+tw-passage {
+    color:white;
 }

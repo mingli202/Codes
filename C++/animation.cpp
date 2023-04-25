@@ -40,6 +40,12 @@ void draw(SDL_Renderer* renderer){
     //     SDL_RenderDrawPointF(renderer, x, y);
     // }
 
+    /* better circle */
+    float n = 1000;
+    float radius = 100;
+    for (float angle = 0; angle <= 2 * M_PI; angle += 2 * M_PI / n){
+        SDL_RenderDrawPoint(renderer, radius * cos(angle) + 500, radius * sin(angle) + 400);
+    }
 }
 
 void animation_on_press(SDL_Renderer* renderer, vector<epicenter>& epicenters){
@@ -53,6 +59,7 @@ void animation_on_press(SDL_Renderer* renderer, vector<epicenter>& epicenters){
         // SDL_RenderDrawLineF(renderer, i.x, i.y - i.dy * speed, i.x + i.dx * speed, i.y);
         // SDL_RenderDrawLineF(renderer, i.x, i.y + i.dy * speed, i.x - i.dx * speed, i.y);
         // SDL_RenderDrawLineF(renderer, i.x, i.y - i.dy * speed, i.x - i.dx * speed, i.y);
+        // i.dx++; i.dy++;
 
         /* expanding circles */
         // for (float x = 0, y; x < 1201; x+=1){
@@ -64,6 +71,7 @@ void animation_on_press(SDL_Renderer* renderer, vector<epicenter>& epicenters){
         // if (i.dx * speed > 2000){
         //     epicenters.erase(epicenters.begin());
         // }
+        // i.dx++;
 
         /* falling blocks */
         // float y = 2 * (float) pow(i.dy, 2) + i.y;
@@ -76,24 +84,61 @@ void animation_on_press(SDL_Renderer* renderer, vector<epicenter>& epicenters){
         // if (i.y >= 730){
         //     epicenters.erase(epicenters.begin());
         // }
+        // i.dy++;
 
         /* Expanding and retracting squares */
-        float peak = 50 / pow(2, i.time);
-        if (i.dx >= peak){
-            i.dx = -i.dx;
-            i.time += 1;
+        // float peak = 50 / pow(2, i.time);
+        // if (i.dx >= peak){
+        //     i.dx = -i.dx;
+        //     i.time += 1;
+        // }
+        // SDL_RenderDrawLineF(renderer, i.x, i.y + i.dx * speed, i.x + i.dx * speed, i.y);
+        // SDL_RenderDrawLineF(renderer, i.x, i.y - i.dx * speed, i.x + i.dx * speed, i.y);
+        // SDL_RenderDrawLineF(renderer, i.x, i.y + i.dx * speed, i.x - i.dx * speed, i.y);
+        // SDL_RenderDrawLineF(renderer, i.x, i.y - i.dx * speed, i.x - i.dx * speed, i.y);
+        // if (peak <= 1){
+        //     epicenters.erase(epicenters.begin());
+        // }
+        // i.dx++;
+
+        /* Collapsing squares */
+        const float RECT_SIZE = 25;
+        const float DELAY = 10;
+        
+        float top_corner_inside_change = 2.5 * (i.dx / DELAY) * (i.dx / DELAY - 10);
+        float top_corner_outside_change = 2.5 * (i.dx / DELAY - 0.5) * (i.dx / DELAY - 10.5);
+        float rect_size_inside = 2 * (RECT_SIZE - top_corner_inside_change);
+        float rect_size_outside = 2 * (RECT_SIZE - top_corner_outside_change);
+
+        SDL_FRect inside = {i.x - RECT_SIZE + top_corner_inside_change, i.y - RECT_SIZE + top_corner_inside_change, rect_size_inside, rect_size_inside};
+        SDL_FRect outside = {i.x - RECT_SIZE + top_corner_outside_change, i.y - RECT_SIZE + top_corner_outside_change, rect_size_outside, rect_size_outside};
+        
+        if (i.dx < 4.5 * DELAY){
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderFillRectF(renderer, &inside);
+            i.dx++;
         }
-        SDL_RenderDrawLineF(renderer, i.x, i.y + i.dx * speed, i.x + i.dx * speed, i.y);
-        SDL_RenderDrawLineF(renderer, i.x, i.y - i.dx * speed, i.x + i.dx * speed, i.y);
-        SDL_RenderDrawLineF(renderer, i.x, i.y + i.dx * speed, i.x - i.dx * speed, i.y);
-        SDL_RenderDrawLineF(renderer, i.x, i.y - i.dx * speed, i.x - i.dx * speed, i.y);
-        if (peak <= 1){
+        else{
+            int color;
+            if (sin(pow(5 - i.dy / DELAY, 2)) < 0){
+                color = 255;
+            }
+            else{
+                color = 0;
+            }
+            SDL_SetRenderDrawColor(renderer, color, color, color, 255);
+            SDL_RenderFillRectF(renderer, &inside);
+            i.dy += 1;
+        }
+        
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRectF(renderer, &outside);
+        
+        if (5 - i.dy / DELAY <= 0){
             epicenters.erase(epicenters.begin());
         }
-
-
-        i.dx+=1;
-        i.dy+=1;
+    
+        /* Rotating things */
     }
 }
 
@@ -156,7 +201,7 @@ int main(){
         SDL_RenderClear(renderer);
         bg(renderer);
 
-        draw(renderer);
+        // draw(renderer);
         animation_on_press(renderer, epicenters);
 
 
