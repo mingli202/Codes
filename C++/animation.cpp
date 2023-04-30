@@ -138,7 +138,18 @@ void animation_on_press(SDL_Renderer* renderer, vector<epicenter>& epicenters){
             epicenters.erase(epicenters.begin());
         }
     
-        /* Rotating things */
+        /* Click expanding cross */
+        // SDL_FRect rect_left = {i.x - 10 + i.dx, i.y - 10, 20, 20};
+        // SDL_FRect rect_right = {i.x - 10 - i.dx, i.y - 10, 20, 20};
+        // SDL_FRect rect_up = {i.x - 10, i.y - 10 + i.dy, 20, 20};
+        // SDL_FRect rect_down = {i.x - 10, i.y - 10 - i.dy, 20, 20};
+        // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        // SDL_RenderFillRectF(renderer, &rect_left);
+        // SDL_RenderFillRectF(renderer, &rect_right);
+        // SDL_RenderFillRectF(renderer, &rect_up);
+        // SDL_RenderFillRectF(renderer, &rect_down);
+
+        // i.dx++; i.dy++;
     }
 }
 

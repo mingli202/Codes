@@ -1,11 +1,11 @@
 #include <iostream>
-using namespace std;
 #include <string>
 #include <cmath>
 #include <array>
 #include <algorithm>
 #include <vector>
 #include <limits>
+#include <map>
 
 typedef struct myStruct{
     int a;
@@ -14,92 +14,92 @@ typedef struct myStruct{
 
 void hello(void){
     int x;
-    cout << "Input your first number: ";  
-    cin >> x;
+    std::cout << "Input your first number: ";  
+    std::cin >> x;
 
     int y;
-    cout << "Input your second number: ";
-    cin >>  y;
+    std::cout << "Input your second number: ";
+    std::cin >>  y;
 
     int choice;
-    cout << "Choose what to do with your numbers:\n";
-    cout << "1.Addition\n2.Substraction\n3.Multiplication\n4.Division\n";
-    cout << "5.Modulus\n6.Find max\n7.Find min\n";
-    cin >> choice;
+    std::cout << "Choose what to do with your numbers:\n";
+    std::cout << "1.Addition\n2.Substraction\n3.Multiplication\n4.Division\n";
+    std::cout << "5.Modulus\n6.Find max\n7.Find min\n";
+    std::cin >> choice;
 
     if (choice == 1){
-        cout << x << " + " << y << " = " << x + y;
+        std::cout << x << " + " << y << " = " << x + y;
     }
     else if (choice == 2){
-        cout << x << " - " << y << " = " << x - y;
+        std::cout << x << " - " << y << " = " << x - y;
     }
     else if (choice == 3){
-        cout << x << " x " << y << " = " << x * y;
+        std::cout << x << " x " << y << " = " << x * y;
     }
     else if (choice == 4){
         if (y == 0){
-            cout << "Division by zero is undefined.";
+            std::cout << "Division by zero is undefined.";
         }
         else{
-            cout << x << " / " << y << " = " << x / y;
+            std::cout << x << " / " << y << " = " << x / y;
         }
     }
     else if (choice == 5){
-        cout << x << " mod " << y << " = " << x % y;
+        std::cout << x << " mod " << y << " = " << x % y;
     }
     else if (choice == 6 || choice == 7){
         if (x == y){
-            cout << "Both numbers are equal";
+            std::cout << "Both numbers are equal";
         }
         if (choice == 6){
-            cout << "The maximum is " << max(x, y);
+            std::cout << "The maximum is " << std::max(x, y);
         }
         else{
-            cout << "The minimum is " << min(x, y);
+            std::cout << "The minimum is " << std::min(x, y);
         }
     }
     else{
-        cout << "PLease type a number";
+        std::cout << "PLease type a number";
     }
 }
 
 void ternary_operator(void){
     int k;
-    cout << "k: ";
-    cin >> k;
-    string l = (k < 10) ? "k is smaller than 10" : "k is bigger than 10";
-    cout << l;
+    std::cout << "k: ";
+    std::cin >> k;
+    std::string l = (k < 10) ? "k is smaller than 10" : "k is bigger than 10";
+    std::cout << l;
 }
 
 void the_switch_operator(void){
     int a;
-    cout << "Enter the day of the week: ";
-    cin >> a;
+    std::cout << "Enter the day of the week: ";
+    std::cin >> a;
 
     switch(a){
         case 1:
-            cout << "Monday";
+            std::cout << "Monday";
             break;
         case 2: 
-            cout << "Tuesday";
+            std::cout << "Tuesday";
             break;
         case 3:
-            cout << "Wednesday";
+            std::cout << "Wednesday";
             break;
         case 4:
-            cout << "Thursday";
+            std::cout << "Thursday";
             break;
         case 5:
-            cout << "Friday";
+            std::cout << "Friday";
             break;
         case 6:
-            cout << "Saterday";
+            std::cout << "Saterday";
             break;
         case 7:
-            cout << "Sunday";
+            std::cout << "Sunday";
             break;
         default:
-            cout << "There is no match";
+            std::cout << "There is no match";
             break;
     }
 }
@@ -107,15 +107,15 @@ void the_switch_operator(void){
 void sum_of_primes(void){
     int list[] = {3, 5, 3, 6, 2, 5, 5, 6, 7};
     for (int i = 0; i < 0;){
-        cout << i;
+        std::cout << i;
     }
 }
 
 void for_each_function(void){
-    string arr[] = {"Hello", "I", "Am", "Gary"};
+    std::string arr[] = {"Hello", "I", "Am", "Gary"};
     
-    for (string i : arr){
-        cout << i << endl;
+    for (std::string i : arr){
+        std::cout << i << std::endl;
     }
 }
 
@@ -126,28 +126,28 @@ void TwoD_array(void){
     };
 
     for (int i = 0; i < 6; i++){
-        cout << k[0][i] << endl;
+        std::cout << k[0][i] << std::endl;
     }
 }
 
 void average(void){
     int score;
-    cout << "What are your scores? ";
+    std::cout << "What are your scores? ";
     int num_of_scores = 0;
     int total = 0;
-    while(cin >> score){
-        cout << "(Enter a letter to stop) What are your scores? ";
+    while(std::cin >> score){
+        std::cout << "(Enter a letter to stop) What are your scores? ";
         total = total + score;
         num_of_scores++;
     }
     float avg = (float)total/num_of_scores;
-    cout << "Your average is: " << avg;
+    std::cout << "Your average is: " << avg;
 }
 
 void wtf(void){
-    array <int, 6> myArray = {1, 2, 3, 4, 5, 0};
+    std::array <int, 6> myArray = {1, 2, 3, 4, 5, 0};
     for (const auto& i : myArray){
-        cout << i << " ";
+        std::cout << i << " ";
     }
 
     // lambda shit
@@ -155,68 +155,68 @@ void wtf(void){
         return (x == 0);
     };
     // algorithm shit
-    if (any_of(myArray.begin(), myArray.end(), check)){
-        cout << "There is at least one zero\n";
+    if (std::any_of(myArray.begin(), myArray.end(), check)){
+        std::cout << "There is at least one zero\n";
     }
     else{
-        cout << "There is no zero\n";
+        std::cout << "There is no zero\n";
     }
 
 }
 
 void vector_shit(void){
-    vector<int> myVector = {5432, 3456, 6543};
+    std::vector<int> myVector = {5432, 3456, 6543};
     myVector.push_back(12345672);
     myVector.push_back(50);
-    cout << myVector[0] << endl;
-    cout << myVector.size() << endl << myVector.capacity();
+    std::cout << myVector[0] << std::endl;
+    std::cout << myVector.size() << std::endl << myVector.capacity();
 
     for (int i : myVector){
-        cout << i << endl;
+        std::cout << i << std::endl;
     }
 
-    vector<vector<int>> the_vector{
+    std::vector<std::vector<int>> the_vector{
         {1, 2, 3, 4, 5},
         {2, 3, 4, 5, 6}
     };
 
-    cout << endl;
+    std::cout << std::endl;
 
-    array<array<int, 5>, 5> myArray;
+    std::array<std::array<int, 5>, 5> myArray;
     
-    for (array<int, 5> i : myArray){
+    for (std::array<int, 5> i : myArray){
         for (int j : i){
-            cout << j << " ";
+            std::cout << j << " ";
         }
     }
-    cout << endl;
+    std::cout << std::endl;
 
-    for (vector<int> i : the_vector){
+    for (std::vector<int> i : the_vector){
         for (int j : i){
-            cout << j << " ";
+            std::cout << j << " ";
         }
     }
 
-    cout << "Enter to continue";
-    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+    std::cout << "Enter to continue";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
 
-    vector<vector<int>> aVector{
+    std::vector<std::vector<int>> aVector{
         {1, 2, 3},
         {4, 5, 6},
         {7, 8, 9}
     };
-    cout << aVector[0][-1];
+    std::cout << aVector[0][-1];
 
 
-    vector<myStruct> p;
+    std::vector<myStruct> p;
 
     myStruct tmp;
 
-    auto print_vector = [](vector<myStruct> p){
+    auto print_vector = [](std::vector<myStruct> p){
         for (myStruct i : p){
-            cout << i.a << i.b << " ";
+            std::cout << i.a << i.b << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     };
 
 
@@ -231,7 +231,7 @@ void vector_shit(void){
     p.erase(p.begin());
 
     print_vector(p);
-    cout << p[0].a;
+    std::cout << p[0].a;
 
     tmp.a = 123;
     tmp.b = 456;
@@ -240,15 +240,52 @@ void vector_shit(void){
     print_vector(p);
 
 
-    cout << endl;
+    std::cout << std::endl;
 }
+
+void map_shit(){
+    std::map<std::string, int> myMap = {
+        {"one", 1},
+        {"three", 3}
+    };
+    myMap["two"] = 2;
+    std::cout << myMap["two"] << "\n";
+    std::cout << myMap["one"] << "\n";
+    std::cout << myMap["three"] << "\n";
+
+    std::map<std::string, myStruct> map2 = {
+        {"Point A", {100, 4}}
+    };
+
+    std::cout << map2["Point A"].a;
+}
+
+typedef struct{
+    int food;
+    int water;
+}storage;
+
+typedef struct{
+    int stamina;
+    int hydration;
+    storage provision;
+}player_stats;
 
 // main
 int main(){
 
-    cout << "Helo world";
-    int a;
-    cin >> a;
-    cout << a;
-    
+    std::map<std::string, player_stats> players{
+        {"Player 1", {
+            100, 100, {10, 20}
+        }},
+        {"Player 2", {
+            100, 100, {10, 20}
+        }}
+    };
+
+    std::cout << players["Player 1"].provision.food << "\n";
+    players["Player 1"].provision.food -= 5;
+    std::cout << players["Player 1"].provision.food << "\n";
+
+    std::cout << "\n";
 }

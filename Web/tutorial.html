@@ -120,6 +120,9 @@
         <picture>
             <source media="(min-width: 540px)" srcset="Images/giphy.gif">
         </picture>
+
+        <p id="1">A paragraph about to be changed</p>
+        <button type="button" onclick="myfunction2()">The change</button>
     </body>
 
     <script>
@@ -127,5 +130,8 @@
             alert("You clicked!");
         }
         var myString = "a string";
+        function myfunction2(){
+            document.getElementById("1").innerHTML = "The paragraph changed!.";
+        }
     </script>
 </html>

@@ -45,7 +45,8 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "variant": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "map": "cpp"
     },
     "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.default.cStandard": "c23",
