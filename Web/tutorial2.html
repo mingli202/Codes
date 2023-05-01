@@ -81,6 +81,15 @@
                 animation-direction:alternate;
                 animation-iteration-count: 2;
             }
+
+            .someVideo{
+                position:fixed;
+                top:0;
+                left:0;
+                width: 100%;
+                z-index: -1;
+                object-fit: cover;
+            }
         </style>
     </head>
 
@@ -121,6 +130,9 @@
         <div class="box"></div>
         <p id="one">Some text</p>
         <div id="two"></div>
+        <video class="someVideo" autoplay muted>
+            <source src="/Twine/Eyes openning vid.mp4">
+        </video>
 
     </body>
 </html>
