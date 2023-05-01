@@ -87,9 +87,21 @@
                 top:0;
                 left:0;
                 width: 100%;
+                height: 100%;
                 z-index: -1;
                 object-fit: cover;
+                border:none;
             }
+
+            iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+
         </style>
     </head>
 
@@ -131,8 +143,9 @@
         <p id="one">Some text</p>
         <div id="two"></div>
         <video class="someVideo" autoplay muted>
-            <source src="/Twine/Eyes openning vid.mp4">
+            <source src="file-source">
         </video>
+        <iframe src="https://www.youtube.com/embed/fWVk7B4dE54?autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&mute=1" allowfullscreen frameborder="0"></iframe>
 
     </body>
 </html>
