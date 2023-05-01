@@ -84,3 +84,22 @@ tw-passage {
     animation-iteration-count: infinite;
     animation-fill-mode: both;
 }
+
+#one {
+    opacity: 1;
+}
+
+@keyframes fadeout{
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+#fade_out {
+    animation-name:fadeout;
+    animation-duration:4s;
+    animation-play-state: paused;
+}

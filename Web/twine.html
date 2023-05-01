@@ -2,16 +2,22 @@
 <html>
     <head>
         <link rel="stylesheet" href="twine.css">
-        <link rel="script" href="twine.js">
     </head>
-    <body>
+    <body id="body">
 
-        <p class="centered_text">hello this text is centered</p>
-        <p class="animation">This is supposed to change color</p>
+        <p class="ani">This is supposed to change color</p>
 
-        <div class="ani2">
-            Cool
+        <div id="one">
+            <p>Why isn't there a bg image</p>
+            This is very weird
+            
         </div>
+        <button type="button" onclick="myFunction()">Click to change background</button>
 
     </body>
+    <script>
+        function myFunction(){
+            document.getElementById("body").style.backgroundImage = "url('https://github.com/Nanoscience202/Codes/blob/main/Web/Images/dark_room.jpeg?raw=true')"
+        }
+    </script>
 </html>

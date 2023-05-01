@@ -14,9 +14,72 @@
                 border-style: outset;
                 background-color:antiquewhite;
                 padding: 5px;
+                transition-property: border-style;
+                transition-duration: 2s;
             }
             table {
                 border-spacing: 5px;
+            }
+
+            th:hover, td:hover{
+                border:inset;
+            }
+
+            .box{
+                width:200px;
+                height:200px;
+                background-color:red;
+                transition: width 2s, height 2s, transform 2s, background-color 3s;
+            }
+            .box:hover{
+                width:400px;
+                height:400px;
+                transform: rotate(90deg);
+                background-color:blue;
+            }
+
+            @keyframes intro1{
+                0% {
+                    opacity:0;
+                }
+                100% {
+                    opacity:1
+                }
+            }
+
+            #one{
+                text-align: center;
+                opacity:0;
+                animation-name: intro1;
+                animation-duration: 6s;
+                animation-fill-mode: both;
+            }
+
+            @keyframes intro {
+                0% {
+                    width:0px;
+                    opactity:0;
+                }
+                80% {
+                    width:400px;
+                    opacity:1;
+                }
+                100% {
+                    width: 400px;
+                }
+            }
+            #two {
+                opacity:0;
+                margin: auto;
+                background-color:black;
+                height:2px;
+                width:0px;
+                animation-name:intro;
+                animation-duration:6s;
+                animation-delay:0s;
+                animation-timing-function:ease-in-out;
+                animation-direction:alternate;
+                animation-iteration-count: 2;
             }
         </style>
     </head>
@@ -55,5 +118,9 @@
             </tr>
         </table>
         <br>
+        <div class="box"></div>
+        <p id="one">Some text</p>
+        <div id="two"></div>
+
     </body>
 </html>

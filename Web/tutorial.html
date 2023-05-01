@@ -121,8 +121,11 @@
             <source media="(min-width: 540px)" srcset="Images/giphy.gif">
         </picture>
 
-        <p id="1">A paragraph about to be changed</p>
+        <p id="1" onclick="myfunction2()">A paragraph about to be changed</p>
         <button type="button" onclick="myfunction2()">The change</button>
+
+        <p id="fade_out" onclick="fadeOut()">This text will disappear</p>
+
     </body>
 
     <script>
@@ -132,6 +135,9 @@
         var myString = "a string";
         function myfunction2(){
             document.getElementById("1").innerHTML = "The paragraph changed!.";
+        }
+        function fadeOut(){
+            document.getElementById("fade_out").style.animationPlayState = "running";
         }
     </script>
 </html>
