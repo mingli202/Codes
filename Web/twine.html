@@ -13,6 +13,7 @@
             
         </div>
         <button type="button" onclick="myFunction()">Click to change background</button>
+        <button type="button" class="btn">Button that changes bg</button>
 
         <div class="abc">
             <pre>
@@ -29,5 +30,10 @@
         function myFunction(){
             document.getElementById("body").style.backgroundImage = "url('https://github.com/Nanoscience202/Codes/blob/main/Web/Images/dark_room.jpeg?raw=true')"
         }
+
+        const btn = window.document.querySelector('.btn')
+        btn.addEventListener('click', () => {
+            document.body.style.backgroundColor = 'red';
+        })
     </script>
 </html>
