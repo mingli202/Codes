@@ -20,6 +20,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
+    color: rgb(240, 128, 128);
 }
 
 tw-passage {
@@ -102,4 +103,51 @@ tw-passage {
     animation-name:fadeout;
     animation-duration:4s;
     animation-play-state: paused;
+}
+
+@keyframes inGlitch{
+    0%{
+        border-style: solid;
+    }
+    10%{
+        border-color: black;
+    }
+    12%{
+        border-color: white;
+    }
+    20%{
+        border-style: dotted;
+    }
+    21%{
+        border-style: solid;
+    }
+    22%{
+        border-style: dashed;
+    }
+    23%{
+        border-style: solid;
+    }
+    100%{
+        border-style: solid;
+    }
+}
+.glitchBg {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://github.com/Nanoscience202/Codes/blob/main/Web/Twine/948e31d8046c8b13f52afe071c19b756.gif?raw=true');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    position:relative;
+    width:auto;
+    height:200px;
+    color:white;
+    border: white solid 10px;
+    animation: inGlitch 5s linear 3s infinite;
+}
+area{
+    background-color:black;
+}
+
+area:hover {
+    background-color:cyan;
 }

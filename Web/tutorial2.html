@@ -3,12 +3,34 @@
     <head>
         <title>Another web page</title>
         <style>
+            :root{
+                --bgAngle: 45deg;
+            }
+            @keyframes bgChange{
+                0% {
+                    background-image: linear-gradient(45deg, rgb(73, 73, 73), black);
+                }
+                100% {
+                    background-image: linear-gradient(225deg, rgb(73, 73, 73), black);
+                }
+            }
+
+            body {
+                background-image: linear-gradient(rgb(73, 73, 73), black);
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+                background-position: center;
+                color:white;
+                /* animation: bgChange 5s infinite linear both; */
+            }
             p{
                 margin: auto;
                 font-size: 24px;
                 font-family:'Times New Roman', Times, serif;
             }
             td, th {
+                color:black;
                 border:solid 5px;
                 /* border-collapse: collapse; */
                 border-radius: 10px;
@@ -103,6 +125,21 @@
                 pointer-events: none;
             }
 
+            txt {
+                font-weight: bolder;
+                background-color:white;
+                color:black;
+            }
+
+            .puzzle {
+                position:relative;
+                top: 100px;
+                right: -100px;
+                width: 300px;
+                height: 300px;
+                float: right;
+            }
+
         </style>
     </head>
 
@@ -143,10 +180,30 @@
         <div class="box"></div>
         <p id="one">Some text</p>
         <div id="two"></div>
-        <video class="someVideo" autoplay muted>
-            <source src="/Twine/vid1.mp4">
-        </video>
-        <!-- <iframe src="https://www.youtube.com/embed/fWVk7B4dE54?autoplay=1&loop=1&controls=0&showinfo=0&autohide=1&mute=1" allowfullscreen frameborder="0"></iframe> -->
 
+        <txt>hello</txt>
+
+        <video class="someVideo" autoplay>
+            <source src="https://video.wixstatic.com/video/3c367c_841db06a5baf4137b7bec19d35008808/480p/mp4/file.mp4">
+        </video>
+        
+        <img class="puzzle" src="https://github.com/Nanoscience202/Codes/blob/main/Web/Twine/europe-map-discoloured-on-a-wall-desaturated-black-old-ancien-371524154.png?raw=true" alt="not loading">
+
+        <pre>
+            hello
+
+
+
+
+
+
+
+
+
+            o
+        </pre>
+        <audio controls autoplay muted>
+            <source src="https://www.dropbox.com/s/2aga39gv2747snq/Dark%20and%20Mysterious%20Ambient%20Music%20_%201%20Hour%20Playlist%20_%20D%26D%20Ambience.mp3?dl=0" type="audio/mpeg">
+        </audio>
     </body>
 </html>
