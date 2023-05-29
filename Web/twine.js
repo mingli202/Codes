@@ -1,5 +1,11 @@
-import { interval } from 'rxjs'
-function myFunction(){
-    document.getElementById("body").style.backgroundImage = "url('https://github.com/Nanoscience202/Codes/blob/main/Web/Images/dark_room.jpeg?raw=true')"
+
+function sum(a, b) {
+    return a + b;
 }
 
+let myStr = "hello world";
+
+console.log("hello world");
+console.log(sum(1, 3));
+console.log(myStr.length);
+console.log(myStr.toUpperCase());

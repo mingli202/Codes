@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    color: white;
+    height: 100dvh;
+    width: 100dvw;
+}
+body::before {
+    content: "";
+    display: block;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/awish_image.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+header {
+    position: relative;
+    width: 100dvw;
+    height: 15dvh;;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#logo {
+    height: 100%;
+    position: relative;
+    left: 10%;
+}
+
+.nav-bar {
+    position: relative;
+    right: 3dvw;
+    display: flex;
+    justify-content: space-around;
+    gap: 10dvw;
+    font-size: 2rem;;
+}
+
+.nav-bar > span {
+    color: white;
+}
+
+.nav-bar > span:hover {
+    color: lightblue;
+}
+
+.container {
+    width: 90dvw;
+    height: 70dvh;
+    position: relative;
+    margin: auto;
+    top: 8dvh;
+    overflow-y: hidden;
+}
+
+#mission {
+    color: white;
+    height: 100%;
+    position: relative;
+    padding: 2rem;
+    padding-top: 5rem;
+}
+
+#mission > h1 {
+    font-size: 4rem;
+}
+
+#mission > p {
+    font-size: 2rem;
+    position: relative;
+    top: 2rem;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    background-color: black;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+button.lang {
+    border:none;
+    outline:none;
+    background-color: transparent;
+    color: white;
+    position: relative;
+    margin-left: 1rem;
+}
+
+button.lang:hover {
+    color: red;
+}
+
+#french {
+    display: none;
+}
+
+#english {
+    display: block;
+}

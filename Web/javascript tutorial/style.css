@@ -1,0 +1,217 @@
+:root {
+    --domimantColor: #edf6f9;
+    --secondaryColor: #002c31;
+    --flashyColor: #4effc1;
+    --seeBox: black 1px solid;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background-color: var(--domimantColor);
+    color: var(--domimantColor);
+    overflow-x: hidden;
+}
+
+h1 {
+    font-size: max(2em, 5vmin);
+}
+
+a {
+    color: var(--flashyColor);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--domimantColor);
+}
+
+#front-page {
+    display: block;
+}
+
+main > div:nth-of-type(even) {
+    background-color: var(--secondaryColor);
+}
+
+header {
+    background-color: var(--secondaryColor);
+    font-size: clamp(3rem, 5dvw, 100dvmax);
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: clamp(6rem, 7dvw, 100dvmax)
+}
+
+#name {
+    position: relative;
+    margin-left: clamp(1rem, 5dvw, 100dvmax);
+    cursor: pointer;
+}
+
+.nav-bar {
+    position: absolute;
+    float: right;
+    right: 2dvw;
+    font-size: 0.3em;
+}
+
+
+.icon {
+    position: relative;
+    margin-left: clamp(1rem, 5dvw, 100dvmax);
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.specialty {
+    color: var(--secondaryColor);
+    width: auto;
+    height: 100dvh;
+    padding: 0;
+    padding: 2rem;
+    position: relative;
+}
+
+.specialty-title {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
+.name-container {
+    padding-right: 10%;
+    padding-left: 5%;
+}
+
+.specialty-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.specialty-name {
+    position: relative;
+    font-weight: bold;
+    font-size: max(1.5rem, 5vw);
+    position: relative;
+    bottom: 1rem;
+}
+
+.specialty-text {
+    font-size: max(1rem, 1.5dvw);
+}
+
+img {
+    width: 50%;
+    border-radius: 20%;
+}
+
+.explore {
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.fresh-image {
+    margin-left: clamp(2rem, 5%, 100vw);
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.explore-text {
+    font-size: clamp(3rem, 6dvw, 100dvmax);
+    font-weight: bold;
+}
+
+button {
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem;
+    font-size: clamp(2rem, 5dvh, 100dvh);
+    color: var(--secondaryColor);
+    background-color: var(--flashyColor);
+    transition: background-color 200ms, color 200ms;
+}
+
+button:hover {
+    background-color: var(--secondaryColor);
+    color: var(--flashyColor)
+}
+
+#grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: clamp(1rem, 2vw, 2rem);
+    row-gap: clamp(1rem, 2vw, 2rem);
+    padding: 30px;
+    font-size: clamp(1.5rem, 3dvh, 100dvh);
+}
+
+.grid-item {
+    color: var(--secondaryColor);
+    border-radius: 2rem;
+    border: var(--secondaryColor) 2px solid;
+    padding: clamp(30px, 3vw, 2rem);
+    position: relative;
+}
+
+.sushi-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    position: relative;
+    top: 1rem;
+}
+
+.sushi-name {
+    font-size: 2rem;
+    color: var(--secondaryColor);
+    font-weight: bold;
+}
+
+.image-container {
+    width: 50%;
+}
+
+.sushi-image {
+    width: 100%;
+}
+
+.sushi-info {
+    width: 50%;
+}
+
+.sushi-info > p:first-child {
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+@keyframes in {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate {
+    animation: in 2s ease-out both;
+}

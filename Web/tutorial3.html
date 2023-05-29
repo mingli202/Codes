@@ -8,6 +8,7 @@
 
     <style>
         body{
+            margin: 0;
             color:white;
             background-image: linear-gradient(red, orange);
             background-color:black;
@@ -16,15 +17,74 @@
             background-attachment: fixed;
             background-position: center;
         }
+        main {
+            margin: 10px;
+        }
+        header {
+            margin: 5px;
+        }
+        footer {
+            font-size: small;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: black;
+            color: white;
+        }
         p {
             color: black;
         }
         p:hover {
             color: white;
         }
+
+        a {
+            color: white;
+        }
+        a:hover {
+            color: blue;
+        }
     </style>
+
 </head>
 <body>
-    <p>hello</p>
+
+
+    <header>
+        <h1>Title of the page</h1>
+    </header>
+    
+    <main>
+
+        <p>hello</p>
+
+        <form>
+            <input id="submit" type="text" name="q" autocomplete="false" autofocus>
+            <input type="submit">
+        </form>
+
+        <a href="tutorial.html">Link to tutorial 1</a>
+        <a href="tutorial2.html">Link to tutorial 2</a>
+
+    </main>
+
+    <footer>
+        Made by Nanoscience202
+    </footer>
+
 </body>
+<script>
+
+    function greet() {
+        let name = document.querySelector("#submit").value;
+        alert("hello " + name);
+    }
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+        let name = document.querySelector("#submit").value;
+        alert("hello " + name);
+        e.preventDefault();
+    });
+
+</script>
 </html>
