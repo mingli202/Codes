@@ -1,0 +1,193 @@
+:root {
+    --bgColor: #000814;
+    --darkBlue: #001d3d;
+    --blue: #003566;
+    --yellow: #ffc300;
+    --lighterYellow: #ffd60a;
+    --seeBorder: 1px 1px white, 1px -1px white, -1px 1px white, -1px -1px white;
+    --bgPosition: 0px;
+    --windowHeight: 100dvh;
+    --detail-visibility: hidden;
+    --detail-height: 0;
+    --detail-margin: 0;
+}
+
+* {
+    /* box-shadow: var(--seeBorder); */
+    padding: 0;
+    margin: 0;
+    font-size: 62.5%;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100dvw;
+    height: 100dvh;
+    height: auto;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("img/juskteez-vu-TIrXot28Znc-unsplash.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: top;
+}
+
+main {
+    width: 100dvw;
+    height: 100dvh;
+}
+
+.plus-icon {
+    position: absolute;
+    right: calc(10dvw + 2rem);
+    top: 2rem;
+    font-size: 3rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    transition: 500ms cubic-bezier(0.04, 0.67, 0.17, 1.05);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.plus-icon:hover {
+    color: var(--blue);
+    background-color: var(--yellow);
+}
+
+.new-goal {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(100dvw - 4rem);
+    height: calc(100dvh - 4rem);
+    background-color: white;
+    margin: 2rem;
+    box-sizing: border-box;
+    border-radius: 1rem;
+    background-color: var(--blue);
+    color: var(--lighterYellow);
+    z-index: 1;
+}
+
+.nav-btn {
+    position: fixed;
+    bottom: 5rem;
+    right: 5rem;
+    font-size: 3rem;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: var(--blue);
+    color: var(--lighterYellow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transition: 500ms cubic-bezier(0.04, 0.67, 0.17, 1.05);
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background-color: var(--lighterYellow);
+    color: var(--blue);
+}
+
+.nav-btn > i {
+    font-size: 75px;
+}
+
+.home {
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 20rem;
+    margin-left: 10dvw;
+    position: relative;
+}
+
+.quote {
+    font-size: 3rem;
+    margin-top: 2rem;
+}
+
+.goal-container {
+    width: 100dvw;
+    position: relative;
+    height: 0;
+}
+
+.goal {
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 7rem;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    margin: 1rem;
+    width: auto;
+    position: relative;
+    display: block;
+    cursor: default;
+}
+
+
+.goal-title {
+    gap: 2dvw;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    position: relative;
+}
+
+.goal-date {
+    font-size: 0.4em;
+    position: absolute;
+    right: 0;
+}
+
+.goal-details {
+    opacity: 0;
+    margin: 3dvw;
+}
+
+.goal-details > * {
+    font-size: 2rem;
+}
+
+.goal-details :nth-child(even) {
+    margin: 1.5rem;
+    margin-left: 3dvw;
+}
+
+/** Utlity */
+.bgColor {
+    background-color: var(--bgColor);
+}
+
+.darkBlue {
+    color: (--darkBlue);
+}
+
+.blue {
+    color: (--blue);
+}
+
+.yellow {
+    color: (--yellow);
+}
+
+.lighterYellow {
+    color: var(--lighterYellow);
+}
+
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}

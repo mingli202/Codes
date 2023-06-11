@@ -36,157 +36,6 @@ Introduction to the MVC pattern
 
 */
 
-const App = {
-    // All of our selected HTML elements. This $ sign is just common practice.
-    $: {
-        resetBtn: document.querySelector('[data-id="reset-btn"]'),
-        newRoundbtn: document.querySelector('[data-id="new-round-btn"]'),
-        square: document.querySelectorAll('[data-id="square"]'),
-        winDialog: document.querySelector('[data-id="win"]'),
-        winnerTxt: document.querySelector('[data-id="winner-txt"]'),
-        againBtn: document.querySelector('[data-id="again-btn"]'),
-        playerIcon: document.querySelector('[data-id="player-icon"]'),
-        innerTurn: document.querySelector(".inner-turn"),
-    },
-
-    state: {
-        player: 1,
-        moves: [],
-    },
-
-    getGameState(moves) {
-        const winningPattern = [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9],
-            [1, 4, 7],
-            [2, 5, 8],
-            [3, 6, 9],
-            [1, 5, 9],
-            [3, 5, 7],
-        ];
-
-        const p1Moves = moves
-            .filter((move) => move.playerId === 1)
-            .map((move) => +move.squareId);
-        const p2Moves = moves
-            .filter((move) => move.playerId === 2)
-            .map((move) => +move.squareId);
-
-        let winner = null;
-
-        winningPattern.forEach((pattern) => {
-            const p1Wins = pattern.every((move) => p1Moves.includes(move));
-            const p2Wins = pattern.every((move) => p2Moves.includes(move));
-
-            if (p1Wins) {
-                winner = 1;
-            }
-            if (p2Wins) {
-                winner = 2;
-            }
-        });
-
-        return {
-            status:
-                moves.length === 9 || winner != null
-                    ? "completed"
-                    : "in-progress", // In progress or completed
-            winner, // 1 or 2 or null
-        };
-    },
-
-    init() {
-        App.registerEvents();
-    },
-
-    // Event listerners.
-    registerEvents() {
-        // TODO
-        App.$.resetBtn.addEventListener("click", () => {
-            console.log("Reset button clicked");
-        });
-
-        // TODO
-        App.$.newRoundbtn.addEventListener("click", () => {
-            console.log("New round button clicked");
-        });
-
-        App.$.againBtn.addEventListener("click", (e) => {
-            console.log("Again button clicked");
-            App.$.winDialog.style.display = "none";
-            App.state.moves = [];
-            App.$.square.forEach((square) => {
-                square.replaceChildren();
-            });
-            App.state.player = 1;
-            App.$.innerTurn.innerHTML =
-                '\
-                <i class="fa fa-x icon" data-id="player-icon"></i>\
-                <!-- Player state -->\
-                <p data-id="player-go">Player 1 Go!</p>';
-            App.$.innerTurn.style.color = "var(--color4)";
-        });
-
-        // TODO
-        App.$.square.forEach((square) => {
-            square.addEventListener("click", (e) => {
-                //* check if the square is empty
-                const hasMove = (squareId) => {
-                    const existingMove = App.state.moves.find(
-                        (move) => move.squareId === squareId
-                    );
-                    return existingMove !== undefined;
-                };
-                if (hasMove(+square.id)) {
-                    return;
-                }
-
-                const player = App.state.player;
-                const icon = document.createElement("i");
-
-                if (player === 1) {
-                    icon.classList.add("fa", "fa-x");
-                    App.$.innerTurn.style.color = "var(--color5)";
-                    App.$.innerTurn.innerHTML =
-                        '\
-                        <i class="fa fa-o icon" data-id="player-icon"></i>\
-                        <!-- Player state -->\
-                        <p data-id="player-go">Player 2 Go!</p>';
-                } else {
-                    icon.classList.add("fa", "fa-o");
-                    App.$.innerTurn.style.color = "var(--color4)";
-                    App.$.innerTurn.innerHTML =
-                        '\
-                        <i class="fa fa-x icon" data-id="player-icon"></i>\
-                        <!-- Player state -->\
-                        <p data-id="player-go">Player 1 Go!</p>';
-                }
-
-                //* check board state
-                App.state.moves.push({
-                    squareId: +square.id,
-                    playerId: player,
-                });
-
-                App.state.player = player === 1 ? 2 : 1;
-                square.replaceChildren(icon);
-
-                //* check for win
-                const game = App.getGameState(App.state.moves);
-                if (game.status === "completed") {
-                    App.$.winDialog.style.display = "flex";
-
-                    if (game.winner) {
-                        App.$.winnerTxt.innerHTML = `Player ${game.winner} wins!`;
-                    } else {
-                        App.$.winnerTxt.innerHTML = "Tie!";
-                    }
-                }
-            });
-        });
-    },
-};
 
 const players = [
     {
@@ -203,23 +52,39 @@ const players = [
 
 function init() {
     const view = new View();
-    const store = new Store(players);
+    const store = new Store("tic-tac-toe-live", players);
 
-    view.bindGameResetEvent(() => {
+    function initView() {
         view.closeWinDialog();
-        store.reset();
         view.clearMoves();
         view.setTurnIndicator(store.game.currentPlayer);
+        view.updateScore(
+            store.stats.playerWithStats[0].wins,
+            store.stats.playerWithStats[1].wins,
+            store.stats.ties
+        );
+        view.inititializeMoves(store.game.currentGameMoves);
+    }
+
+    window.addEventListener('storage', () => {
+        console.log('state changed from another tab');
+        initView();
+    })
+
+    initView();
+
+    view.bindGameResetEvent(() => {
+        store.reset();
+        initView();
     });
 
-    // TODO
     view.bindNewRoundEvent((e) => {
-        console.log("New Round Event");
-        console.log(e);
+        store.newRound();
+        initView();
     });
 
     view.bindPlayerMoveEvent((square) => {
-        const existingMove = store.game.moves.find(
+        const existingMove = store.game.currentGameMoves.find(
             (move) => move.squareId === +square.id
         );
         if (existingMove) {
@@ -232,7 +97,7 @@ function init() {
 
         if (store.game.status.isComplete) {
             const winTxt = store.game.status.winner
-                ? `Player ${store.game.status.winner} wins!`
+                ? `Player ${store.game.status.winner.id} wins!`
                 : "Tie!";
             view.openWinDialog(winTxt);
             return;

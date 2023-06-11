@@ -1,0 +1,69 @@
+* {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size: 62.5%;
+}
+
+section {
+    width: 100dvw;
+    height: 100dvh;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 500px;
+    /* perspective-origin: 0 0; */
+    transform-style: preserve-3d;
+    /* transform: rotateX(30deg) rotateY(20deg); */
+}
+
+section > div {
+    background-color: black;
+    margin: 2rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    aspect-ratio: 1;
+    position: relative;
+    font-size: 2rem;
+}
+
+.cube {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.3);
+    transform-style: preserve-3d;
+}
+
+#top {
+    z-index: 1;
+}
+
+button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+}
+
+.top-wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.top-wave svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 150px;
+}
+
+.top-wave .shape-fill {
+    fill: #974d4d;
+}

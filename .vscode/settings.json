@@ -11,7 +11,8 @@
         "string_view": "c",
         "unordered_map": "c",
         "vector": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "stdbool.h": "c"
     },
     "C_Cpp.default.cStandard": "c23",
     "C_Cpp.default.cppStandard": "c++23"

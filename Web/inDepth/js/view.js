@@ -11,6 +11,9 @@ export default class View {
         this.$.innerTurn = this.#qs(".inner-turn");
         this.$.actionIcon = this.#qs('[data-id="action-icon"]');
         this.$.action = this.#qs(".action");
+        this.$.player1Score = this.#qs('[data-id="player1-score"]');
+        this.$.player2Score = this.#qs('[data-id="player2-score"]');
+        this.$.tiesScore = this.#qs('[data-id="ties-score"]');
 
         this.$.action.onmouseover = () => {
             this.#menuIn();
@@ -40,6 +43,12 @@ export default class View {
     /**
      * DOM Helper Methods
      */
+    updateScore(p1Wins, p2Wins, ties) {
+        this.$.player1Score.innerText = `${p1Wins} wins`;
+        this.$.tiesScore.innerText = `${ties}`;
+        this.$.player2Score.innerText = `${p2Wins} wins`;
+    }
+
     openWinDialog(messsage) {
         this.$.winDialog.style.display = "flex";
         this.$.winnerTxt.innerText = messsage;
@@ -68,6 +77,17 @@ export default class View {
         const icon = document.createElement("i");
         icon.classList.add(player.iconClass, "fa");
         squareEl.replaceChildren(icon);
+    }
+
+    inititializeMoves(moves) {
+        this.$.square.forEach((square) => {
+            const existingMove = moves.find(
+                (move) => move.squareId === +square.id
+            );
+            if (existingMove) {
+                this.handlePlayerMove(square, existingMove.player)
+            }
+        });
     }
 
     setTurnIndicator(player) {
