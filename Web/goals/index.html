@@ -20,7 +20,95 @@
                 <i class="fa fa-arrow-down"></i>
             </span>
             <div class="new-goal" data-id="new-goal-section">
-                <form>  </form>
+                <form data-id="form">
+                    <div class="top">
+                        <input
+                            type="button"
+                            value="Cancel"
+                            class="new-goal-btns"
+                            data-id="close-btn"
+                        />
+                        <input
+                            type="submit"
+                            value="Add"
+                            class="new-goal-btns submit-btn"
+                        />
+                    </div>
+                    <div class="new-goal-container">
+                        <div class="ani">
+                            <i
+                                class="fa fa-check yellow"
+                                style="font-size: 0"
+                                id="icon"
+                            ></i>
+                        </div>
+                        <div class="new-goal-title-date">
+                            <div class="section">
+                                <p style="font-size: 5rem">Title</p>
+                                <p style="font-size: 2rem; margin: 1.5rem">
+                                    A short and concise title, meant to gently
+                                    remind you of your goal.
+                                </p>
+                                <div>
+                                    <textarea
+                                        name="goalTitle"
+                                        class="input-txt"
+                                        rows="1"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="section">
+                                <p style="font-size: 5rem">Due Date</p>
+                                <p style="font-size: 2rem; margin: 1.5rem">
+                                    A goal must be timed. You need to feel
+                                    pressured to complete your goal on time. It
+                                    must be a numerical date.
+                                </p>
+                                <div>
+                                    <textarea
+                                        name="goalDate"
+                                        class="input-txt"
+                                        rows="1"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="new-goal-left">
+                            <p style="font-size: 5rem">Specific Goal</p>
+                            <p style="font-size: 2rem; margin-top: 1.5rem">
+                                A good goal must be concrete. You need a clear
+                                sense of what you're going to accomplish. For
+                                this section, think of how it could be measured
+                                and assign an end value to it. It must be
+                                realistic and meaningful.
+                            </p>
+                        </div>
+                        <div>
+                            <textarea
+                                name="goalSpecific"
+                                class="input-txt"
+                            ></textarea>
+                        </div>
+
+                        <div class="new-goal-left">
+                            <p style="font-size: 5rem">Concrete Plan</p>
+                            <p style="font-size: 2rem; margin-top: 1.5rem">
+                                A goal contains many smaller goals. Break it up
+                                into smaller goals and assign a due date to
+                                them. It will help with motivation as well as
+                                keeping track of your progress. A concrete plan
+                                is essential for success.
+                            </p>
+                        </div>
+                        <div>
+                            <textarea
+                                name="goalPlan"
+                                class="input-txt"
+                            ></textarea>
+                        </div>
+                    </div>
+                </form>
             </div>
             <section class="home" data-id="home">
                 <span class="plus-icon" data-id="new-goal">NEW GOAL</span>
@@ -34,88 +122,7 @@
                 </div>
             </section>
 
-            <section class="goal-container" data-id="goal-section">
-                <div class="goal" data-id="goals" id="0">
-                    <div class="goal-title">
-                        <i class="fa fa-square check-icon"></i>
-                        <span>Finishing Building this website</span>
-                        <span class="goal-date yellow">June 10 2023</span>
-                    </div>
-                    <div class="goal-details" data-id="goal-details">
-                        <div>Specific Goal:</div>
-                        <div>
-                            I want to make a website using all my knownledge I
-                            have and make a personal project that I can be proud
-                            of.
-                        </div>
-                        <div>Action plan:</div>
-                        <div>
-                            Each day, I will work on the website, adding new
-                            features to it
-                        </div>
-                    </div>
-                </div>
-                <div class="goal" data-id="goals" id="1">
-                    <div class="goal-title">
-                        <i class="fa fa-square check-icon"></i>
-                        <span>Finishing Building this website</span>
-                        <span class="goal-date yellow">June 10 2023</span>
-                    </div>
-                    <div class="goal-details" data-id="goal-details">
-                        <div>Specific Goal:</div>
-                        <div>
-                            I want to make a website using all my knownledge I
-                            have and make a personal project that I can be proud
-                            of.
-                        </div>
-                        <div>Action plan:</div>
-                        <div>
-                            Each day, I will work on the website, adding new
-                            features to it
-                        </div>
-                    </div>
-                </div>
-                <div class="goal" data-id="goals" id="2">
-                    <div class="goal-title">
-                        <i class="fa fa-square check-icon"></i>
-                        <span>Finishing Building this website</span>
-                        <span class="goal-date yellow">June 10 2023</span>
-                    </div>
-                    <div class="goal-details" data-id="goal-details">
-                        <div>Specific Goal:</div>
-                        <div>
-                            I want to make a website using all my knownledge I
-                            have and make a personal project that I can be proud
-                            of.
-                        </div>
-                        <div>Action plan:</div>
-                        <div>
-                            Each day, I will work on the website, adding new
-                            features to it
-                        </div>
-                    </div>
-                </div>
-                <div class="goal" data-id="goals" id="3">
-                    <div class="goal-title">
-                        <i class="fa fa-square check-icon"></i>
-                        <span>Finishing Building this website</span>
-                        <span class="goal-date yellow">June 10 2023</span>
-                    </div>
-                    <div class="goal-details" data-id="goal-details">
-                        <div>Specific Goal:</div>
-                        <div>
-                            I want to make a website using all my knownledge I
-                            have and make a personal project that I can be proud
-                            of.
-                        </div>
-                        <div>Action plan:</div>
-                        <div>
-                            Each day, I will work on the website, adding new
-                            features to it
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <section class="goal-container" data-id="goal-section"></section>
         </main>
 
         <script
@@ -125,6 +132,6 @@
         <script src="/kute.js-master/docs/src/kute-extra.min.js"></script>
         <!-- <script src="/kute.js-master/dist/kute.min.js"></script> -->
         <script src="/anime-master/lib/anime.min.js"></script>
-        <script src="js/app.js" type="module"></script>
+        <script src="dist/scr/app.js" type="module"></script>
     </body>
 </html>

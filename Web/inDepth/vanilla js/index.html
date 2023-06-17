@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vanilla Js</title>
+        <link rel="stylesheet" href="style.css" />
+        <script
+            src="https://kit.fontawesome.com/132a3eb674.js"
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <header>Tic Tac Toe</header>
+        <main>
+            <!-- Left side -->
+            <div class="left">
+                <div class="turn" style="flex-grow: 1">
+                    <div class="inner-turn">
+                        <i class="fa fa-x" data-id="player-icon"></i>
+                        <!-- Player state -->
+                        <p>Player 1 Go!</p>
+                    </div>
+                </div>
+                <div class="turn" style="flex-grow: 2">
+                    <div class="action">
+                        <div style="display: flex; gap: 2rem">
+                            <p>Action</p>
+                            <i class="fa fa-angle-down" data-id="action-icon"></i>
+                        </div>
+                        <!-- action buttons -->
+                        <div class="vertical-nav-bar">
+                            <p data-id="reset-btn">Reset</p>
+                            <p data-id="new-round-btn">New Round</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- main board -->
+            <div class="grid-container">
+                <div id="1" class="board" data-id="square"></div>
+                <div id="2" class="board" data-id="square"></div>
+                <div id="3" class="board" data-id="square"></div>
+                <div id="4" class="board" data-id="square"></div>
+                <div id="5" class="board" data-id="square"></div>
+                <div id="6" class="board" data-id="square"></div>
+                <div id="7" class="board" data-id="square"></div>
+                <div id="8" class="board" data-id="square"></div>
+                <div id="9" class="board" data-id="square"></div>
+            </div>
+
+            <!-- right side -->
+            <div class="right">
+                <div class="score" style="background-color: var(--color4)">
+                    <p>Player 1:</p>
+                    <p data-id="player1-score">0 wins</p>
+                </div>
+                <div class="score" style="background-color: var(--color3)">
+                    <p>Ties:</p>
+                    <p  data-id="ties-score">0</p>
+                </div>
+                <div class="score" style="background-color: var(--color5)">
+                    <p>Player 2:</p>
+                    <p data-id="player2-score">0 wins</p>
+                </div>
+            </div>
+        </main>
+
+        <dialog data-id="win">
+            <div>
+                <p data-id="winner-txt"></p>
+                <button class="again-btn" data-id="again-btn">Play again</button>
+            </div>
+        </dialog>
+
+        <script src="js/App.js" type="module"></script>
+    </body>
+</html>

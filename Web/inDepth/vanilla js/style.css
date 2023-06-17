@@ -1,0 +1,298 @@
+:root {
+    --seeBorder: 1px 1px black, 1px -1px black, -1px 1px black, -1px -1px black;
+    --color1: #006d77;
+    --color2: #83c5be;
+    --color3: #edf6f9;
+    --color4: #ffddd2;
+    --color5: #e29578;
+    --darkerbg: #005057;
+    --display: none;
+    --boardSize: 60dvh;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    /* box-shadow: var(--seeBorder); */
+    font-family: "Montserrat", sans-serif;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: var(--color1);
+    color: var(--color4);
+    height: 100dvh;
+    display: flex;
+    flex-flow: column;
+}
+
+header {
+    width: 100dvw;
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+}
+
+main {
+    flex-basis: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100%;
+    display: flex;
+    grid-row: auto;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.left,
+.right {
+    height: var(--boardSize);
+    flex-basis: 100%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 2rem;
+    margin: 2rem;
+}
+
+.turn,
+.score {
+    /* background-color: var(--color4); */
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 3rem;
+    position: relative;
+}
+
+.score {
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    padding: 1.5rem;
+    color: var(--color1);
+    margin-left: 8%;
+    box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.score > p:first-child {
+    font-weight: bold;
+}
+
+.turn {
+    width: 100%;
+    justify-content: center;
+    height: 33.33%;
+}
+
+.inner-turn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--darkerbg);
+    box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    color: var(--color4);
+}
+
+.inner-turn > i {
+    font-size: 5rem;
+}
+
+@keyframes player-go {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+.inner-turn > p {
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+.inner-turn > p::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--darkerbg);
+    animation-name: player-go;
+    animation-duration: 1000ms;
+    animation-timing-function: cubic-bezier(0, -0.01, 0, 1);
+    animation-fill-mode: both;
+}
+
+@keyframes icon {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.fa-x,
+.fa-o {
+    animation-name: icon;
+    animation-duration: 500ms;
+    animation-timing-function: ease-in-out;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: var(--boardSize);
+    aspect-ratio: 1;
+    flex: 0 0 var(--boardSize);
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.board {
+    background-color: var(--color2);
+    border-radius: 5%;
+    transition: 0.5s ease-out;
+    box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.board:hover {
+    background-color: var(--color3);
+    transform: translate(-0.5rem, -0.5rem);
+    box-shadow: 0.5rem 0.5rem 2rem rgba(0, 0, 0, 0.5);
+}
+
+.board > i {
+    font-size: 10dvh;
+    position: absolute;
+}
+
+.fa-x {
+    color: var(--color4);
+}
+
+.fa-o {
+    color: var(--color5);
+}
+
+footer {
+    position: absolute;
+}
+
+.action {
+    position: absolute;
+    top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    cursor: pointer;
+    background-color: var(--darkerbg);
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.action:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    --display: block;
+}
+
+.vertical-nav-bar {
+    display: var(--display);
+}
+
+.vertical-nav-bar > p {
+    margin: 1rem;
+    font-size: 2rem;
+}
+
+.vertical-nav-bar > p:hover {
+    color: var(--color2);
+}
+
+dialog {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+dialog > div {
+    height: 20dvh;
+    aspect-ratio: 1.62;
+    text-align: center;
+    font-size: 3rem;
+    background-color: var(--color1);
+    border-radius: 1rem;
+    color: var(--color3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.again-btn {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: none;
+    width: 50%;
+    padding: 1rem;
+    color: var(--color2);
+    font-size: 2rem;
+    border-radius: 1rem;
+}
+
+.again-btn:hover {
+    background-color: var(--darkerbg);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+.rotate {
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
+}
+
+.rotate-back {
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
+    animation-direction: reverse;
+}
