@@ -1,0 +1,38 @@
+dialog {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+dialog > div {
+  height: 20dvh;
+  aspect-ratio: 1.62;
+  text-align: center;
+  font-size: 3rem;
+  background-color: var(--color1);
+  border-radius: 1rem;
+  color: var(--color3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.again-btn {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  width: 50%;
+  padding: 1rem;
+  color: var(--color2);
+  font-size: 2rem;
+  border-radius: 1rem;
+}
+
+.again-btn:hover {
+  background-color: var(--darkerbg);
+}
+ 

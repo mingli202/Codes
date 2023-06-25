@@ -1,0 +1,100 @@
+.left {
+  height: var(--boardSize);
+  flex-basis: 100%;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 2rem;
+  margin: 2rem;
+}
+
+.turn {
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 3rem;
+  position: relative;
+}
+
+.turn {
+  width: 100%;
+  justify-content: center;
+  height: 33.33%;
+}
+
+.inner-turn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--darkerbg);
+  box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+  color: var(--color4);
+}
+
+.inner-turn > i {
+  font-size: 5rem;
+}
+
+@keyframes player-go {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.inner-turn > p {
+  position: relative;
+  width: auto;
+  height: auto;
+}
+
+.inner-turn > p::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--darkerbg);
+  animation-name: player-go;
+  animation-duration: 1000ms;
+  animation-timing-function: cubic-bezier(0, -0.01, 0, 1);
+  animation-fill-mode: both;
+}
+
+.action {
+  position: absolute;
+  top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  cursor: pointer;
+  background-color: var(--darkerbg);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+.action:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  --display: block;
+}
+
+.vertical-nav-bar {
+  display: var(--display);
+}
+
+.vertical-nav-bar > p {
+  margin: 1rem;
+  font-size: 2rem;
+}
+
+.vertical-nav-bar > p:hover {
+  color: var(--color2);
+}
