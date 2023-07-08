@@ -1,5 +1,5 @@
 import "./LeftMenu.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classNames from "classnames";
 import { Player } from "../types";
 
@@ -8,6 +8,26 @@ type Props = {
   player: Player;
 };
 
+function PlayerTurn(player: Player) {
+  const cPlayer = (
+    <>
+      <i className={classNames("fa", player.iconClass)}></i>
+      <p className={player.colorClass}>{player.name} Go!</p>
+    </>
+  );
+
+  // useEffect(() => {
+  //   setCPlayer(
+  //     <>
+  //       <i className={classNames("fa", player.iconClass)}></i>
+  //       <p className={player.colorClass}>{player.name} Go!</p>
+  //     </>
+  //   );
+  // }, [player])
+
+  return cPlayer;
+}
+
 export default function LeftMenu({ onAction, player }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -15,10 +35,7 @@ export default function LeftMenu({ onAction, player }: Props) {
     <div className="left">
       <div className="turn" style={{ flexGrow: "1" }}>
         <div className="inner-turn">
-          <i className={classNames("fa", player.iconClass)}></i>
-
-          {/* <!-- Player state --> */}
-          <p className={player.colorClass}>{player.name} Go!</p>
+          <PlayerTurn {...player}/>
         </div>
       </div>
       <div className="turn" style={{ flexGrow: "2" }}>

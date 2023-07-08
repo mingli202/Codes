@@ -59,11 +59,7 @@ int main(){
 
     std::cout << std::any_of(Vector_of_Struct.begin(), Vector_of_Struct.end(), lamdba_test);
 
-    std::cout << "\n";
-
-    std::vector<std::string> teamates = {"Ming Li, Qian, Katy, Sophia"};
-
-    
+    std::cout << "\n";    
 
     return 0;
 }
