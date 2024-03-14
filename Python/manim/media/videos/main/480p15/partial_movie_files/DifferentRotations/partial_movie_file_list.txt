@@ -1,0 +1,3 @@
+# This file is used internally by FFMPEG.
+file 'file:/Users/vincentliu/github repo/Codes/Python/manim/media/videos/main/480p15/partial_movie_files/DifferentRotations/1185818338_766845339_2497268682.mp4'
+file 'file:/Users/vincentliu/github repo/Codes/Python/manim/media/videos/main/480p15/partial_movie_files/DifferentRotations/624642324_1704852926_4230416284.mp4'

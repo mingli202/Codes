@@ -1,9 +1,13 @@
-
 function sum(a, b) {
-    return a + b;
+  return a + b;
+}
+
+if (true){
+
 }
 
 let myStr = "hello world";
+const a = "hello world";
 
 console.log("hello world");
 console.log(sum(1, 3));
