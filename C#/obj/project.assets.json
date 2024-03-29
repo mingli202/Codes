@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/vincentliu/github repo/Codes/C#/C#.csproj",
-      "projectName": "C#",
-      "projectPath": "/Users/vincentliu/github repo/Codes/C#/C#.csproj",
+      "projectUniqueName": "/Users/vincentliu/Desktop/4th Semester/Programming/Programming.csproj",
+      "projectName": "Programming",
+      "projectPath": "/Users/vincentliu/Desktop/4th Semester/Programming/Programming.csproj",
       "packagesPath": "/Users/vincentliu/.nuget/packages/",
-      "outputPath": "/Users/vincentliu/github repo/Codes/C#/obj/",
+      "outputPath": "/Users/vincentliu/Desktop/4th Semester/Programming/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/vincentliu/.nuget/NuGet/NuGet.Config"

@@ -1,9 +1,11 @@
+#[allow(unused)]
 use intro::my_fns;
 
-fn main() {
-    let mut arr = my_fns::randomize(10);
-    println!("{:?}", arr);
+use std::error::Error;
 
-    let arr = my_fns::my_quick_sort(&mut arr);
-    println!("{:?}", arr);
+fn main() -> Result<(), Box<dyn Error>> {
+    let foo = "bar";
+    println!("foo: {}", foo);
+
+    Ok(())
 }
