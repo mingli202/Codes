@@ -1,0 +1,104 @@
+{
+  "3": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "00003",
+    "lecture": {
+      "prof": "Rutherford, Sharon",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  },
+  "0": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "",
+    "lecture": {
+      "prof": "",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  },
+  "2": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "00002",
+    "lecture": {
+      "prof": "Pagnucco, Katherine S.",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  },
+  "1": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "00001",
+    "lecture": {
+      "prof": "Pagnucco, Katherine S.",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  },
+  "5": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "00005",
+    "lecture": {
+      "prof": "Lapointe, Jason",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  },
+  "4": {
+    "course": "",
+    "code": "101-NYA-05",
+    "code_header": null,
+    "title": "101-NYA-05",
+    "section": "00004",
+    "lecture": {
+      "prof": "Rutherford, Sharon",
+      "time": {}
+    },
+    "lab": {
+      "prof": "",
+      "time": {}
+    },
+    "more": null,
+    "viewdata": {}
+  }
+}
