@@ -1,6 +1,15 @@
 #[allow(dead_code)]
 pub mod my_fns {
-    use std::{collections::HashMap, io};
+    use std::{
+        cell::RefCell,
+        cmp::Ordering::{Equal, Greater},
+        collections::HashMap,
+        io,
+        rc::Rc,
+        sync::mpsc,
+        thread,
+        time::Duration,
+    };
 
     use rand::Rng;
 
@@ -100,7 +109,7 @@ pub mod my_fns {
         for i in 1..n {
             let res = u128::overflowing_add(a, b);
 
-            if res.1 == true {
+            if res.1 {
                 println!("overflowed at {i}");
                 break;
             }
@@ -157,11 +166,15 @@ pub mod my_fns {
         let mut mode: Vec<u32> = Vec::new();
         let mut max = 0;
         for (k, v) in table.iter() {
-            if *v > max {
-                max = *v;
-                mode = vec![*k];
-            } else if *v == max {
-                mode.push(*k);
+            match (*v).cmp(&max) {
+                Greater => {
+                    max = *v;
+                    mode = vec![*k];
+                }
+                Equal => {
+                    mode.push(*k);
+                }
+                _ => (),
             }
         }
 
@@ -218,7 +231,7 @@ pub mod my_fns {
                                         break;
                                     }
                                 }
-                                if found == false {
+                                if !found {
                                     println!("Could not find {} in {}", name, department);
                                 }
                             }
@@ -255,6 +268,105 @@ pub mod my_fns {
                 "quit" | "q" => break,
                 _ => println!("Invalid command"),
             }
+        }
+    }
+
+    struct Node<T> {
+        value: T,
+        next: Option<Box<Node<T>>>,
+    }
+
+    struct LinkedList<T> {
+        head: Option<Box<Node<T>>>,
+    }
+
+    impl<T: std::fmt::Display> LinkedList<T> {
+        fn new(arr: Vec<T>) -> LinkedList<T> {
+            let mut head: Option<Box<Node<T>>> = None;
+            let mut tmp = &mut head;
+
+            for a in arr {
+                *tmp = Some(Box::new(Node {
+                    value: a,
+                    next: None,
+                }));
+                tmp = &mut tmp.as_mut().unwrap().next;
+            }
+
+            LinkedList { head }
+        }
+
+        fn print(&self) {
+            let mut head = &self.head;
+
+            while let Some(t) = head {
+                println!("{}", t.value);
+                head = &t.next;
+            }
+        }
+
+        fn insert(&mut self, val: T) {
+            self.head = Some(Box::new(Node {
+                value: val,
+                next: self.head.take(),
+            }));
+        }
+    }
+
+    pub fn linked_list() {
+        let mut arr = LinkedList::new(vec![1, 2, 3, 4, 5, 6]);
+        arr.insert(10);
+
+        arr.print();
+    }
+
+    pub fn ref_cell_bs() {
+        let v = RefCell::new(vec![3, 6, 8]);
+
+        let ptr = Rc::new(&v);
+
+        let a = Rc::clone(&ptr);
+        let b = Rc::clone(&ptr);
+
+        (*RefCell::borrow_mut(&a)).push(1);
+        (*RefCell::borrow_mut(&b)).push(2);
+
+        println!("{:?}", RefCell::borrow(&v)); // [3, 6, 8, 1, 2]
+    }
+
+    pub fn thread_intro() {
+        let v = vec![1, 2, 3];
+
+        let handle = thread::spawn(move || {
+            println!("{:?}", v);
+            thread::sleep(Duration::from_millis(1));
+        });
+
+        handle.join().unwrap();
+    }
+
+    pub fn thread_msg() {
+        let (tx, rx) = mpsc::channel();
+        let tx1 = tx.clone();
+
+        thread::spawn(move || {
+            for i in ["Hello", "world", "this", "is", "cool", "concurrency"] {
+                tx.send(i).unwrap();
+                thread::sleep(std::time::Duration::from_secs(1));
+            }
+        });
+
+        thread::spawn(move || {
+            for i in [
+                "For", "every", "human", "there", "are", "millions", "of", "ants",
+            ] {
+                tx1.send(i).unwrap();
+                thread::sleep(std::time::Duration::from_secs(1));
+            }
+        });
+
+        for r in rx {
+            println!("Got {}", r);
         }
     }
 }
