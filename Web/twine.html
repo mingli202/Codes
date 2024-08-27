@@ -1,44 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <link rel="stylesheet" href="twine.css">
-    </head>
-    <body id="body">
+  <head>
+    <link rel="stylesheet" href="twine.css" />
+  </head>
+  <body id="body">
+    <p class="ani">This is supposed to change color</p>
 
-        <p class="ani">This is supposed to change color</p>
+    <div id="one">
+      <p>Why isn't there a bg image</p>
+      This is very weird
+    </div>
+    <button type="button" onclick="myFunction()">
+      Click to change background
+    </button>
+    <button type="button" class="btn">Button that changes bg</button>
+    <button type="button" onclick="bgChange()">Button that changes bg</button>
 
-        <div id="one">
-            <p>Why isn't there a bg image</p>
-            This is very weird
-            
-        </div>
-        <button type="button" onclick="myFunction()">Click to change background</button>
-        <button type="button" class="btn">Button that changes bg</button>
-        <button type="button" onclick="bgChange()">Button that changes bg</button>
-
-        <div class="abc">
-            <pre>
+    <div class="abc">
+      <pre>
                 hello this is some text
 
 
 
                 ghfdjsk
-            </pre>
-        </div>
+            </pre
+      >
+    </div>
+  </body>
+  <script>
+    function myFunction() {
+      document.getElementById("body").style.backgroundImage =
+        "url('https://github.com/mingli202/Codes/blob/main/Web/Images/dark_room.jpeg?raw=true')";
+    }
 
-    </body>
-    <script>
-        function myFunction(){
-            document.getElementById("body").style.backgroundImage = "url('https://github.com/Nanoscience202/Codes/blob/main/Web/Images/dark_room.jpeg?raw=true')"
-        }
+    const btn = window.document.querySelector(".btn");
+    btn.addEventListener("click", () => {
+      document.body.style.backgroundColor = "red";
+    });
 
-        const btn = window.document.querySelector('.btn')
-        btn.addEventListener('click', () => {
-            document.body.style.backgroundColor = 'red';
-        })
-
-        window.bgChange = function(){
-            window.document.getElementsByTagName("div").style.backgroundColor = 'red';
-        }
-    </script>
+    window.bgChange = function () {
+      window.document.getElementsByTagName("div").style.backgroundColor = "red";
+    };
+  </script>
 </html>
+

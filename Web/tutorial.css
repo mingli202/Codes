@@ -1,153 +1,155 @@
 p {
-    color:rgb(50, 85, 59);
-    border: rgb(16, 35, 103) solid 2px;
-    padding: 5px 2px; /*Padding defines the space btw the text and the border*/
-    margin: 2px; /*defines space outside border*/
-    text-decoration: none;
+  color: rgb(50, 85, 59);
+  border: rgb(16, 35, 103) solid 2px;
+  padding: 5px 2px; /*Padding defines the space btw the text and the border*/
+  margin: 2px; /*defines space outside border*/
+  text-decoration: none;
 }
 a:link {
-    color:lightseagreen;
-    background-color: transparent;
-    text-decoration: none;
+  color: lightseagreen;
+  background-color: transparent;
+  text-decoration: none;
 }
 a:hover {
-    color:blanchedalmond;
-    background-color:darkblue;
+  color: blanchedalmond;
+  background-color: darkblue;
 }
 body {
-    background-image: url("Images/abstract-blue-geometric-circles-overlapping-background-with-light-blue-free-vector.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    color: rgb(240, 128, 128);
+  background-image: url("Images/abstract-blue-geometric-circles-overlapping-background-with-light-blue-free-vector.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  color: rgb(240, 128, 128);
 }
 
 tw-passage {
-    color:white;
+  color: white;
 }
 
 .centered_text {
-    text-align: center;
-    font-size: 24px;
+  text-align: center;
+  font-size: 24px;
 }
 
 @keyframes ani_1 {
-    0% {
-        background-color: white;
-    }
-    33.3% {
-        background-color: blue;
-        color:white;
-    }
-    66.7% {
-        background-color: red;
-        color:pink;
-    }
-    100% {
-        background-color: white;
-        color:black;
-    }
+  0% {
+    background-color: white;
+  }
+  33.3% {
+    background-color: blue;
+    color: white;
+  }
+  66.7% {
+    background-color: red;
+    color: pink;
+  }
+  100% {
+    background-color: white;
+    color: black;
+  }
 }
 
 .animation {
-    border: solid black 2px;
-    padding: 5px;
-    animation-name: ani_1;
-    animation-duration: 4s;
-    animation-delay: 4;
-    animation-iteration-count: infinite;
+  border: solid black 2px;
+  padding: 5px;
+  animation-name: ani_1;
+  animation-duration: 4s;
+  animation-delay: 4;
+  animation-iteration-count: infinite;
 }
 
 @keyframes ani_2 {
-    0% {
-        width: 0px;
-        height: 0px;
-    }
-    50% {
-        width:100px;
-        height:50px;
-    }
-    100% {
-        width: 0px;
-        height: 0px;
-    }
+  0% {
+    width: 0px;
+    height: 0px;
+  }
+  50% {
+    width: 100px;
+    height: 50px;
+  }
+  100% {
+    width: 0px;
+    height: 0px;
+  }
 }
 
 .ani2 {
-    color: white;
-    background-color: black;
-    width:0px;
-    height:0px;
-    animation-name:ani_2;
-    animation-duration:6s;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-    animation-fill-mode: both;
+  color: white;
+  background-color: black;
+  width: 0px;
+  height: 0px;
+  animation-name: ani_2;
+  animation-duration: 6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
 }
 
 #one {
-    opacity: 1;
+  opacity: 1;
 }
 
-@keyframes fadeout{
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 #fade_out {
-    animation-name:fadeout;
-    animation-duration:4s;
-    animation-play-state: paused;
+  animation-name: fadeout;
+  animation-duration: 4s;
+  animation-play-state: paused;
 }
 
-@keyframes inGlitch{
-    0%{
-        border-style: solid;
-    }
-    10%{
-        border-color: black;
-    }
-    12%{
-        border-color: white;
-    }
-    20%{
-        border-style: dotted;
-    }
-    21%{
-        border-style: solid;
-    }
-    22%{
-        border-style: dashed;
-    }
-    23%{
-        border-style: solid;
-    }
-    100%{
-        border-style: solid;
-    }
+@keyframes inGlitch {
+  0% {
+    border-style: solid;
+  }
+  10% {
+    border-color: black;
+  }
+  12% {
+    border-color: white;
+  }
+  20% {
+    border-style: dotted;
+  }
+  21% {
+    border-style: solid;
+  }
+  22% {
+    border-style: dashed;
+  }
+  23% {
+    border-style: solid;
+  }
+  100% {
+    border-style: solid;
+  }
 }
 .glitchBg {
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://github.com/Nanoscience202/Codes/blob/main/Web/Twine/948e31d8046c8b13f52afe071c19b756.gif?raw=true');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    position:relative;
-    width:auto;
-    height:200px;
-    color:white;
-    border: white solid 10px;
-    animation: inGlitch 5s linear 3s infinite;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://github.com/mingli202/Codes/blob/main/Web/Twine/948e31d8046c8b13f52afe071c19b756.gif?raw=true");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: relative;
+  width: auto;
+  height: 200px;
+  color: white;
+  border: white solid 10px;
+  animation: inGlitch 5s linear 3s infinite;
 }
-area{
-    background-color:black;
+area {
+  background-color: black;
 }
 
 area:hover {
-    background-color:cyan;
+  background-color: cyan;
 }
+

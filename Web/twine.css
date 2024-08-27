@@ -1,51 +1,52 @@
 .box {
-    padding: 0px;
-    margin: 0px;
+  padding: 0px;
+  margin: 0px;
 }
 #one {
-    color:white;
+  color: white;
 }
 
-@keyframes ani{
-    0% {
-        background-color: white;
-        color: black;
-    }
-    50% {
-        background-color: black;
-        color: white;
-    }
+@keyframes ani {
+  0% {
+    background-color: white;
+    color: black;
+  }
+  50% {
+    background-color: black;
+    color: white;
+  }
 }
 .ani {
-    border: solid black 2px;
-    animation: ani 4s ease-in-out infinite alternate-reverse;
+  border: solid black 2px;
+  animation: ani 4s ease-in-out infinite alternate-reverse;
 }
 
 #bodyaaa {
-    background-image: url("https://github.com/Nanoscience202/Codes/blob/main/Web/Images/darkRoom.jpg?raw=true");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
+  background-image: url("https://github.com/mingli202/Codes/blob/main/Web/Images/darkRoom.jpg?raw=true");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 .abc {
-    color:white;
-    background-image: url("https://github.com/Nanoscience202/Codes/blob/main/Web/Images/darkRoom.jpg?raw=true");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
-    z-index: 1;
-    width:100%;
-    height:500px;
+  color: white;
+  background-image: url("https://github.com/mingli202/Codes/blob/main/Web/Images/darkRoom.jpg?raw=true");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  z-index: 1;
+  width: 100%;
+  height: 500px;
 }
 
 @keyframes intro {
-    0% {
-        display:none;
-    }
-    100% {
-        display:flex;
-    }
+  0% {
+    display: none;
+  }
+  100% {
+    display: flex;
+  }
 }
+

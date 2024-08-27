@@ -1,48 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-CA">
-    <head>
-        <title>Hello World</title>
-        <!-- You can add css into your do with the <style> tag -->
-        <style>
-            body {
-                background-color:rgb(243, 255, 252);
-                font-size: 20px;
-            }
-            h1 {
-                background-color: aqua;
-            }
-        </style>
+  <head>
+    <title>Hello World</title>
+    <!-- You can add css into your do with the <style> tag -->
+    <style>
+      body {
+        background-color: rgb(243, 255, 252);
+        font-size: 20px;
+      }
+      h1 {
+        background-color: aqua;
+      }
+    </style>
 
-        <!-- Or you can import your own css -->
-        <link rel="stylesheet" href="tutorial.css">
+    <!-- Or you can import your own css -->
+    <link rel="stylesheet" href="tutorial.css" />
 
-        <!-- add an icon on top -->
-        <!-- its not working -->
-        <link rel="icon" href="Images/favicon.ico">
-    </head>
+    <!-- add an icon on top -->
+    <!-- its not working -->
+    <link rel="icon" href="Images/favicon.ico" />
+  </head>
 
-    <body>
-        <h1 id="heading 1">This is a heading</h1>
-        <p>And this is a paragraph</p>
-        <p>This is very cool</p>
-        <a href="https://soundcloud.com/vincent-liu-971824079/sets/loop">This is a link</a>
-        <br>
-        <img src="Images/dark_room.jpeg" alt="image is not imaging">
-        <br>
-        <img src="https://github.com/Nanoscience202/Codes/blob/main/Web/dark_room.jpeg?raw=true" alt="Image from github">
-        <br>
-        <p style="color:red;" title="this will be displayed when my cursor hovers over the text">this is a red paragraph</p>
-        <p style="text-align: center;">This text is centered</p>
-        <p style="color: blue; text-align: center;">Thie is a blue text and i skiped a line <br> for This</p>
-        <hr> cool horizontal line that is meant to separate content
-        <pre style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 24px;">
+  <body>
+    <h1 id="heading 1">This is a heading</h1>
+    <p>And this is a paragraph</p>
+    <p>This is very cool</p>
+    <a href="https://soundcloud.com/vincent-liu-971824079/sets/loop"
+      >This is a link</a
+    >
+    <br />
+    <img src="Images/dark_room.jpeg" alt="image is not imaging" />
+    <br />
+    <img
+      src="https://github.com/mingli202/Codes/blob/main/Web/dark_room.jpeg?raw=true"
+      alt="Image from github"
+    />
+    <br />
+    <p
+      style="color: red"
+      title="this will be displayed when my cursor hovers over the text"
+    >
+      this is a red paragraph
+    </p>
+    <p style="text-align: center">This text is centered</p>
+    <p style="color: blue; text-align: center">
+      Thie is a blue text and i skiped a line <br />
+      for This
+    </p>
+    <hr />
+    cool horizontal line that is meant to separate content
+    <pre
+      style="
+        font-family: &quot;Times New Roman&quot;, Times, serif;
+        text-align: center;
+        font-size: 24px;
+      "
+    >
             This is preformatted text
             meaning that it will not ignore the empty lines
             It also has a default font (courier)
             Its now in Times New Roman
             Its 24px big
-        </pre>
-        <pre style="font-size: 24px;">
+        </pre
+    >
+    <pre style="font-size: 24px">
             <b>This is a "bold" text</b>
             <i>This is an "italic" text</i>
             <strong>This text is "strong"</strong>
@@ -54,101 +75,136 @@
             T<sub>subscript</sub>
             T<sup>supscript</sup>
         </pre>
-        <p>As quoted in the book:</p>
-        <blockquote cite="http://havenner.weebly.com/uploads/2/0/5/7/20575006/jackson-shirley-the-haunting-of-hill-house.pdf">
-            "No live organism can continue for long to exist sanely under conditions of absolute 
-            reality; even larks and katydids are supposed, by some, to dream. Hill House, not sane, 
-            stood by itself against its hills, holding darkness within; it had stood so for eighty 
-            years and might stand for eighty more. Within, walls continued upright, bricks met neatly, 
-            floors were firm, and doors were sensibly shut; silence lay steadily against the wood and 
-            stone of Hill House, and whatever walked there, walked alone."
-        </blockquote>
-        <p>As the author describes is: 
-            <q>
-                No live organism can continue for long to exist sanely under conditions of absolute 
-                reality; even larks and katydids are supposed, by some, to dream. Hill House, not sane, 
-                stood by itself against its hills, holding darkness within; it had stood so for eighty 
-                years and might stand for eighty more. Within, walls continued upright, bricks met neatly, 
-                floors were firm, and doors were sensibly shut; silence lay steadily against the wood and 
-                stone of Hill House, and whatever walked there, walked alone.
-            </q>
-        </p>
-        <p>The <abbr title="Hill House">HH</abbr> was founded by Hugh Crain</p>
-        <address>
-            Written by Ming<br>
-            Email: vincentmingli@gmail.com<br>
-            Phone: 514-586-1268<br>
-            This basically tells the website where is the contact info
-        </address>
-        <p>The book <cite>The Haunting of the Hill House</cite> was written by Shirley Jackson</p>
-        <p>bdp means bi-directional override, it defines the direction of the text</p>
-        <bdo dir="rtl">Text dispayed from right to left</bdo>
-        <!-- This is a comment and will no be displayed in the website -->
-        <p style="border: 2px solid aquamarine;">Cool border color</p>
-        <p style="background-color: rgba(200, 143, 65, 0.5);">Bg colors can have alpha channels (transparency btw 0 & 1)</p>
+    <p>As quoted in the book:</p>
+    <blockquote
+      cite="http://havenner.weebly.com/uploads/2/0/5/7/20575006/jackson-shirley-the-haunting-of-hill-house.pdf"
+    >
+      "No live organism can continue for long to exist sanely under conditions
+      of absolute reality; even larks and katydids are supposed, by some, to
+      dream. Hill House, not sane, stood by itself against its hills, holding
+      darkness within; it had stood so for eighty years and might stand for
+      eighty more. Within, walls continued upright, bricks met neatly, floors
+      were firm, and doors were sensibly shut; silence lay steadily against the
+      wood and stone of Hill House, and whatever walked there, walked alone."
+    </blockquote>
+    <p>
+      As the author describes is:
+      <q>
+        No live organism can continue for long to exist sanely under conditions
+        of absolute reality; even larks and katydids are supposed, by some, to
+        dream. Hill House, not sane, stood by itself against its hills, holding
+        darkness within; it had stood so for eighty years and might stand for
+        eighty more. Within, walls continued upright, bricks met neatly, floors
+        were firm, and doors were sensibly shut; silence lay steadily against
+        the wood and stone of Hill House, and whatever walked there, walked
+        alone.
+      </q>
+    </p>
+    <p>The <abbr title="Hill House">HH</abbr> was founded by Hugh Crain</p>
+    <address>
+      Written by Ming<br />
+      Email: vincentmingli@gmail.com<br />
+      Phone: 514-586-1268<br />
+      This basically tells the website where is the contact info
+    </address>
+    <p>
+      The book <cite>The Haunting of the Hill House</cite> was written by
+      Shirley Jackson
+    </p>
+    <p>
+      bdp means bi-directional override, it defines the direction of the text
+    </p>
+    <bdo dir="rtl">Text dispayed from right to left</bdo>
+    <!-- This is a comment and will no be displayed in the website -->
+    <p style="border: 2px solid aquamarine">Cool border color</p>
+    <p style="background-color: rgba(200, 143, 65, 0.5)">
+      Bg colors can have alpha channels (transparency btw 0 & 1)
+    </p>
 
-        <a href="tutorial2.html" target="_self">_self will open the page in same page<br></a>
-        <a href="tutorial2.html" target="_blank">_blank will open the page in another tab/window<br></a>
-        <a href="tutorial2.html" target="_parent">_blank will open the page in parent frame<br></a>
-        <a href="tutorial2.html" target="_top">_top will open in the full body of the window<br></a>
+    <a href="tutorial2.html" target="_self"
+      >_self will open the page in same page<br
+    /></a>
+    <a href="tutorial2.html" target="_blank"
+      >_blank will open the page in another tab/window<br
+    /></a>
+    <a href="tutorial2.html" target="_parent"
+      >_blank will open the page in parent frame<br
+    /></a>
+    <a href="tutorial2.html" target="_top"
+      >_top will open in the full body of the window<br
+    /></a>
 
-        <!-- you can also put images as link -->
-        <a href="https://github.com/Nanoscience202/Codes" title="Go to Nanoscience202's github"><img src="Images/126989125.png" alt="Nanoscience202"></a>
-        <br>
-        <a href="mailto:vincentmingli@gmail.com">Send Email to Ming (opens their mail software to send email)</a>
-        <br>
-        <button onclick="document.location = 'tutorial2.html'">Cool button</button>
-        <br>
-        <a href="#heading 1">Jump back to top; syntax: id="value", href="#value"</a>
-        <br>
-        <p>
-            Add the css float:right to float the image ot the right
-            <img src="Images/giphy.gif" style="width: 200px; height: 200px; float:right">
-        </p>
-        <br>
+    <!-- you can also put images as link -->
+    <a
+      href="https://github.com/mingli202/Codes"
+      title="Go to mingli202's github"
+      ><img src="Images/126989125.png" alt="mingli202"
+    /></a>
+    <br />
+    <a href="mailto:vincentmingli@gmail.com"
+      >Send Email to Ming (opens their mail software to send email)</a
+    >
+    <br />
+    <button onclick="document.location = 'tutorial2.html'">Cool button</button>
+    <br />
+    <a href="#heading 1">Jump back to top; syntax: id="value", href="#value"</a>
+    <br />
+    <p>
+      Add the css float:right to float the image ot the right
+      <img
+        src="Images/giphy.gif"
+        style="width: 200px; height: 200px; float: right"
+      />
+    </p>
+    <br />
 
-        <!-- we can define areas where clicking on an image will bring us to -->
-        <img src="Images/cool circle.gif" usemap="#cool circle map">
-        <map name="cool circle map">
-            <!-- Make something happen when click -->
-            <area shape="circle" coords="251, 181, 148" href="tutorial2.html" alt="cool circle gif" onclick="myFunction()">
-        </map>
+    <!-- we can define areas where clicking on an image will bring us to -->
+    <img src="Images/cool circle.gif" usemap="#cool circle map" />
+    <map name="cool circle map">
+      <!-- Make something happen when click -->
+      <area
+        shape="circle"
+        coords="251, 181, 148"
+        href="tutorial2.html"
+        alt="cool circle gif"
+        onclick="myFunction()"
+      />
+    </map>
 
-        <!-- You can made images display according to a minimum width (for different platform) -->
-        <!-- it looks like the <picture> tag doesn't work -->
-        <br>
-        <picture>
-            <source media="(min-width: 540px)" srcset="Images/giphy.gif">
-        </picture>
+    <!-- You can made images display according to a minimum width (for different platform) -->
+    <!-- it looks like the <picture> tag doesn't work -->
+    <br />
+    <picture>
+      <source media="(min-width: 540px)" srcset="Images/giphy.gif" />
+    </picture>
 
-        <p id="1" onclick="myfunction2()">A paragraph about to be changed</p>
-        <button type="button" onclick="myfunction2()">The change</button>
+    <p id="1" onclick="myfunction2()">A paragraph about to be changed</p>
+    <button type="button" onclick="myfunction2()">The change</button>
 
-        <p id="fade_out" onclick="fadeOut()">This text will disappear</p>
+    <p id="fade_out" onclick="fadeOut()">This text will disappear</p>
 
-        <div class="glitchBg">
-            Hello this text is supposed to be white
-            Yes mommy
-        </div>
+    <div class="glitchBg">
+      Hello this text is supposed to be white Yes mommy
+    </div>
 
-        <div class="box">
-            <p class="para"><img src="Images/darkRoom.jpg" alt="hello" width="100%"></p>
-        </div>
-        
+    <div class="box">
+      <p class="para">
+        <img src="Images/darkRoom.jpg" alt="hello" width="100%" />
+      </p>
+    </div>
+  </body>
 
-    </body>
-
-    <script>
-        function myFunction(){
-            alert("You clicked!");
-        }
-        var myString = "a string";
-        function myfunction2(){
-            document.getElementById("1").innerHTML = "The paragraph changed!.";
-        }
-        function fadeOut(){
-            document.getElementById("fade_out").style.animationPlayState = "running";
-        }
-        const img = document.querySelector("")
-    </script>
+  <script>
+    function myFunction() {
+      alert("You clicked!");
+    }
+    var myString = "a string";
+    function myfunction2() {
+      document.getElementById("1").innerHTML = "The paragraph changed!.";
+    }
+    function fadeOut() {
+      document.getElementById("fade_out").style.animationPlayState = "running";
+    }
+    const img = document.querySelector("");
+  </script>
 </html>

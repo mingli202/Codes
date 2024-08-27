@@ -5,12 +5,7 @@ from decimal import Decimal
 
 
 def main():
-    A = Matrix([
-        [1, 2, -2],
-        [2, 3, -1],
-        [0, -1, 3],
-        [-1, 2, -10]
-    ])
+    A = Matrix([[1, 2, -2], [2, 3, -1], [0, -1, 3], [-1, 2, -10]])
 
     print(A.REF())
     print(A.RREF())
