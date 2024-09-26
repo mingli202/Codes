@@ -275,7 +275,7 @@ long long latticePaths(int m, int n) {
 
 int main(void) {
 
-  printf("%lli\n", latticePaths(20, 20));
+  printf("%i", 'a');
 
   printf("\n");
 }

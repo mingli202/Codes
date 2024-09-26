@@ -855,3 +855,5 @@ pyvenv.cfg
 pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,csharp,lua,python,venv,node,rust,macos
+.ccls*
+bin
