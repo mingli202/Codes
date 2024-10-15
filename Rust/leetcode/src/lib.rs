@@ -1,25 +1,29 @@
 pub struct Solution;
 
-#[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
+mod data_structures;
 
-impl ListNode {
-    pub fn new(arr: Vec<i32>) -> Option<Box<Self>> {
-        let mut head = None;
+impl Solution {
+    pub fn minimum_steps(s: String) -> i64 {
+        let mut k = 0;
 
-        let mut cursor = &mut head;
-
-        for val in arr {
-            *cursor = Some(Box::new(ListNode { val, next: None }));
-
-            cursor = &mut cursor.as_mut().unwrap().next;
-        }
-        head
+        s.chars().enumerate().fold(0i64, |acc, (i, c)| {
+            if c == '0' {
+                let a = acc + (i - k) as i64;
+                k += 1;
+                a
+            } else {
+                acc
+            }
+        })
     }
 }
 
-mod my_calendar_i;
-pub use my_calendar_i::MyCalendar;
+#[cfg(test)]
+mod test {
+    use crate::Solution;
+
+    #[test]
+    fn example_1() {
+        assert_eq!(7, Solution::minimum_steps("01010001".to_string()));
+    }
+}

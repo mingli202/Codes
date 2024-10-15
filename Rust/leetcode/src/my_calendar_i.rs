@@ -1,48 +1,38 @@
-use std::cell::RefCell;
-use std::cmp::Ordering;
-
 #[derive(Debug)]
 pub struct MyCalendar {
-    segment_tree: RefCell<Vec<bool>>,
+    booked: Vec<(i32, i32)>,
 }
 
 impl MyCalendar {
     pub fn new() -> Self {
-        MyCalendar {
-            segment_tree: RefCell::new(vec![false; 10_usize.pow(9) + 1]),
-        }
+        MyCalendar { booked: Vec::new() }
     }
 
-    pub fn book(&self, start: i32, end: i32) -> bool {
-        let left = 0;
-        let right = 10i32.pow(9);
-        let is_taken = self.search(left, right, start, end) && self.search(left, right, start, end);
-
-        if is_taken {
-            return false;
-        } else {
+    pub fn book(&mut self, start: i32, end: i32) -> bool {
+        if self.booked.is_empty() {
+            self.booked.push((start, end));
+            return true;
         }
 
-        is_taken
-    }
+        match self.booked.binary_search_by(|(a, _)| a.cmp(&start)) {
+            Ok(_) => false,
+            Err(i) => {
+                let mut can_book = true;
 
-    fn search(&self, left: i32, right: i32, start: i32, end: i32) -> bool {
-        let mid = (left + right) / 2;
+                if let Some((a, _)) = self.booked.get(i) {
+                    can_book &= end <= *a;
+                }
 
-        match start.cmp(&mid) {
-            Ordering::Less => self.search(left, mid - 1, start, end),
-            Ordering::Greater => self.search(mid + 1, right, start, end),
-            Ordering::Equal => self.segment_tree.borrow()[mid as usize],
-        }
-    }
+                if let Some((_, b)) = self.booked.get((i as i32 - 1) as usize) {
+                    can_book &= start >= *b;
+                }
 
-    fn update(&self, start: i32, end: i32, target: i32) -> bool {
-        let mid = (start + end) / 2;
+                if can_book {
+                    self.booked.insert(i, (start, end));
+                }
 
-        match target.cmp(&mid) {
-            Ordering::Less => self.update(start, mid - 1, target),
-            Ordering::Greater => self.update(mid + 1, end, target),
-            Ordering::Equal => true,
+                can_book
+            }
         }
     }
 }
@@ -59,7 +49,7 @@ mod tests {
 
     #[test]
     fn example_1() {
-        let calender = MyCalendar::new();
+        let mut calender = MyCalendar::new();
 
         assert_eq!(
             [true, false, true],
