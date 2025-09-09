@@ -90,5 +90,9 @@ def numbers():
         exit(1)
 
 
+def f(a: int, b: int, c: int) -> int:
+    return a + b + c
+
+
 if __name__ == "__main__":
-    numbers()
+    f(1, 2, 3)

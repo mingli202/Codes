@@ -1,18 +1,39 @@
-while True:
-    try:
-        input1 = int(input("Enter your age: "))
+import math
 
-        if input1 >= 81.75 or input1 < 0:
-            raise ValueError
-
-        break
-    except ValueError:
-        print("Must be a number between 0 and 81.75")
-
-weeksLeft = (81.75 - input1) * 365 / 7
-daysLeft = (81.75 - input1) * 365 % 7 * 365
-hoursLeft = (81.75 - input1) * 365 % 7 % 365 * 24
+n = 3
 
 
-print(f"You probably have {weeksLeft} weeks, {
-      daysLeft} days, and {hoursLeft} hours left in your life <3")
+def gen(i) -> list[int]:
+    k = 2**n
+
+    out = []
+
+    while k > 1:
+        out.append(math.floor(i % k / (k / 2)))
+        k /= 2
+
+    return out
+
+
+out = [gen(i) for i in range(0, 2**n)]
+
+
+def f(x: int, y: int, z: int) -> int:
+    return int(x and (not z or not y))
+
+
+for x, y, z in out:
+    print(f(x, y, z))
+
+
+a = {i for i in range(-4, 8)}
+b = {i for i in range(3, 12)}
+
+c = a
+print(c)
+print(len(c))
+
+n = 12
+
+for k in range(0, n + 1):
+    print(f"{k}!/({n}!*{n - k}!)")
