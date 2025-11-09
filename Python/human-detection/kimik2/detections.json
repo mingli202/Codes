@@ -1,0 +1,207 @@
+{
+  "video_path": "../videos/output-trimmed.mp4",
+  "fps": 25.0,
+  "total_frames": 276273,
+  "duration": 11050.92,
+  "detection_ranges": [
+    {
+      "start_time": 1025.84,
+      "start_frame": 25647,
+      "end_time": 1036.76,
+      "end_frame": 25920,
+      "start_timestamp": "00:17:05.840",
+      "end_timestamp": "00:17:16.760",
+      "duration": 10.920000000000073
+    },
+    {
+      "start_time": 3395.0,
+      "start_frame": 84876,
+      "end_time": 3425.6,
+      "end_frame": 85641,
+      "start_timestamp": "00:56:35.000",
+      "end_timestamp": "00:57:05.600",
+      "duration": 30.59999999999991
+    },
+    {
+      "start_time": 5324.96,
+      "start_frame": 133125,
+      "end_time": 5328.92,
+      "end_frame": 133224,
+      "start_timestamp": "01:28:44.960",
+      "end_timestamp": "01:28:48.920",
+      "duration": 3.9600000000000364
+    },
+    {
+      "start_time": 5336.480000000001,
+      "start_frame": 133413,
+      "end_time": 5339.12,
+      "end_frame": 133479,
+      "start_timestamp": "01:28:56.480",
+      "end_timestamp": "01:28:59.120",
+      "duration": 2.6399999999985084
+    },
+    {
+      "start_time": 6112.16,
+      "start_frame": 152805,
+      "end_time": 6122.360000000001,
+      "end_frame": 153060,
+      "start_timestamp": "01:41:52.160",
+      "end_timestamp": "01:42:02.360",
+      "duration": 10.200000000000728
+    },
+    {
+      "start_time": 6668.72,
+      "start_frame": 166719,
+      "end_time": 6679.76,
+      "end_frame": 166995,
+      "start_timestamp": "01:51:08.720",
+      "end_timestamp": "01:51:19.760",
+      "duration": 11.039999999999964
+    },
+    {
+      "start_time": 6848.12,
+      "start_frame": 171204,
+      "end_time": 6850.28,
+      "end_frame": 171258,
+      "start_timestamp": "01:54:08.120",
+      "end_timestamp": "01:54:10.280",
+      "duration": 2.1599999999998545
+    },
+    {
+      "start_time": 6901.88,
+      "start_frame": 172548,
+      "end_time": 6903.92,
+      "end_frame": 172599,
+      "start_timestamp": "01:55:01.880",
+      "end_timestamp": "01:55:03.920",
+      "duration": 2.0399999999999636
+    },
+    {
+      "start_time": 6912.08,
+      "start_frame": 172803,
+      "end_time": 6914.360000000001,
+      "end_frame": 172860,
+      "start_timestamp": "01:55:12.080",
+      "end_timestamp": "01:55:14.360",
+      "duration": 2.280000000000655
+    },
+    {
+      "start_time": 7328.72,
+      "start_frame": 183219,
+      "end_time": 7340.84,
+      "end_frame": 183522,
+      "start_timestamp": "02:02:08.720",
+      "end_timestamp": "02:02:20.840",
+      "duration": 12.11999999999989
+    },
+    {
+      "start_time": 7691.24,
+      "start_frame": 192282,
+      "end_time": 7702.76,
+      "end_frame": 192570,
+      "start_timestamp": "02:08:11.240",
+      "end_timestamp": "02:08:22.760",
+      "duration": 11.520000000000437
+    },
+    {
+      "start_time": 7845.2,
+      "start_frame": 196131,
+      "end_time": 8052.4400000000005,
+      "end_frame": 201312,
+      "start_timestamp": "02:10:45.200",
+      "end_timestamp": "02:14:12.440",
+      "duration": 207.2400000000007
+    },
+    {
+      "start_time": 8054.6,
+      "start_frame": 201366,
+      "end_time": 8060.12,
+      "end_frame": 201504,
+      "start_timestamp": "02:14:14.600",
+      "end_timestamp": "02:14:20.120",
+      "duration": 5.519999999999527
+    },
+    {
+      "start_time": 8067.4400000000005,
+      "start_frame": 201687,
+      "end_time": 8084.0,
+      "end_frame": 202101,
+      "start_timestamp": "02:14:27.440",
+      "end_timestamp": "02:14:44.000",
+      "duration": 16.55999999999949
+    },
+    {
+      "start_time": 8595.68,
+      "start_frame": 214893,
+      "end_time": 8597.960000000003,
+      "end_frame": 214950,
+      "start_timestamp": "02:23:15.680",
+      "end_timestamp": "02:23:17.960",
+      "duration": 2.280000000002474
+    },
+    {
+      "start_time": 8604.92,
+      "start_frame": 215124,
+      "end_time": 8609.84,
+      "end_frame": 215247,
+      "start_timestamp": "02:23:24.920",
+      "end_timestamp": "02:23:29.840",
+      "duration": 4.920000000000073
+    },
+    {
+      "start_time": 8657.48,
+      "start_frame": 216438,
+      "end_time": 8659.64,
+      "end_frame": 216492,
+      "start_timestamp": "02:24:17.480",
+      "end_timestamp": "02:24:19.640",
+      "duration": 2.1599999999998545
+    },
+    {
+      "start_time": 9071.6,
+      "start_frame": 226791,
+      "end_time": 9097.28,
+      "end_frame": 227433,
+      "start_timestamp": "02:31:11.600",
+      "end_timestamp": "02:31:37.280",
+      "duration": 25.68000000000029
+    },
+    {
+      "start_time": 10881.2,
+      "start_frame": 272031,
+      "end_time": 10882.52,
+      "end_frame": 272064,
+      "start_timestamp": "03:01:21.200",
+      "end_timestamp": "03:01:22.520",
+      "duration": 1.319999999999709
+    },
+    {
+      "start_time": 10961.36,
+      "start_frame": 274035,
+      "end_time": 10963.52,
+      "end_frame": 274089,
+      "start_timestamp": "03:02:41.360",
+      "end_timestamp": "03:02:43.520",
+      "duration": 2.1599999999998545
+    },
+    {
+      "start_time": 11038.64,
+      "start_frame": 275967,
+      "end_time": 11041.64,
+      "end_frame": 276042,
+      "start_timestamp": "03:03:58.640",
+      "end_timestamp": "03:04:01.640",
+      "duration": 3.0
+    },
+    {
+      "start_time": 11044.16,
+      "start_frame": 276105,
+      "end_time": 11047.4,
+      "end_frame": 276186,
+      "start_timestamp": "03:04:04.160",
+      "end_timestamp": "03:04:07.400",
+      "duration": 3.2399999999997817
+    }
+  ],
+  "total_detections": 22
+}

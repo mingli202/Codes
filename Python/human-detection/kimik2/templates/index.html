@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Footage Analyzer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 20px;
+        height: calc(100vh - 100px);
+      }
+
+      .video-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #videoPlayer {
+        width: 100%;
+        max-height: 70vh;
+        border-radius: 4px;
+        background: #000;
+      }
+
+      .controls {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .controls button {
+        padding: 8px 16px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .controls button:hover {
+        background: #2980b9;
+      }
+
+      .time-display {
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .detection-panel {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+      }
+
+      .detection-panel h2 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+      }
+
+      .range-item {
+        background: #ecf0f1;
+        border-left: 4px solid #e74c3c;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .range-item:hover {
+        background: #d5dbdb;
+        transform: translateX(5px);
+      }
+
+      .range-item.active {
+        background: #3498db;
+        color: white;
+        border-left-color: #2c3e50;
+      }
+
+      .range-time {
+        font-weight: bold;
+        font-size: 0.9em;
+      }
+
+      .range-duration {
+        font-size: 0.85em;
+        opacity: 0.8;
+        margin-top: 4px;
+      }
+
+      .stats {
+        background: #2c3e50;
+        color: white;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      .stats h3 {
+        margin-bottom: 10px;
+      }
+
+      .stats p {
+        font-size: 0.9em;
+        margin: 5px 0;
+      }
+
+      .status {
+        text-align: center;
+        padding: 20px;
+        color: #7f8c8d;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #3498db;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎥 Security Footage Human Detection</h1>
+
+      <div class="main-layout">
+        <div class="video-section">
+          <video id="videoPlayer" controls>
+            <source src="" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <div class="controls">
+            <button onclick="playPause()">⏯️ Play/Pause</button>
+            <button onclick="skipBack()">⏮️ -10s</button>
+            <button onclick="skipForward()">⏭️ +10s</button>
+            <span class="time-display" id="currentTime">00:00:00</span>
+            <span>/</span>
+            <span id="totalTime">00:00:00</span>
+          </div>
+        </div>
+
+        <div class="detection-panel">
+          <div id="loadingMessage" class="loading">Loading detections...</div>
+          <div id="contentArea" style="display: none">
+            <div class="stats" id="statsArea"></div>
+            <h2>Detected Human Appearances</h2>
+            <div id="rangesList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let detectionsData = null;
+      let currentVideoUrl = "";
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadDetections();
+
+        // Update time display
+        const video = document.getElementById("videoPlayer");
+        video.addEventListener("timeupdate", updateTimeDisplay);
+        video.addEventListener("loadedmetadata", function () {
+          document.getElementById("totalTime").textContent = formatTime(
+            video.duration,
+          );
+        });
+      });
+
+      function loadDetections() {
+        fetch("/api/detections")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              showError(data.error);
+              return;
+            }
+
+            detectionsData = data;
+            displayStats();
+            displayRanges();
+            loadVideo();
+          })
+          .catch((error) => {
+            showError("Failed to load detections: " + error);
+          });
+      }
+
+      function showError(message) {
+        document.getElementById("loadingMessage").innerHTML =
+          `<div style="color: #e74c3c; text-align: center;">${message}</div>`;
+      }
+
+      function displayStats() {
+        const stats = detectionsData;
+        const statsHtml = `
+                <h3>📊 Video Statistics</h3>
+                <p><strong>Duration:</strong> ${formatTime(stats.duration)}</p>
+                <p><strong>Total Detections:</strong> ${stats.total_detections}</p>
+                <p><strong>FPS:</strong> ${stats.fps.toFixed(2)}</p>
+                <p><strong>Processed Frames:</strong> ${stats.total_frames}</p>
+            `;
+        document.getElementById("statsArea").innerHTML = statsHtml;
+      }
+
+      function displayRanges() {
+        const rangesList = document.getElementById("rangesList");
+        const ranges = detectionsData.detection_ranges;
+
+        if (ranges.length === 0) {
+          rangesList.innerHTML =
+            '<div class="status">No humans detected in this footage.</div>';
+          return;
+        }
+
+        rangesList.innerHTML = ranges
+          .map(
+            (range, index) => `
+                <div class="range-item" onclick="jumpToTime(${range.start_time}, ${index})" id="range-${index}">
+                    <div class="range-time">${range.start_timestamp} → ${range.end_timestamp}</div>
+                    <div class="range-duration">Duration: ${formatTime(range.duration)} | Frames: ${range.end_frame - range.start_frame}</div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      function loadVideo() {
+        const videoPath = detectionsData.video_path;
+        const videoName = videoPath.split("/").pop();
+        const videoUrl = `../videos/${videoName}`;
+
+        const video = document.getElementById("videoPlayer");
+        video.src = videoUrl;
+        currentVideoUrl = videoUrl;
+
+        document.getElementById("loadingMessage").style.display = "none";
+        document.getElementById("contentArea").style.display = "block";
+      }
+
+      function jumpToTime(time, rangeIndex) {
+        const video = document.getElementById("videoPlayer");
+        video.currentTime = time;
+
+        // Highlight active range
+        document
+          .querySelectorAll(".range-item")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById(`range-${rangeIndex}`).classList.add("active");
+
+        // Start playing
+        video.play();
+      }
+
+      function playPause() {
+        const video = document.getElementById("videoPlayer");
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+
+      function skipBack() {
+        const video = document.getElementById("videoPlayer");
+        video.currentTime = Math.max(0, video.currentTime - 10);
+      }
+
+      function skipForward() {
+        const video = document.getElementById("videoPlayer");
+        video.currentTime = Math.min(video.duration, video.currentTime + 10);
+      }
+
+      function updateTimeDisplay() {
+        const video = document.getElementById("videoPlayer");
+        document.getElementById("currentTime").textContent = formatTime(
+          video.currentTime,
+        );
+      }
+
+      function formatTime(seconds) {
+        if (isNaN(seconds)) return "00:00:00";
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      }
+    </script>
+  </body>
+</html>
