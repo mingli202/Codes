@@ -273,9 +273,18 @@ long long latticePaths(int m, int n) {
   return table[m][n];
 }
 
+enum Exam { MIDTERM, FINAL };
+
+struct Grade {
+  enum Exam exam;
+  char name[63];
+  int grade;
+};
+
+void func(int *count) { *count = 2; }
+
 int main(void) {
+  int count = FINAL;
 
-  printf("%i", 'a');
-
-  printf("\n");
+  printf("%d\n", count);
 }
