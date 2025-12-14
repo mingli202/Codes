@@ -16,7 +16,6 @@ def handle_pdf(
     *,
     s3_bucket: str = "vincentliu-bucket-demo",
     s3_key: str | None = None,
-    json_root: str | Path = "json",
     textract_client=None,
     s3_client=None,
     job_poll_seconds: float = 2.0,
@@ -43,13 +42,6 @@ def handle_pdf(
       - Requires IAM permissions for S3 put/get and Textract Start/GetDocumentAnalysis.
     """
     pdf_path = Path(pdf_path)
-
-    out_dir = Path(json_root) / pdf_path.parent.name
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{pdf_path.stem}.json"
-
-    if out_path.exists():
-        return
 
     if textract_client is None:
         textract_client = boto3.client("textract", region_name="us-east-1")

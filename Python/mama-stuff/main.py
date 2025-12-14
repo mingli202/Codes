@@ -49,18 +49,19 @@ def process_data_subfolder_files(
         itertools.chain.from_iterable([[f for f in iter_files(s)] for s in subdirs])
     )
 
-    def fn(path: Path) -> tuple[Path, dict[str, float]] | None:
+    def fn(path: Path):
         if not path.is_file():
-            return None
+            return
 
         ext = path.suffix.lower()
         out_dir = Path(str(path).replace(str(data_dir), "json")).parent
+        out_dir.mkdir(parents=True, exist_ok=True)
         out_path = out_dir / f"{path.stem}.json"
         d = None
 
         if out_path.exists():
             print(f"{path.stem}{path.suffix} exists")
-            return None
+            return
 
         print(f"parsing {path.stem}{path.suffix}")
         if ext in PDF_EXTS:
@@ -69,22 +70,17 @@ def process_data_subfolder_files(
             d = handle_excel(path)
 
         if d is None:
-            return None
+            return
 
-        return out_path, d
+        with open(out_path, "w") as file:
+            json.dump(d, file, indent=2)
 
-    with ThreadPoolExecutor() as e:
+    with ThreadPoolExecutor(max_workers=10) as e:
         res = e.map(fn, allFiles)
         res = [r for r in res if r is not None]
 
-        for path, data in res:
-            with open(path, "w") as file:
-                json.dump(data, file, indent=2)
 
-
-def handle_excel(
-    excel_path: Path, *, json_root: str | Path = "json"
-) -> dict[str, float] | None:
+def handle_excel(excel_path: Path) -> dict[str, float] | None:
     """
     Reads an Excel weekly report and extracts:
       - product name from column "Désignation"
@@ -94,13 +90,6 @@ def handle_excel(
       {json_root}/{excel_parent_folder_name}/{excel_stem}.json
     """
     excel_path = Path(excel_path)
-
-    out_dir = Path(json_root) / excel_path.parent.name
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{excel_path.stem}.json"
-
-    if out_path.exists():
-        return
 
     def norm(v: int | str | None) -> str:
         if v is None:
