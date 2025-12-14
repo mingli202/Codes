@@ -34,7 +34,13 @@ def process_data_subfolder_files(
         raise ValueError(f"data_dir must be an existing directory: {data_dir}")
 
     # Only look inside immediate subfolders of data_dir (as requested).
-    subdirs = [p for p in data_dir.iterdir() if p.is_dir()]
+    subdirs = list(
+        itertools.chain.from_iterable(
+            [_p for _p in p.iterdir() if _p.is_dir()]
+            for p in data_dir.iterdir()
+            if p.is_dir()
+        )
+    )
 
     def iter_files(subdir: Path) -> Iterable[Path]:
         yield from subdir.glob("*")
@@ -43,23 +49,42 @@ def process_data_subfolder_files(
         itertools.chain.from_iterable([[f for f in iter_files(s)] for s in subdirs])
     )
 
-    def fn(path: Path):
+    def fn(path: Path) -> tuple[Path, dict[str, float]] | None:
         if not path.is_file():
-            return
+            return None
+
+        ext = path.suffix.lower()
+        out_dir = Path(str(path).replace(str(data_dir), "json")).parent
+        out_path = out_dir / f"{path.stem}.json"
+        d = None
+
+        if out_path.exists():
+            print(f"{path.stem}{path.suffix} exists")
+            return None
 
         print(f"parsing {path.stem}{path.suffix}")
-        ext = path.suffix.lower()
-
         if ext in PDF_EXTS:
-            handle_pdf(path)
+            d = handle_pdf(path)
         elif ext in EXCEL_EXTS:
-            handle_excel(path)
+            d = handle_excel(path)
+
+        if d is None:
+            return None
+
+        return out_path, d
 
     with ThreadPoolExecutor() as e:
-        _ = e.map(fn, allFiles)
+        res = e.map(fn, allFiles)
+        res = [r for r in res if r is not None]
+
+        for path, data in res:
+            with open(path, "w") as file:
+                json.dump(data, file, indent=2)
 
 
-def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
+def handle_excel(
+    excel_path: Path, *, json_root: str | Path = "json"
+) -> dict[str, float] | None:
     """
     Reads an Excel weekly report and extracts:
       - product name from column "Désignation"
@@ -159,18 +184,19 @@ def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
 
     # Correctness check: they must be on the same row (by construction they are)
     # 4) Extract rows until "Désignation" cell is empty
-    items: dict[str, float | None] = {}
+    items: dict[str, float] = {}
     for r in range(des_row + 1, nrows):
         name_val = df.iat[r, des_col]
         if is_empty(name_val):
             break
 
         qty_val = df.iat[r, qty_col]
-        items[str(name_val).strip()] = parse_quantity(qty_val)
+        q = parse_quantity(qty_val)
+        if q is None:
+            continue
+        items[str(name_val).strip()] = q
 
-    # 5) Write JSON output
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(items, f, ensure_ascii=False, indent=2)
+    return items
 
 
 def main():

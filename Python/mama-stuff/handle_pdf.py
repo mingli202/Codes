@@ -21,7 +21,7 @@ def handle_pdf(
     s3_client=None,
     job_poll_seconds: float = 2.0,
     job_timeout_seconds: float = 15 * 60,
-) -> None:
+) -> dict[str, float] | None:
     """
     Extract products + weekly quantity sold from a scanned PDF (one page = one sheet)
     using Amazon Textract table analysis.
@@ -77,8 +77,7 @@ def handle_pdf(
 
     records = _extract_products_and_qty_from_blocks(blocks)
 
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(records, f, ensure_ascii=False, indent=2)
+    return records
 
 
 # -----------------------------
@@ -174,13 +173,13 @@ class _HeaderHit:
 
 def _extract_products_and_qty_from_blocks(
     blocks: list[dict[str, Any]],
-) -> dict[str, Any]:
+) -> dict[str, float]:
     block_map: dict[str, dict[str, Any]] = {b["Id"]: b for b in blocks if "Id" in b}
 
     # Group TABLE blocks by page for more predictable extraction.
     tables: list[dict[str, Any]] = [b for b in blocks if b.get("BlockType") == "TABLE"]
 
-    records: dict[str, Any] = {}
+    records: dict[str, float] = {}
 
     for table in tables:
         hit = _find_header_and_qty_col(table, block_map)
@@ -190,7 +189,6 @@ def _extract_products_and_qty_from_blocks(
         table_records = _extract_rows_from_table(
             table=table,
             block_map=block_map,
-            page=hit.page,
             des_row=hit.des_row,
             des_col=hit.des_col,
             qty_col=hit.qty_col,
@@ -211,7 +209,7 @@ def _find_header_and_qty_col(
     page = int(table.get("Page", 1))
     table_id = table["Id"]
 
-    grid, max_row, max_col = _table_to_grid(table, block_map)
+    grid, _, max_col = _table_to_grid(table, block_map)
 
     # Find "Désignation" cell in the grid.
     des_row = des_col = None
@@ -263,14 +261,13 @@ def _extract_rows_from_table(
     *,
     table: dict[str, Any],
     block_map: dict[str, dict[str, Any]],
-    page: int,
     des_row: int,
     des_col: int,
     qty_col: int,
-) -> dict[str, Any]:
+) -> dict[str, float]:
     grid, max_row, _ = _table_to_grid(table, block_map)
 
-    out: dict[str, Any] = {}
+    out: dict[str, float] = {}
 
     for r in range(des_row + 1, max_row + 1):
         name = _clean_cell_text(grid.get((r, des_col), ""))
@@ -284,7 +281,8 @@ def _extract_rows_from_table(
         qty_raw = _clean_cell_text(grid.get((r, qty_col), ""))
         qty = _parse_quantity(qty_raw)
 
-        out[name] = qty
+        if qty is not None:
+            out[name] = qty
 
     return out
 
@@ -381,7 +379,7 @@ def _is_standalone_qte(text: str) -> bool:
     return bool(_QTE_RE.match(_strip_accents(_clean_cell_text(text)).lower()))
 
 
-def _parse_quantity(v: str) -> int | float | None:
+def _parse_quantity(v: str) -> float | None:
     """
     Parse quantities like: 14, 0, 1 234, 12,5, etc.
     Returns int if integer-like, else float; None if cannot parse.
@@ -397,7 +395,7 @@ def _parse_quantity(v: str) -> int | float | None:
         return None
 
     x = float(m.group(0))
-    return int(x) if x.is_integer() else x
+    return x
 
 
 if __name__ == "__main__":
