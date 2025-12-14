@@ -10,6 +10,7 @@ import pandas as pd
 import itertools
 
 from handle_pdf import handle_pdf
+from compile_json_reports_to_excel import compile_json_reports_to_excel
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -175,8 +176,7 @@ def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
 def main():
     data_path = Path("./data")
     process_data_subfolder_files(data_path)
-    # df = pd.read_excel("./data/291 St-Amable/20250803.xlsx")
-    # print(df.iloc[9])
+    _ = compile_json_reports_to_excel()
 
 
 if __name__ == "__main__":
