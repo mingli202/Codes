@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import itertools
 import json
 import re
 from collections import defaultdict
@@ -12,6 +11,7 @@ from typing import Any
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.worksheet import Worksheet
 
 
 @dataclass(frozen=True)
@@ -84,13 +84,20 @@ def compile_json_reports_to_excel(
         years = sorted({r.year for r in reports})
         year_to_color = _assign_year_colors(years)
 
+        header_row = _write_year_color_legend(
+            ws,
+            years=years,
+            year_to_color=year_to_color,
+            start_row=1,
+            start_col=1,
+        )
+
         # Column order:
         # report columns ordered by (month, day, year), to keep same MM/DD consecutive
         ordered_reports = sorted(reports, key=lambda r: (r.dt.month, r.dt.day, r.year))
 
         # Build a mapping from report to column index
         # col 1 = Product, cols 2..N = reports, then year totals, then All Years Total
-        header_row = 1
         first_data_row = header_row + 1
         first_report_col = 2
 
@@ -209,8 +216,8 @@ def compile_json_reports_to_excel(
                 value=f"=SUM({start}{total_row}:{end}{total_row})",
             ).font = Font(bold=True)
 
-        # Freeze panes (keep header + product col visible)
-        ws.freeze_panes = ws["B2"]
+        # Freeze panes (keep table header + product column visible)
+        ws.freeze_panes = ws[f"B{first_data_row}"]
 
         # Basic widths
         ws.column_dimensions["A"].width = 44
@@ -361,3 +368,39 @@ def _unique_sheet_name(wb: Workbook, desired: str) -> str:
         if candidate not in existing:
             return candidate
         i += 1
+
+
+def _write_year_color_legend(
+    ws: Worksheet,
+    *,
+    years: list[int],
+    year_to_color: dict[int, PatternFill],
+    start_row: int = 1,
+    start_col: int = 1,
+) -> int:
+    """
+    Writes a simple legend above the table:
+      - Column start_col: colored swatch
+      - Column start_col+1: year label
+
+    Returns the first row AFTER the legend (with one blank row gap),
+    which you can use as the table header row.
+    """
+    title = ws.cell(row=start_row, column=start_col, value="Legend (Year Colors)")
+    title.font = Font(bold=True)
+    title.alignment = Alignment(horizontal="left", vertical="center")
+
+    for i, y in enumerate(years):
+        r = start_row + 1 + i
+        swatch = ws.cell(row=r, column=start_col, value=None)
+        swatch.fill = year_to_color[y]
+        swatch.alignment = Alignment(horizontal="center", vertical="center")
+
+        label = ws.cell(row=r, column=start_col + 1, value=str(y))
+        label.font = Font(bold=True)
+        label.alignment = Alignment(horizontal="left", vertical="center")
+
+        ws.row_dimensions[r].height = 18
+
+    # One blank row after legend
+    return start_row + 1 + len(years) + 1
