@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 import time
 import unicodedata
@@ -12,253 +11,331 @@ from typing import Any
 import boto3
 
 
-@dataclass(frozen=True)
-class _Cell:
-    row: int
-    col: int
-    row_span: int
-    col_span: int
-    text: str
-    page: int
-    bbox: dict[str, float]  # Textract BoundingBox: Left, Top, Width, Height
-
-
 def handle_pdf(
     pdf_path: Path,
     *,
+    s3_bucket: str = "vincentliu-bucket-demo",
+    s3_key: str | None = None,
     json_root: str | Path = "json",
-    s3_bucket: str | None = None,
-    s3_prefix: str = "textract-input/",
-    aws_region: str | None = None,
-    poll_seconds: float = 1.5,
-    max_poll_seconds: int = 600,
+    textract_client=None,
+    s3_client=None,
+    job_poll_seconds: float = 2.0,
+    job_timeout_seconds: float = 15 * 60,
 ) -> None:
     """
-    Extracts product names (column "Désignation") and weekly quantity sold
-    (column "Qte" under "Sommaire hebdo") from a scanned PDF using AWS Textract.
+    Extract products + weekly quantity sold from a scanned PDF (one page = one sheet)
+    using Amazon Textract table analysis.
 
-    Writes JSON to:
-      {json_root}/{pdf_parent_folder_name}/{pdf_stem}.json
+    Heuristics implemented (based on your constraints):
+      - Do NOT rely on merged cells. We ignore MERGED_CELL blocks and only use CELL.
+      - Find the header row by locating a cell equal to "Désignation" (accent-insensitive).
+      - Quantity column is chosen as:
+          1) the "Qte" cell immediately left of "Poids" in the same header row, if possible
+             (this targets the Sommaire hebdo section),
+          2) otherwise, the rightmost standalone "Qte" cell in the header row.
+      - Read rows until the "Désignation" cell is empty.
+
+    Output JSON:
+      json/<pdf_parent_folder_name>/<pdf_stem>.json
+
+    Notes:
+      - Textract async APIs require the PDF to be in S3.
+      - Requires IAM permissions for S3 put/get and Textract Start/GetDocumentAnalysis.
     """
     pdf_path = Path(pdf_path)
-
-    if not pdf_path.exists() or not pdf_path.is_file():
-        raise ValueError(f"PDF path must exist and be a file: {pdf_path}")
-
-    bucket = s3_bucket or os.getenv("TEXTRACT_S3_BUCKET")
-    if not bucket:
-        raise ValueError(
-            "Missing S3 bucket. Pass s3_bucket=... or set TEXTRACT_S3_BUCKET."
-        )
-
-    prefix = s3_prefix or os.getenv("TEXTRACT_S3_PREFIX", "textract-input/")
-    prefix = prefix.strip("/")
-    key = f"{prefix}/{pdf_path.parent.name}/{pdf_path.name}"
-
-    region = aws_region or os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
-
-    s3 = boto3.client("s3", region_name=region)
-    textract = boto3.client("textract", region_name=region)
-
-    _upload_to_s3(s3, bucket=bucket, key=key, file_path=pdf_path)
-
-    job_id = _start_textract_job(
-        textract,
-        bucket=bucket,
-        key=key,
-    )
-
-    blocks = _poll_and_get_blocks(
-        textract,
-        job_id=job_id,
-        poll_seconds=poll_seconds,
-        max_poll_seconds=max_poll_seconds,
-    )
-
-    records = _extract_products_and_qty_from_blocks(blocks)
 
     out_dir = Path(json_root) / pdf_path.parent.name
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"{pdf_path.stem}.json"
 
+    if out_path.exists():
+        return
+
+    if textract_client is None:
+        textract_client = boto3.client("textract", region_name="us-east-1")
+    if s3_client is None:
+        s3_client = boto3.client("s3", region_name="us-east-1")
+
+    if s3_key is None:
+        # Default: mirror local parent folder + filename into S3
+        s3_key = f"textract-input/{pdf_path.parent.name}/{pdf_path.name}"
+
+    _upload_to_s3(s3_client, pdf_path=pdf_path, bucket=s3_bucket, key=s3_key)
+
+    job_id = _start_textract_tables_job(
+        textract_client,
+        bucket=s3_bucket,
+        key=s3_key,
+    )
+
+    blocks = _wait_and_collect_textract_blocks(
+        textract_client,
+        job_id=job_id,
+        poll_seconds=job_poll_seconds,
+        timeout_seconds=job_timeout_seconds,
+    )
+
+    records = _extract_products_and_qty_from_blocks(blocks)
+
     with out_path.open("w", encoding="utf-8") as f:
         json.dump(records, f, ensure_ascii=False, indent=2)
 
 
-def _upload_to_s3(s3: Any, *, bucket: str, key: str, file_path: Path) -> None:
-    s3.upload_file(str(file_path), bucket, key)
+# -----------------------------
+# Textract job helpers
+# -----------------------------
 
 
-def _start_textract_job(textract: Any, *, bucket: str, key: str) -> str:
-    resp = textract.start_document_analysis(
+def _upload_to_s3(s3_client, *, pdf_path: Path, bucket: str, key: str) -> None:
+    if not pdf_path.exists() or not pdf_path.is_file():
+        raise ValueError(f"PDF path must exist and be a file: {pdf_path}")
+
+    s3_client.upload_file(
+        Filename=str(pdf_path),
+        Bucket=bucket,
+        Key=key,
+    )
+
+
+def _start_textract_tables_job(textract_client, *, bucket: str, key: str) -> str:
+    resp = textract_client.start_document_analysis(
         DocumentLocation={"S3Object": {"Bucket": bucket, "Name": key}},
         FeatureTypes=["TABLES"],
     )
     return resp["JobId"]
 
 
-def _poll_and_get_blocks(
-    textract: Any,
+def _wait_and_collect_textract_blocks(
+    textract_client,
     *,
     job_id: str,
     poll_seconds: float,
-    max_poll_seconds: int,
+    timeout_seconds: float,
 ) -> list[dict[str, Any]]:
-    deadline = time.time() + max_poll_seconds
-
+    deadline = time.time() + timeout_seconds
+    next_token: str | None = None
+    all_blocks: list[dict[str, Any]] = []
     status = "IN_PROGRESS"
-    while status in {"IN_PROGRESS"}:
+
+    # Wait for job completion (and fetch the first page of results)
+    while True:
         if time.time() > deadline:
             raise TimeoutError(
-                f"Textract job {job_id} did not finish within {max_poll_seconds}s"
+                f"Textract job timed out after {timeout_seconds}s (JobId={job_id})"
             )
 
-        resp = textract.get_document_analysis(JobId=job_id, MaxResults=1000)
+        kwargs = {"JobId": job_id}
+        if next_token:
+            kwargs["NextToken"] = next_token
+
+        resp = textract_client.get_document_analysis(**kwargs)
         status = resp["JobStatus"]
 
-        if status == "SUCCEEDED":
-            break
-        if status in {"FAILED", "PARTIAL_SUCCESS"}:
+        if status in {"IN_PROGRESS"}:
+            time.sleep(poll_seconds)
+            continue
+
+        if status not in {"SUCCEEDED"}:
             msg = resp.get("StatusMessage", "")
-            raise RuntimeError(f"Textract job {job_id} ended with {status}. {msg}")
-
-        time.sleep(poll_seconds)
-
-    # Fetch all pages (pagination)
-    blocks: list[dict[str, Any]] = []
-    next_token: str | None = None
-
-    while True:
-        if next_token:
-            resp = textract.get_document_analysis(
-                JobId=job_id, MaxResults=1000, NextToken=next_token
+            raise RuntimeError(
+                f"Textract job failed (JobId={job_id}, Status={status}): {msg}"
             )
-        else:
-            resp = textract.get_document_analysis(JobId=job_id, MaxResults=1000)
 
-        blocks.extend(resp.get("Blocks", []))
+        # Job succeeded: collect this page and paginate
+        all_blocks.extend(resp.get("Blocks", []))
         next_token = resp.get("NextToken")
-        if not next_token:
-            break
 
-    return blocks
+        while next_token:
+            resp = textract_client.get_document_analysis(
+                JobId=job_id,
+                NextToken=next_token,
+            )
+            all_blocks.extend(resp.get("Blocks", []))
+            next_token = resp.get("NextToken")
+
+        break
+
+    return all_blocks
+
+
+# -----------------------------
+# Table parsing + extraction
+# -----------------------------
+
+
+@dataclass(frozen=True)
+class _HeaderHit:
+    table_id: str
+    page: int
+    des_row: int
+    des_col: int
+    qty_col: int
 
 
 def _extract_products_and_qty_from_blocks(
     blocks: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    blocks_by_id = {b["Id"]: b for b in blocks}
+) -> dict[str, Any]:
+    block_map: dict[str, dict[str, Any]] = {b["Id"]: b for b in blocks if "Id" in b}
 
-    # Collect all TABLE blocks
-    table_blocks = [b for b in blocks if b.get("BlockType") == "TABLE"]
+    # Group TABLE blocks by page for more predictable extraction.
+    tables: list[dict[str, Any]] = [b for b in blocks if b.get("BlockType") == "TABLE"]
 
-    results: list[dict[str, Any]] = []
+    records: dict[str, Any] = {}
 
-    for table in table_blocks:
-        table_page = int(table.get("Page", 1))
-        cells = _table_cells(table, blocks_by_id)
-        if not cells:
+    for table in tables:
+        hit = _find_header_and_qty_col(table, block_map)
+        if hit is None:
             continue
 
-        # Find the header row containing "Désignation"
-        des_cell = _find_best_cell(cells, _is_designation)
-        if not des_cell:
-            continue
-
-        header_row = des_cell.row
-        des_col = des_cell.col
-
-        # Find "Sommaire hebdo" in a row above the header row
-        som_cell = _find_sommaire_cell_above(cells, header_row=header_row)
-        summary_cols = _infer_summary_columns(
-            cells, header_row=header_row, som_cell=som_cell
+        table_records = _extract_rows_from_table(
+            table=table,
+            block_map=block_map,
+            page=hit.page,
+            des_row=hit.des_row,
+            des_col=hit.des_col,
+            qty_col=hit.qty_col,
         )
 
-        qty_cell = _find_qty_cell(
-            cells,
-            header_row=header_row,
-            des_col=des_col,
-            summary_cols=summary_cols,
-        )
-        if not qty_cell:
-            # If we found Désignation but not Qte, skip this table.
+        # If we got something meaningful, keep it.
+        if table_records:
+            records.update(table_records)
+
+    # If multiple tables matched (rare), you can dedupe here if needed.
+    return records
+
+
+def _find_header_and_qty_col(
+    table: dict[str, Any],
+    block_map: dict[str, dict[str, Any]],
+) -> _HeaderHit | None:
+    page = int(table.get("Page", 1))
+    table_id = table["Id"]
+
+    grid, max_row, max_col = _table_to_grid(table, block_map)
+
+    # Find "Désignation" cell in the grid.
+    des_row = des_col = None
+    for (r, c), text in grid.items():
+        if _is_designation_header(text):
+            des_row, des_col = r, c
+            break
+
+    if des_row is None or des_col is None:
+        return None
+
+    # In the same header row, find the right "Qte" column.
+    header_cells: list[tuple[int, str]] = [
+        (c, grid.get((des_row, c), "")) for c in range(1, max_col + 1)
+    ]
+
+    qte_cols = [c for (c, t) in header_cells if _is_standalone_qte(t)]
+
+    if not qte_cols:
+        return None
+
+    # Preferred: the "Qte" immediately left of "Poids" in this header row.
+    poids_col = None
+    for c, t in header_cells:
+        if _norm_text(t) == "poids":
+            poids_col = c
+            break
+
+    qty_col: int | None = None
+    if poids_col is not None:
+        left_qtes = [c for c in qte_cols if c < poids_col]
+        if left_qtes:
+            qty_col = max(left_qtes)
+
+    # Fallback: rightmost standalone "Qte" in header row.
+    if qty_col is None:
+        qty_col = max(qte_cols)
+
+    return _HeaderHit(
+        table_id=table_id,
+        page=page,
+        des_row=des_row,
+        des_col=des_col,
+        qty_col=qty_col,
+    )
+
+
+def _extract_rows_from_table(
+    *,
+    table: dict[str, Any],
+    block_map: dict[str, dict[str, Any]],
+    page: int,
+    des_row: int,
+    des_col: int,
+    qty_col: int,
+) -> dict[str, Any]:
+    grid, max_row, _ = _table_to_grid(table, block_map)
+
+    out: dict[str, Any] = {}
+
+    for r in range(des_row + 1, max_row + 1):
+        name = _clean_cell_text(grid.get((r, des_col), ""))
+        if name == "" or name == "Qte":
+            break
+
+        # Skip accidental header repeats inside the body
+        if _is_designation_header(name):
             continue
 
-        qty_col = qty_cell.col
+        qty_raw = _clean_cell_text(grid.get((r, qty_col), ""))
+        qty = _parse_quantity(qty_raw)
 
-        # Extract downwards until Désignation is empty.
-        cell_map: dict[tuple[int, int], _Cell] = {(c.row, c.col): c for c in cells}
-        max_row = max(c.row for c in cells)
+        out[name] = qty
 
-        for r in range(header_row + 1, max_row + 1):
-            name_cell = cell_map.get((r, des_col))
-            if not name_cell or _is_empty(name_cell.text):
-                break
-
-            qty_val = cell_map.get((r, qty_col))
-            qty = _parse_quantity(qty_val.text if qty_val else "")
-
-            results.append(
-                {
-                    "page": table_page,
-                    "product": name_cell.text.strip(),
-                    "quantity": qty,
-                }
-            )
-
-    return results
+    return out
 
 
-def _table_cells(
-    table_block: dict[str, Any],
-    blocks_by_id: dict[str, dict[str, Any]],
-) -> list[_Cell]:
-    cells: list[_Cell] = []
-    rels = table_block.get("Relationships", [])
-    child_ids: list[str] = []
-    for rel in rels:
+def _table_to_grid(
+    table: dict[str, Any],
+    block_map: dict[str, dict[str, Any]],
+) -> tuple[dict[tuple[int, int], str], int, int]:
+    """
+    Build a simple (row, col) -> text mapping for CELL blocks.
+    We ignore MERGED_CELL blocks on purpose.
+    """
+    cell_ids: list[str] = []
+    for rel in table.get("Relationships", []):
         if rel.get("Type") == "CHILD":
-            child_ids.extend(rel.get("Ids", []))
+            cell_ids.extend(rel.get("Ids", []))
 
-    for cid in child_ids:
-        b = blocks_by_id.get(cid)
-        if not b or b.get("BlockType") != "CELL":
+    grid: dict[tuple[int, int], str] = {}
+    max_row = 0
+    max_col = 0
+
+    for cid in cell_ids:
+        b = block_map.get(cid)
+        if not b:
+            continue
+        if b.get("BlockType") != "CELL":
+            # Ignore MERGED_CELL or anything else.
             continue
 
-        text = _cell_text(b, blocks_by_id)
-        geom = b.get("Geometry", {}) or {}
-        bbox = geom.get("BoundingBox", {}) or {}
+        r = int(b.get("RowIndex", 0))
+        c = int(b.get("ColumnIndex", 0))
+        if r <= 0 or c <= 0:
+            continue
 
-        cells.append(
-            _Cell(
-                row=int(b.get("RowIndex", 0)),
-                col=int(b.get("ColumnIndex", 0)),
-                row_span=int(b.get("RowSpan", 1)),
-                col_span=int(b.get("ColumnSpan", 1)),
-                text=text,
-                page=int(b.get("Page", 1)),
-                bbox={
-                    "Left": float(bbox.get("Left", 0.0)),
-                    "Top": float(bbox.get("Top", 0.0)),
-                    "Width": float(bbox.get("Width", 0.0)),
-                    "Height": float(bbox.get("Height", 0.0)),
-                },
-            )
-        )
+        text = _cell_text(b, block_map)
+        text = _clean_cell_text(text)
 
-    return cells
+        grid[(r, c)] = text
+        max_row = max(max_row, r)
+        max_col = max(max_col, c)
+
+    return grid, max_row, max_col
 
 
-def _cell_text(
-    cell_block: dict[str, Any],
-    blocks_by_id: dict[str, dict[str, Any]],
-) -> str:
+def _cell_text(cell_block: dict[str, Any], block_map: dict[str, dict[str, Any]]) -> str:
     parts: list[str] = []
     for rel in cell_block.get("Relationships", []):
         if rel.get("Type") != "CHILD":
             continue
         for cid in rel.get("Ids", []):
-            child = blocks_by_id.get(cid)
+            child = block_map.get(cid)
             if not child:
                 continue
             bt = child.get("BlockType")
@@ -267,131 +344,62 @@ def _cell_text(
             elif bt == "SELECTION_ELEMENT":
                 if child.get("SelectionStatus") == "SELECTED":
                     parts.append("X")
-    return " ".join(p for p in parts if p).strip()
+    return " ".join([p for p in parts if p])
 
 
-def _norm(s: str) -> str:
-    s = s or ""
-    s = s.replace("\u00a0", " ").strip().lower()
-    s = unicodedata.normalize("NFKD", s)
-    s = "".join(ch for ch in s if not unicodedata.combining(ch))
-    s = re.sub(r"\s+", " ", s)
+# -----------------------------
+# Text normalization/parsing
+# -----------------------------
+
+
+def _clean_cell_text(s: str) -> str:
+    s = (s or "").replace("\u00a0", " ")
+    s = re.sub(r"\s+", " ", s).strip()
     return s
 
 
-def _is_empty(s: str) -> bool:
-    return _norm(s) == ""
+def _strip_accents(s: str) -> str:
+    s = unicodedata.normalize("NFKD", s)
+    return "".join(ch for ch in s if not unicodedata.combining(ch))
 
 
-def _is_designation(s: str) -> bool:
-    t = _norm(s)
-    return t == "designation" or "designation" in t
+def _norm_text(s: str) -> str:
+    s = _clean_cell_text(s).lower()
+    s = _strip_accents(s)
+    return s
 
 
-def _is_qte(s: str) -> bool:
-    t = _norm(s)
-    return t in {"qte", "qté"} or t.startswith("qte")
+def _is_designation_header(text: str) -> bool:
+    return _norm_text(text) == "designation"
 
 
-def _is_sommaire_hebdo(s: str) -> bool:
-    t = _norm(s)
-    return "sommaire" in t and "hebdo" in t
+_QTE_RE = re.compile(r"^qte\.?$", re.IGNORECASE)
 
 
-def _find_best_cell(cells: list[_Cell], predicate) -> _Cell | None:
-    matches = [c for c in cells if predicate(c.text)]
-    if not matches:
-        return None
-    # Prefer top-most, then left-most.
-    return sorted(matches, key=lambda c: (c.row, c.col))[0]
+def _is_standalone_qte(text: str) -> bool:
+    # Must be a standalone header cell, not "Diff. Qte ..." etc.
+    return bool(_QTE_RE.match(_strip_accents(_clean_cell_text(text)).lower()))
 
 
-def _find_sommaire_cell_above(
-    cells: list[_Cell],
-    *,
-    header_row: int,
-) -> _Cell | None:
-    candidates = [c for c in cells if c.row < header_row and _is_sommaire_hebdo(c.text)]
-    if not candidates:
-        return None
-    # Prefer the closest row above the header; if tie, prefer right-most (summary is on right)
-    return sorted(candidates, key=lambda c: (header_row - c.row, -c.col))[0]
-
-
-def _infer_summary_columns(
-    cells: list[_Cell],
-    *,
-    header_row: int,
-    som_cell: _Cell | None,
-) -> set[int] | None:
+def _parse_quantity(v: str) -> int | float | None:
     """
-    Attempts to infer which header_row columns fall under the "Sommaire hebdo"
-    group header.
-
-    Returns a set of column indices or None if not inferable.
+    Parse quantities like: 14, 0, 1 234, 12,5, etc.
+    Returns int if integer-like, else float; None if cannot parse.
     """
-    if not som_cell:
+    s = _clean_cell_text(v)
+    if s == "":
         return None
 
-    # Best case: Textract gives a ColumnSpan for the merged group header.
-    if som_cell.col_span and som_cell.col_span > 1:
-        start = som_cell.col
-        end = som_cell.col + som_cell.col_span - 1
-        return set(range(start, end + 1))
-
-    # Fallback: use geometry overlap (header cell centers under sommaire bbox).
-    left = som_cell.bbox["Left"]
-    right = som_cell.bbox["Left"] + som_cell.bbox["Width"]
-    header_cells = [c for c in cells if c.row == header_row]
-
-    cols: set[int] = set()
-    for c in header_cells:
-        cx = c.bbox["Left"] + (c.bbox["Width"] / 2.0)
-        if left <= cx <= right:
-            cols.add(c.col)
-
-    return cols or None
-
-
-def _find_qty_cell(
-    cells: list[_Cell],
-    *,
-    header_row: int,
-    des_col: int,
-    summary_cols: set[int] | None,
-) -> _Cell | None:
-    header_cells = [c for c in cells if c.row == header_row]
-    qtes = [c for c in header_cells if _is_qte(c.text)]
-    if not qtes:
-        return None
-
-    # Prefer Qte that is under Sommaire hebdo.
-    if summary_cols:
-        under_summary = [c for c in qtes if c.col in summary_cols]
-        if under_summary:
-            return sorted(under_summary, key=lambda c: c.col)[0]
-
-    # Fallback heuristic: weekly summary Qte is usually the right-most Qte on that row.
-    # Also ensure it's to the right of "Désignation".
-    right_side = [c for c in qtes if c.col > des_col]
-    if right_side:
-        return sorted(right_side, key=lambda c: c.col)[-1]
-
-    return sorted(qtes, key=lambda c: c.col)[-1]
-
-
-def _parse_quantity(v: str) -> float | None:
-    t = v.strip()
-    if _is_empty(t):
-        return None
-
-    # Normalize: "1 234" -> "1234", "12,5" -> "12.5"
-    t = t.replace("\u00a0", " ")
-    t = t.replace(" ", "")
-    t = t.replace(",", ".")
-    m = re.search(r"-?\d+(?:\.\d+)?", t)
+    s = s.replace(" ", "").replace("\u00a0", "")
+    s = s.replace(",", ".")
+    m = re.search(r"-?\d+(?:\.\d+)?", s)
     if not m:
         return None
 
     x = float(m.group(0))
     return int(x) if x.is_integer() else x
+
+
+if __name__ == "__main__":
+    path = Path("./data/8187 St-Juile/8187.pdf")
+    handle_pdf(path)

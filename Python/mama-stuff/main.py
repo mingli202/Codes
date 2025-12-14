@@ -7,6 +7,11 @@ import re
 from typing import Any
 
 import pandas as pd
+import itertools
+
+from handle_pdf import handle_pdf
+
+from concurrent.futures import ThreadPoolExecutor
 
 PDF_EXTS = {".pdf"}
 EXCEL_EXTS = {".xls", ".xlsx", ".xlsm", ".xlsb"}
@@ -14,8 +19,6 @@ EXCEL_EXTS = {".xls", ".xlsx", ".xlsm", ".xlsb"}
 
 def process_data_subfolder_files(
     data_dir: str | Path,
-    *,
-    recursive_within_subfolders: bool = False,
 ) -> None:
     """
     Find all PDF + Excel files contained in *subfolders* of `data_dir`
@@ -33,27 +36,26 @@ def process_data_subfolder_files(
     subdirs = [p for p in data_dir.iterdir() if p.is_dir()]
 
     def iter_files(subdir: Path) -> Iterable[Path]:
-        if recursive_within_subfolders:
-            yield from subdir.rglob("*")
-        else:
-            yield from subdir.glob("*")
+        yield from subdir.glob("*")
 
-    for subdir in subdirs:
-        for path in iter_files(subdir):
-            if not path.is_file():
-                continue
+    allFiles = list(
+        itertools.chain.from_iterable([[f for f in iter_files(s)] for s in subdirs])
+    )
 
-            ext = path.suffix.lower()
+    def fn(path: Path):
+        if not path.is_file():
+            return
 
-            if ext in PDF_EXTS:
-                handle_pdf(path)
-            elif ext in EXCEL_EXTS:
-                handle_excel(path)
-            # else: ignore everything else
+        print(f"parsing {path.stem}.{path.suffix}")
+        ext = path.suffix.lower()
 
+        if ext in PDF_EXTS:
+            handle_pdf(path)
+        elif ext in EXCEL_EXTS:
+            handle_excel(path)
 
-def handle_pdf(path: Path):
-    pass
+    with ThreadPoolExecutor() as e:
+        _ = e.map(fn, allFiles)
 
 
 def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
@@ -66,7 +68,13 @@ def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
       {json_root}/{excel_parent_folder_name}/{excel_stem}.json
     """
     excel_path = Path(excel_path)
-    print(f"parsing {excel_path}")
+
+    out_dir = Path(json_root) / excel_path.parent.name
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{excel_path.stem}.json"
+
+    if out_path.exists():
+        return
 
     def norm(v: int | str | None) -> str:
         if v is None:
@@ -150,25 +158,16 @@ def handle_excel(excel_path: Path, *, json_root: str | Path = "json") -> None:
 
     # Correctness check: they must be on the same row (by construction they are)
     # 4) Extract rows until "Désignation" cell is empty
-    items: list[dict[str, Any]] = []
+    items: dict[str, float | None] = {}
     for r in range(des_row + 1, nrows):
         name_val = df.iat[r, des_col]
         if is_empty(name_val):
             break
 
         qty_val = df.iat[r, qty_col]
-        items.append(
-            {
-                "product": str(name_val).strip(),
-                "quantity": parse_quantity(qty_val),
-            }
-        )
+        items[str(name_val).strip()] = parse_quantity(qty_val)
 
     # 5) Write JSON output
-    out_dir = Path(json_root) / excel_path.parent.name
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{excel_path.stem}.json"
-
     with out_path.open("w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
