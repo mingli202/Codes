@@ -46,7 +46,7 @@ def process_data_subfolder_files(
         if not path.is_file():
             return
 
-        print(f"parsing {path.stem}.{path.suffix}")
+        print(f"parsing {path.stem}{path.suffix}")
         ext = path.suffix.lower()
 
         if ext in PDF_EXTS:
