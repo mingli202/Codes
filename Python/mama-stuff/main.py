@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 PDF_EXTS = {".pdf"}
 EXCEL_EXTS = {".xls", ".xlsx", ".xlsm", ".xlsb"}
+SALES_TOTAL_KEY = "__weekly_sales_total__"
 
 
 def process_data_subfolder_files(
@@ -50,7 +51,7 @@ def process_data_subfolder_files(
     )
 
     def fn(path: Path):
-        if not path.is_file():
+        if not path.is_file() or "DS_Store" in path.name:
             return
 
         ext = path.suffix.lower()
@@ -85,6 +86,7 @@ def handle_excel(excel_path: Path) -> dict[str, float] | None:
     Reads an Excel weekly report and extracts:
       - product name from column "Désignation"
       - quantity sold from column "Qte" under the header group "Sommaire hebdo"
+      - weekly total sales from column "Vente $" under "Sommaire hebdo"
 
     Writes a JSON file to:
       {json_root}/{excel_parent_folder_name}/{excel_stem}.json
@@ -119,6 +121,11 @@ def handle_excel(excel_path: Path) -> dict[str, float] | None:
             return None
         x = float(m.group(0))
         return int(x) if x.is_integer() else x
+
+    def is_vente_header(v: Any) -> bool:
+        s = norm(v)
+        s = re.sub(r"[\s$]", "", s)
+        return s in {"vente", "ventes"}
 
     df = pd.read_excel(excel_path)
 
@@ -158,18 +165,27 @@ def handle_excel(excel_path: Path) -> dict[str, float] | None:
     header_down = df.iloc[des_row]
 
     qty_col = None
+    vente_col = None
     for c in range(som_col, ncols):
-        if norm(header_down[c]) == "qte":
+        cell_val = header_down.iloc[c]
+        if norm(cell_val) == "qte":
             qty_col = c
             break
 
-        if norm(header_down[c] == "Promo"):
+        if norm(cell_val) == "promo":
             raise ValueError(f"Could not find Qte in sheet {excel_path}")
 
     if qty_col is None:
         raise ValueError(
             f'Could not find "Qte" on the same row as "Désignation" in {excel_path}.'
         )
+
+    # Find "Vente $" column in the same header row (if present).
+    for c in range(som_col, ncols):
+        cell_val = header_down.iloc[c]
+        if is_vente_header(cell_val):
+            vente_col = c
+            break
 
     # Correctness check: they must be on the same row (by construction they are)
     # 4) Extract rows until "Désignation" cell is empty
@@ -185,6 +201,17 @@ def handle_excel(excel_path: Path) -> dict[str, float] | None:
             continue
         items[str(name_val).strip()] = q
 
+    # Weekly sales total: last numeric value in "Vente $" column
+    if vente_col is not None:
+        last_num: float | None = None
+        for r in range(des_row + 1, nrows):
+            val = df.iat[r, vente_col]
+            num = parse_quantity(val)
+            if num is not None:
+                last_num = num
+        if last_num is not None:
+            items[SALES_TOTAL_KEY] = last_num
+
     return items
 
 
@@ -196,3 +223,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # d = handle_excel(Path("./data/2026/439 Châteauguy/20260215.xls"))
+    # print(d)

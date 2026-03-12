@@ -9,6 +9,7 @@ from typing import Any
 
 import boto3
 
+SALES_TOTAL_KEY = "__weekly_sales_total__"
 
 def handle_pdf(
     pdf_path: Path,
@@ -35,6 +36,7 @@ def handle_pdf(
 
     Output JSON:
       json/<pdf_parent_folder_name>/<pdf_stem>.json
+      Includes a reserved key for weekly sales total: __weekly_sales_total__
 
     Notes:
       - Textract async APIs require the PDF to be in S3.
@@ -160,6 +162,7 @@ class _HeaderHit:
     des_row: int
     des_col: int
     qty_col: int
+    sales_col: int | None
 
 
 def _extract_products_and_qty_from_blocks(
@@ -171,6 +174,7 @@ def _extract_products_and_qty_from_blocks(
     tables: list[dict[str, Any]] = [b for b in blocks if b.get("BlockType") == "TABLE"]
 
     records: dict[str, float] = {}
+    weekly_sales_total: float | None = None
 
     for table in tables:
         hit = _find_header_and_qty_col(table, block_map)
@@ -188,8 +192,17 @@ def _extract_products_and_qty_from_blocks(
         # If we got something meaningful, keep it.
         if table_records:
             records.update(table_records)
+            if weekly_sales_total is None and hit.sales_col is not None:
+                weekly_sales_total = _extract_sales_total_from_table(
+                    table=table,
+                    block_map=block_map,
+                    des_row=hit.des_row,
+                    sales_col=hit.sales_col,
+                )
 
     # If multiple tables matched (rare), you can dedupe here if needed.
+    if weekly_sales_total is not None:
+        records[SALES_TOTAL_KEY] = weekly_sales_total
     return records
 
 
@@ -218,6 +231,7 @@ def _find_header_and_qty_col(
     ]
 
     qte_cols = [c for (c, t) in header_cells if _is_standalone_qte(t)]
+    sales_col = next((c for (c, t) in header_cells if _is_vente_header(t)), None)
 
     if not qte_cols:
         return None
@@ -245,6 +259,7 @@ def _find_header_and_qty_col(
         des_row=des_row,
         des_col=des_col,
         qty_col=qty_col,
+        sales_col=sales_col,
     )
 
 
@@ -276,6 +291,26 @@ def _extract_rows_from_table(
             out[name] = qty
 
     return out
+
+
+def _extract_sales_total_from_table(
+    *,
+    table: dict[str, Any],
+    block_map: dict[str, dict[str, Any]],
+    des_row: int,
+    sales_col: int | None,
+) -> float | None:
+    if sales_col is None:
+        return None
+
+    grid, max_row, _ = _table_to_grid(table, block_map)
+    last_num: float | None = None
+    for r in range(des_row + 1, max_row + 1):
+        val = _clean_cell_text(grid.get((r, sales_col), ""))
+        num = _parse_quantity(val)
+        if num is not None:
+            last_num = num
+    return last_num
 
 
 def _table_to_grid(
@@ -369,6 +404,12 @@ def _is_standalone_qte(text: str) -> bool:
     # Must be a standalone header cell, not "Diff. Qte ..." etc.
     return bool(_QTE_RE.match(_strip_accents(_clean_cell_text(text)).lower()))
 
+
+def _is_vente_header(text: str) -> bool:
+    # Matches "Vente $" or "Ventes $" (with/without spaces or $)
+    s = _strip_accents(_clean_cell_text(text)).lower()
+    s = re.sub(r"[\s$]", "", s)
+    return s in {"vente", "ventes"}
 
 def _parse_quantity(v: str) -> float | None:
     """

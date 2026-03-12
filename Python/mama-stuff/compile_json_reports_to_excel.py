@@ -13,6 +13,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
+SALES_TOTAL_KEY = "__weekly_sales_total__"
+META_KEY = "__meta__"
 
 @dataclass(frozen=True)
 class ReportRef:
@@ -44,6 +46,7 @@ def compile_json_reports_to_excel(
       - Year-based background colors for report-date columns
       - Year total columns (one per year)
       - Final "All Years Total" column
+      - A "TOTAL SALES $" row (monetary) sourced from __weekly_sales_total__
       - Final "TOTAL" row summing each report column and each year total column
         (bottom-right cell = grand total).
     """
@@ -65,18 +68,28 @@ def compile_json_reports_to_excel(
 
         # Load all reports for this store
         report_data: dict[tuple[int, str], dict[str, Any]] = {}
+        report_sales: dict[tuple[int, str], float | None] = {}
         products_set = set()
 
         for rep in reports:
             key = (rep.year, rep.dt.strftime("%Y%m%d"))
             data = _load_json_map(rep.path)
+            sales_total = None
+            if SALES_TOTAL_KEY in data:
+                sales_total = _to_number_or_none(data.get(SALES_TOTAL_KEY))
+            meta = data.get(META_KEY)
+            if sales_total is None and isinstance(meta, dict):
+                sales_total = _to_number_or_none(meta.get("weekly_sales_total"))
             # normalize keys a bit
             cleaned = {}
             for k, v in data.items():
+                if str(k).startswith("__"):
+                    continue
                 name = _clean_product_name(k)
                 if name:
                     cleaned[name] = v
             report_data[key] = cleaned
+            report_sales[key] = sales_total
             products_set.update(cleaned.keys())
 
         products = sorted(products_set, key=str.casefold)
@@ -184,27 +197,66 @@ def compile_json_reports_to_excel(
                     value=f"=SUM({start}{r}:{end}{r})",
                 )
 
-        # Totals row
-        total_row = first_data_row + len(products)
+        products_start_row = first_data_row
+        products_end_row = first_data_row + len(products) - 1
+
+        # Weekly sales total row (monetary)
+        sales_row = products_end_row + 1
+        ws.cell(row=sales_row, column=1, value="TOTAL SALES $").font = Font(bold=True)
+
+        for c, rep in report_col_meta:
+            key = (rep.year, rep.dt.strftime("%Y%m%d"))
+            val = report_sales.get(key, None)
+            if val is None:
+                continue
+            ws.cell(row=sales_row, column=c, value=_to_number_or_none(val))
+
+        # Sales row year totals
+        for y in years:
+            cols_for_year = [c for c, rep in report_col_meta if rep.year == y]
+            if not cols_for_year:
+                continue
+            cell_refs = ",".join(
+                f"{get_column_letter(c)}{sales_row}" for c in cols_for_year
+            )
+            ws.cell(
+                row=sales_row,
+                column=year_total_cols[y],
+                value=f"=SUM({cell_refs})",
+            )
+
+        # Sales row all years total
+        if last_report_col >= first_report_col:
+            start = get_column_letter(first_report_col)
+            end = get_column_letter(last_report_col)
+            ws.cell(
+                row=sales_row,
+                column=all_years_total_col,
+                value=f"=SUM({start}{sales_row}:{end}{sales_row})",
+            )
+
+        # Totals row (quantities)
+        total_row = sales_row + 1
         ws.cell(row=total_row, column=1, value="TOTAL").font = Font(bold=True)
 
-        # Sum each report column down the product rows
-        for c in range(first_report_col, last_report_col + 1):
-            col_letter = get_column_letter(c)
-            ws.cell(
-                row=total_row,
-                column=c,
-                value=f"=SUM({col_letter}{first_data_row}:{col_letter}{total_row - 1})",
-            ).font = Font(bold=True)
+        if products_end_row >= products_start_row:
+            # Sum each report column down the product rows
+            for c in range(first_report_col, last_report_col + 1):
+                col_letter = get_column_letter(c)
+                ws.cell(
+                    row=total_row,
+                    column=c,
+                    value=f"=SUM({col_letter}{products_start_row}:{col_letter}{products_end_row})",
+                ).font = Font(bold=True)
 
-        # Sum each year total column down the product rows
-        for y, c in year_total_cols.items():
-            col_letter = get_column_letter(c)
-            ws.cell(
-                row=total_row,
-                column=c,
-                value=f"=SUM({col_letter}{first_data_row}:{col_letter}{total_row - 1})",
-            ).font = Font(bold=True)
+            # Sum each year total column down the product rows
+            for y, c in year_total_cols.items():
+                col_letter = get_column_letter(c)
+                ws.cell(
+                    row=total_row,
+                    column=c,
+                    value=f"=SUM({col_letter}{products_start_row}:{col_letter}{products_end_row})",
+                ).font = Font(bold=True)
 
         # Grand total (bottom-right): sum of report totals across ALL report columns
         if last_report_col >= first_report_col:
@@ -248,6 +300,11 @@ def compile_json_reports_to_excel(
                     )
                     if y is not None:
                         ws.cell(row=r, column=c).fill = year_to_color[y]
+
+        # Format sales row as currency
+        currency_fmt = '"$"#,##0.00'
+        for c in range(2, last_col + 1):
+            ws.cell(row=sales_row, column=c).number_format = currency_fmt
 
         # Make totals row stand out a bit
         total_fill = PatternFill("solid", fgColor="FFF2CC")  # light yellow
