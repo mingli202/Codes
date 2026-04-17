@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ImageLib" Version="*" />
+    <PackageReference Include="TesterLib" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets\*.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
+

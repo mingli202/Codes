@@ -1,0 +1,4 @@
+trigger: none
+
+extends:
+  template: /.azuredevops/review-pipeline.yml@problem

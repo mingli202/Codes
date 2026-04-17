@@ -1,0 +1,22 @@
+# Sokoban
+
+# OVERVIEW
+
+Sokoban is a puzzle game. Your goal is to push colored trophies onto their matching colored targets to win the level.
+
+## GAME ELEMENTS
+
+  Player (>)   - You! Shown facing right, left, up, or down.
+  Crate  (B)   - An obstacle on the board.
+  Wall   (W)   - Impassable barrier.
+  Trophy (r/g/b/y) - Colored item (red, green, blue, yellow) to push onto
+                     its matching target.
+  Target (R/G/B/Y) - Colored goal marker. Match the trophy color to win.
+  Blank  (_)   - Empty space.
+
+
+## HOW TO WIN
+
+Push every colored trophy onto the target of the same color.
+The level is complete when all targets are covered by their
+matching trophy.

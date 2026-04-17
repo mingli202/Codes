@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ImageLib" Version="*" />
+    <PackageReference Include="TesterLib" Version="*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniqueWebpages.Implementation\UniqueWebpages.Implementation.csproj" />
+  </ItemGroup>
+</Project>
+

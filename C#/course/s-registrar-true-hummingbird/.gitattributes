@@ -1,0 +1,8 @@
+# Autodetect text files
+* text=auto eol=lf
+
+# Definitively text files
+*.md text
+*.cs text
+*.json text
+*.csproj text

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ImageLib" Version="*" />
+    <PackageReference Include="TesterLib" Version="*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Huffman.Implementation\Huffman.Implementation.csproj" />
+  </ItemGroup>
+</Project>
+

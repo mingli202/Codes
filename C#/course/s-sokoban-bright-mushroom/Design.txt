@@ -1,0 +1,112 @@
+# SOKOBAN PROJECT DESIGN
+
+## GAME LAYER
+
+Game
+  Entry point of the application. Extends the World class (from ImageLib).
+  Creates a Level from two string grids (ground and description), renders the
+  level as an image, and launches the game window via BigBang.
+
+Level
+  Represents a single Sokoban game level. Holds two Boards: one for the ground
+  layer (targets) and one for the description layer (walls, player, crates,
+  trophies). Parses string representations into cell grids, renders both
+  layers as an overlaid image, and checks the win condition (every target
+  has a matching-color trophy on it).
+
+## DATA STRUCTURES
+
+Grid<T>
+  A generic two-dimensional grid backed by a ListOf<ListOf<T>>. Validates
+  that all rows have equal length (rectangular shape). Provides All, Any,
+  Fold, Get, Set, Swap, and Map operations over (row, col) coordinates.
+
+ListOf<T>  (abstract)
+  Abstract base class for an immutable, recursively-defined linked list.
+  Declares operations: All, Any, Contains, Equals, Filter, Find, Fold, Get,
+  IndexOf, Length, Map, Set, SplitAt, and ToString.
+
+  EmptyLo<T>
+    The empty-list case. Represents the end of a list. All/Fold return
+    base-case values; Find returns None; Length returns 0.
+
+  LinkLo<T>
+    The non-empty-list case. Holds a first element and a rest (ListOf<T>).
+    Implements every ListOf operation by processing the first element and
+    recursing on the rest.
+
+Option<T>  (abstract)
+  A generic option type representing a value that may or may not exist.
+  Provides AndThen (flat-map), Map, and MapOr operations.
+
+  Some<T>
+    Wraps a present value. AndThen/Map/MapOr apply the given function to
+    the wrapped value.
+
+  None<T>
+    Represents the absence of a value. AndThen/Map return None; MapOr
+    returns the provided default.
+
+Util  (static)
+  Utility class with a helper to convert a string into a ListOf<char>,
+  used during level parsing.
+
+## CELLS
+
+Cell  (abstract)
+  Base class for every cell on the board. Declares:
+    - GetImage(): returns the visual representation of the cell.
+    - Equals(): double-dispatch equality via EqualsXxx visitor methods.
+    - IsTrophyOnTarget / IsTrophyOnTargetTarget: double-dispatch logic
+      used to check the win condition.
+    - FromDescription(char): factory that creates a cell from a description
+      character (walls, player, crates, trophies, blanks).
+    - FromGround(char): factory that creates a cell from a ground character
+      (targets, blanks).
+
+  Blank
+    An empty/transparent cell. Renders as a transparent rectangle.
+
+  Wall
+    An impassable wall cell. Renders from a wall image asset.
+
+  Crate
+    A pushable crate. Renders from a crate image asset.
+
+  Player
+    The player character. Stores a PlayerDirection (Up, Down, Left, Right)
+    and renders the player image rotated to face that direction. Constructed
+    from a direction character (^, v, <, >).
+
+  Trophy
+    A colored trophy (goal piece). Stores an AColor and renders a
+    color-specific trophy image. Participates in the win-condition check:
+    returns true for IsTrophyOnTargetTarget when its color matches the
+    target's color.
+
+  Target
+    A colored target square on the ground layer. Stores an AColor and
+    renders as a colored bullseye (concentric circles). Overrides
+    IsTrophyOnTarget to delegate to the description cell's
+    IsTrophyOnTargetTarget, enabling the double-dispatch win check.
+
+PlayerDirection  (enum)
+  Enumerates the four player-facing directions: Up, Down, Left, Right.
+
+## COLORS
+
+AColor  (abstract record)
+  Base record holding RGB byte values. Provides a factory method From(char)
+  that maps character codes (R/r, G/g, B/b, Y/y) to concrete color records.
+
+  Red      — (255, 0, 0)
+  Green    — (0, 128, 0)
+  Blue     — (0, 0, 255)
+  Yellow   — (255, 255, 0)
+
+## Option
+
+
+Option Type
+   Option<T> (Some/None) replaces nulls for safe value retrieval from
+   lists and grids.

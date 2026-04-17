@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>exe</OutputType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="ImageLib" Version="*" />
+		<PackageReference Include="TesterLib" Version="*" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Sokoban.Implementation\Sokoban.Implementation.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="..\Sokoban.Implementation\Assets\" />
+	</ItemGroup>
+	<ItemGroup>
+
+		<None Remove="..\Sokoban.Implementation\Assets\*.png" />
+
+		<Content Include="..\Sokoban.Implementation\Assets\*.png">
+			<Link>Assets\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+	</ItemGroup>
+</Project>
+

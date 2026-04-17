@@ -1,0 +1,15 @@
+resources:
+  repositories:
+  - repository: problem
+    type: git
+    name: Problem.TesterIntroduction
+    ref: main
+
+trigger:
+  - main
+
+extends:
+  template: /.azuredevops/student-pipeline.yml@problem
+  parameters:
+    debug: false
+

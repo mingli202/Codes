@@ -1,0 +1,17 @@
+For Cell, we added a new method HandleSwap(ICell other) to handle the swap of two cells. This is because when something goings into a hole, both the hole and the cell becomes blank. As such, instead of doing type checking to see whether the next cell is a hole, we delegate the moving to the cell themselves.
+
+If we had known that a hole was coming, we would have added new method fromt the start.
+
+Yes, if there are new tiles, we would be able to handle them.
+
+For the pushing logic, we first check whether the player can move the next cell. If it can't, then try to push the cell in the given direction.
+
+Now that the game have many end condition, we have a GameOverReason to represent the end conditions.
+
+To make this an actual game and not just a singular level, we implemented the Elm architecture. When the user does something, we send the event to the GameState, which will handle the event base on the current state. Right now, the we only have one event that we are interested in, which is the KeyUp event. However, this architecture allows to extend with other events, such as MouseMove if we want to support clicking on cells for example in the future. After handling the event, the game state returns an action to the main loop (Game), which then handles whatever the state wants. And for the UI, it is a function of the state. The Render method's only job is to render its state and does no update to itself.
+
+ASSIGNMENT 9 UPDATE
+
+Design wise, we changed the Level.MoveCell method to have the cell that is being moved into handle the swap. Before, it checks whether the next cell is swapable, and if it is, then swap it, if not, then try to move the next cell, then try to move the given cell. Now, the individual cell handles its swapping, so those that needs to be pushed will be handled by themselves. Using the above strategy, the ice implementation is now obvious: it is part the ground and after the content cell is moved, we ask the ground call to handle the swapping. In this case, the ice will move whatever is on it to the next block in the given direction. This also means that anything on ice has no weight. Meaning the player can push any number of blocks as long as they are all on ice, and they will get pushed to the edge until they can move anymore.
+
+Since nothing is mutable except the top level game state, we make a new level every time something happens. Before, we rendered the level image on every tick, which made the game lag. Now, we only remake the game image if the Action::Render is returned. This way, when the player isn't making a move, the image doesn't get remade.

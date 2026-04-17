@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ImageLib" Version="*" />
+    <PackageReference Include="TesterLib" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="public\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="public\*.png" />
+    <Content Include="public\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
+

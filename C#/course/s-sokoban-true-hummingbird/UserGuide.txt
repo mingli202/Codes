@@ -1,0 +1,7 @@
+Keymaps are shown at the bottom of every screen.
+
+The goal is the game is to push all the trophies to their targets. The game is won when every target has a trophy of the matching color on it. There can be more tropies than targets, but not more targets than trophies (otherwise it's not winnable).
+
+A block and trophy can be pushed by the player. It can only be pushed if the adjacent cell in the given direction is empty. However, if they are on ice, then they are considered to have no weight, meaning that the player can push any number of block/trophy as long as they are on ice.
+
+Anything that is pushed into a hole is gone along with the hole. If the player falls, they lose. If a trophy falls and there are not enough trophies fo fill the targets, then the game is unwinnable and you must restart the level.

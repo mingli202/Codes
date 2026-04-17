@@ -1,0 +1,1162 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+    displayMath: [ ["$$","$$"], 
+                   ["\\[","\\]"], 
+                   ["\\begin{equation}","\\end{equation}"], 
+                   ["\\begin{equation*}","\\end{equation*}"] ],
+    processEscapes: true,
+    autoload: {
+      color: [],
+      colorv2: ['color']
+    },
+    packages: {'[+]': ['noerrors']}
+  },
+  options: {
+    ignoreHtmlClass: "tex2jax_ignore|JavaHighlightBlock|JavaHighlight|sourceCode",
+    processHtmlClass: 'tex2jax_process',
+    enableMenu: false,
+    menuOptions: {
+      settings: {
+        enrich: false,
+        collapsible: false,
+      }
+    }
+  },
+  output: {
+    font: 'mathjax-asana',
+    scale: 1.15,
+  },
+  loader: {
+    load: ['[tex]/noerrors'],
+    '[mathjax-asana]/chtml': {
+      ready() {
+        const ASANA = MathJax._.output.fonts['mathjax-asana'].chtml_ts.MathJaxAsanaFont;
+        ASANA.defaultChars['-tex-mathit'] = {0x66: [.733, .276, .55, {c: '\u{1D453}', f: 'MI'}]};
+        ASANA.defaultStyles['.mjx-c66.ASNA-MI'] = {margin: '0 -.111em'};
+      }
+    }
+  }
+};
+</script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+<link rel="stylesheet" type="text/css" href="codemirror.css">
+<link rel="stylesheet" type="text/css" href="manual-fonts.css">
+<link rel="stylesheet" type="text/css" href="extra-styles.css">
+<script src="codemirror.js"></script>
+<script src="runmode.js"></script>
+<script src="python.js"></script>
+<script src="clike.js"></script>
+<script src="setup-page.js"></script>
+<link type="image/png" rel="icon" href="favicon.png">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=0.8"><title>The Tester Library</title><link rel="stylesheet" type="text/css" href="scribble.css" title="default"><link rel="stylesheet" type="text/css" href="manual-style.css" title="default"><link rel="stylesheet" type="text/css" href="manual-racket.css" title="default"><script type="text/javascript" src="scribble-common.js"></script><script type="text/javascript" src="manual-racket.js"></script><script src="https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml.js" charset="UTF-8"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@4/input/tex/extensions/noerrors.js" charset="UTF-8"></script><style id="MJX-LE-styles">:root {
+  --mjx-fg-red: 255, 0, 0;
+  --mjx-fg-green: 0, 255, 0;
+  --mjx-fg-blue: 0, 0, 255;
+  --mjx-fg-yellow: 255, 255, 0;
+  --mjx-fg-cyan: 0, 255, 255;
+  --mjx-fg-magenta: 255, 0, 255;
+  --mjx-fg-white: 255, 255, 255;
+  --mjx-fg-black: 0, 0, 0;
+  --mjx-bg-red: 255, 0, 0;
+  --mjx-bg-green: 0, 255, 0;
+  --mjx-bg-blue: 0, 0, 255;
+  --mjx-bg-yellow: 255, 255, 0;
+  --mjx-bg-cyan: 0, 255, 255;
+  --mjx-bg-magenta: 255, 0, 255;
+  --mjx-bg-white: 255, 255, 255;
+  --mjx-bg-black: 0, 0, 0;
+  --mjx-live-bg-color: white;
+  --mjx-live-shadow-color: #888;
+  --mjx-live-border-color: #CCCCCC;
+  --mjx-bg1-color: rgba(var(--mjx-bg-blue), var(--mjx-bg-alpha));
+  --mjx-fg1-color: rgba(var(--mjx-fg-black), 1);
+  --mjx-bg2-color: rgba(var(--mjx-bg-red), 1);
+  --mjx-fg2-color: rgba(var(--mjx-fg-black), 1);
+  --mjx-bg1-alpha: 0.2;
+  --mjx-fg1-alpha: 1;
+  --mjx-bg2-alpha: 1;
+  --mjx-fg2-alpha: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mjx-bg-blue: 132, 132, 255;
+      --mjx-bg-white: 0, 0, 0;
+      --mjx-bg-black: 255, 255, 255;
+      --mjx-fg-white: 0, 0, 0;
+      --mjx-fg-black: 255, 255, 255;
+      --mjx-live-bg-color: #222025;
+      --mjx-live-shadow-color: black;
+      --mjx-live-border-color: #7C7C7C;
+      --mjx-bg1-alpha: 0.3;
+      --mjx-fg1-alpha: 1;
+      --mjx-bg2-alpha: 1;
+      --mjx-fg2-alpha: 1;
+  }
+}
+
+.MJX_LiveRegion {
+  position: absolute;
+  top: 0;
+  display: none;
+  width: auto;
+  height: auto;
+  padding: 0;
+  opacity: 1;
+  z-index: 202;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: var(--mjx-live-bg-color);
+  box-shadow: 0px 5px 20px var(--mjx-live-shadow-color);
+  border: 2px solid var(--mjx-live-border-color);
+}
+
+.MJX_LiveRegion_Show {
+  display: block;
+}
+
+.MJX_LiveRegion > div {
+  color: var(--mjx-fg1-color);
+  background-color: var(--mjx-bg1-color);
+}
+
+mjx-container [data-sre-highlight-1]:not([data-mjx-collapsed], rect) {
+  color: var(--mjx-fg1-color) ! important;
+  fill: var(--mjx-fg1-color) ! important;
+}
+
+mjx-container:not([data-mjx-clone-container]) [data-sre-highlight-1]:not([data-sre-enclosed], rect) {
+  background-color: var(--mjx-bg1-color) ! important;
+}
+
+mjx-container rect[data-sre-highlight-1]:not([data-sre-enclosed]) {
+  fill: var(--mjx-bg1-color) ! important;
+}
+
+mjx-container [data-sre-highlight-2] {
+  color: var(--mjx-fg2-color) ! important;
+  background-color: var(--mjx-bg2-color) ! important;
+  fill: var(--mjx-fg2-color) ! important;
+}
+
+mjx-container rect[data-sre-highlight-2] {
+  fill: var(--mjx-bg2-color) ! important;
+}</style><style id="MJX-RE-styles">.MJX_HoverRegion {
+  display: block;
+  position: absolute;
+  width: max-content;
+  height: auto;
+  padding: 0;
+  opacity: 1;
+  z-index: 202;
+  margin: 0 auto;
+  background-color: white;
+  line-height: 0;
+  box-shadow: 0px 10px 20px #888;
+  border: 2px solid #CCCCCC;
+}
+
+.MJX_HoverRegion > div {
+  overflow: hidden;
+  color: var(--mjx-fg1-color);
+  background-color: var(--mjx-bg1-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .MJX_HoverRegion {
+    background-color: #222025;
+      box-shadow: 0px 5px 20px #000;
+      border: 1px solid #7C7C7C;
+  }
+}
+
+mjx-container[data-mjx-clone-container] {
+  padding: 2px ! important;
+}
+
+mjx-math > mjx-mlabeledtr {
+  display: inline-block;
+  margin-right: .5em ! important;
+}
+
+mjx-math > mjx-mtd {
+  float: right;
+}</style><style id="MJX-_E-styles">.MJX_ToolTip {
+  width: auto;
+  height: auto;
+  opacity: 1;
+  text-align: center;
+  border-radius: 4px;
+  padding: 0;
+  border-bottom: 1px dotted black;
+  position: absolute;
+  display: inline-block;
+  background-color: white;
+  z-index: 202;
+}
+
+.MJX_ToolTip > div {
+  border-radius: inherit;
+  padding: 0 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .MJX_ToolTip {
+    background-color: #222025;
+      box-shadow: 0px 5px 20px #000;
+      border: 1px solid #7C7C7C;
+  }
+}</style><style id="MJX-Menu-styles">.CtxtMenu_Menu {
+  position: absolute;
+  background-color: white;
+  color: black;
+  width: auto;
+  padding: 5px 0px;
+  border: 1px solid #CCCCCC;
+  margin: 0;
+  cursor: default;
+  font: menu;
+  text-align: left;
+  text-indent: 0;
+  text-transform: none;
+  line-height: normal;
+  letter-spacing: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  float: none;
+  z-index: 1001;
+  border-radius: 5px;
+  box-shadow: 0px 10px 20px #808080;
+}
+.CtxtMenu_MenuItem {
+  padding: 1px 2em;
+  background: transparent;
+}
+.CtxtMenu_MenuArrow {
+  position: absolute;
+  right: 0.5em;
+  padding-top: 0.25em;
+  color: #666666;
+  font-family: null;
+  font-size: 0.75em;
+}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {
+  color: white;
+}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {
+  left: 0.5em;
+  right: auto;
+}
+.CtxtMenu_MenuCheck {
+  position: absolute;
+  left: 0.7em;
+  font-family: null;
+}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL {
+  right: 0.7em;
+  left: auto;
+}
+.CtxtMenu_MenuRadioCheck {
+  position: absolute;
+  left: 0.7em;
+}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {
+  right: 0.7em;
+  left: auto;
+}
+.CtxtMenu_MenuInputBox {
+  padding-left: 1em;
+  right: 0.5em;
+  color: #666666;
+  font-family: null;
+}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {
+  left: 0.1em;
+}
+.CtxtMenu_MenuComboBox {
+  left: 0.1em;
+  padding-bottom: 0.5em;
+}
+.CtxtMenu_MenuSlider {
+  left: 0.1em;
+}
+.CtxtMenu_SliderValue {
+  position: absolute;
+  right: 0.1em;
+  padding-top: 0.25em;
+  color: #333333;
+  font-size: 0.75em;
+}
+.CtxtMenu_MenuActive .CtxtMenu_SliderValue {
+  color: #DDDDDD;
+}
+.CtxtMenu_SliderBar {
+  outline: none;
+  background: #D3D3D3;
+}
+.CtxtMenu_MenuLabel {
+  padding: 1px 2em 3px 1.33em;
+  font-style: italic;
+}
+.CtxtMenu_MenuRule {
+  border-top: 1px solid #DDDDDD;
+  margin: 4px 3px;
+}
+.CtxtMenu_MenuDisabled {
+  color: #999;
+}
+.CtxtMenu_MenuActive {
+  background-color: #606872;
+  color: white;
+}
+.CtxtMenu_MenuDisabled:focus {
+  background-color: #E8E8E8;
+}
+.CtxtMenu_MenuLabel:focus {
+  background-color: #E8E8E8;
+}
+.CtxtMenu_ContextMenu:focus {
+  outline: none;
+}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {
+  outline: none;
+}
+.CtxtMenu_SelectionMenu {
+  position: relative;
+  float: left;
+  border-bottom: none;
+  box-shadow: none ! important;
+  border-radius: 0px !important;
+}
+.CtxtMenu_SelectionItem {
+  padding-right: 1em;
+}
+.CtxtMenu_Selection {
+  right: 40%;
+  width: 50%;
+}
+.CtxtMenu_SelectionBox {
+  padding: 0em;
+  max-height: 20em;
+  max-width: none;
+  background-color: #FFFFFF;
+}
+.CtxtMenu_SelectionDivider {
+  clear: both;
+  border-top: 2px solid #000000;
+}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {
+  top: -10px;
+  left: -10px;
+}
+@media (prefers-color-scheme: dark) /* menu */ {
+  .CtxtMenu_Menu {
+  color: #E0E0E0;
+  background-color: #242436;
+  box-shadow: 0px 10px 20px #000;
+  border: 1px solid #808080;
+}
+  .CtxtMenu_SliderValue {
+  color: #D0D0D0;
+}
+  .CtxtMenu_MenuDisabled:focus {
+  background-color: #383838;
+}
+  .CtxtMenu_MenuLabel:focus {
+  background-color: #585858;
+}
+  .CtxtMenu_MenuRule {
+  border-top: 1px solid #808080;
+}
+  .CtxtMenu_SelectionDivider {
+  border-top: 2px solid #808080;
+};
+}
+.CtxtMenu_MenuClose {
+  position: absolute;
+  cursor: pointer;
+  display: inline-block;
+  border: 2px solid #AAA;
+  border-radius: 18px;
+  font-family:  "Courier New", Courier;
+  font-size: 24px;
+  color: #F0F0F0;
+}
+.CtxtMenu_MenuClose span {
+  display: block;
+  background-color: #AAA;
+  border: 1.5px solid;
+  border-radius: 18px;
+  line-height: 0;
+  padding: 8px 0 6px;
+}
+.CtxtMenu_MenuClose:hover {
+  color: white !important;
+  border: 2px solid #CCC !important;
+}
+.CtxtMenu_MenuClose:hover span {
+  background-color: #CCC !important;
+}
+.CtxtMenu_MenuClose:hover:focus {
+  outline: none;
+}</style><style id="MJX-CHTML-styles">
+mjx-container[overflow="scroll"][display] {
+  overflow: auto clip;
+  min-width: initial !important;
+}
+
+mjx-container[overflow="truncate"][display] {
+  overflow: hidden clip;
+  min-width: initial !important;
+}
+
+mjx-container[display] {
+  display: block;
+  text-align: center;
+  justify-content: center;
+  margin: .7em 0;
+  padding: .3em 2px;
+}
+
+mjx-container[display][width="full"] {
+  display: flex;
+}
+
+mjx-container[justify="left"] {
+  text-align: left;
+  justify-content: left;
+}
+
+mjx-container[justify="right"] {
+  text-align: right;
+  justify-content: right;
+}
+
+mjx-container[jax="CHTML"] {
+  white-space: nowrap;
+}
+
+mjx-mo > mjx-c, mjx-mi > mjx-c, mjx-mn > mjx-c, mjx-ms > mjx-c, mjx-mtext > mjx-c {
+  clip-path: padding-box polygon(-1em -2px, calc(100% + 1em) -2px, calc(100% + 1em) calc(100% + 2px), -1em calc(100% + 2px));
+}
+
+mjx-stretchy-h {
+  clip-path: padding-box polygon(0 -2px, 100% -2px, 100% calc(100% + 2px), 0 calc(100% + 2px));
+}
+
+mjx-stretchy-v {
+  clip-path: padding-box polygon(-2px 0, calc(100% + 2px) 0, calc(100% + 2px) 100%, -2px 100%);
+}
+
+mjx-container [space="1"] {
+  margin-left: .111em;
+}
+
+mjx-container [space="2"] {
+  margin-left: .167em;
+}
+
+mjx-container [space="3"] {
+  margin-left: .222em;
+}
+
+mjx-container [space="4"] {
+  margin-left: .278em;
+}
+
+mjx-container [space="5"] {
+  margin-left: .333em;
+}
+
+mjx-container [rspace="1"] {
+  margin-right: .111em;
+}
+
+mjx-container [rspace="2"] {
+  margin-right: .167em;
+}
+
+mjx-container [rspace="3"] {
+  margin-right: .222em;
+}
+
+mjx-container [rspace="4"] {
+  margin-right: .278em;
+}
+
+mjx-container [rspace="5"] {
+  margin-right: .333em;
+}
+
+mjx-container [size="s"] {
+  font-size: 70.7%;
+}
+
+mjx-container [size="ss"] {
+  font-size: 50%;
+}
+
+mjx-container [size="Tn"] {
+  font-size: 60%;
+}
+
+mjx-container [size="sm"] {
+  font-size: 85%;
+}
+
+mjx-container [size="lg"] {
+  font-size: 120%;
+}
+
+mjx-container [size="Lg"] {
+  font-size: 144%;
+}
+
+mjx-container [size="LG"] {
+  font-size: 173%;
+}
+
+mjx-container [size="hg"] {
+  font-size: 207%;
+}
+
+mjx-container [size="HG"] {
+  font-size: 249%;
+}
+
+mjx-container [width="full"] {
+  width: 100%;
+}
+
+mjx-box {
+  display: inline-block;
+}
+
+mjx-block {
+  display: block;
+}
+
+mjx-itable {
+  display: inline-table;
+}
+
+mjx-row {
+  display: table-row;
+}
+
+mjx-row > mjx-cell, mjx-row > mjx-base, mjx-row > mjx-under, mjx-row > mjx-over, mjx-row > mjx-den {
+  display: table-cell;
+}
+
+mjx-container [inline-breaks] {
+  display: inline;
+}
+
+mjx-container .mjx-selected {
+  outline: 2px solid black;
+}
+
+@media (prefers-color-scheme: dark) {
+  mjx-container .mjx-selected {
+    outline: 2px solid #C8C8C8;
+  }
+}
+
+mjx-mtext {
+  display: inline-block;
+}
+
+mjx-mstyle {
+  display: inline-block;
+}
+
+mjx-merror {
+  display: inline-block;
+  color: red;
+  background-color: yellow;
+}
+
+mjx-mphantom {
+  visibility: hidden;
+}
+
+mjx-container[has-speech="true"] {
+  position: relative;
+  cursor: default;
+}
+
+mjx-speech {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+mjx-speech:focus {
+  outline: none;
+}
+
+mjx-container a[data-mjx-href] {
+  color: LinkText;
+  cursor: pointer;
+}
+
+mjx-container a[data-mjx-href].mjx-visited {
+  color: VisitedText;
+}
+
+mjx-container > mjx-help {
+  display: none;
+  position: absolute;
+  top: -.3em;
+  right: -.5em;
+  width: .6em;
+  height: .6em;
+  cursor: pointer;
+}
+
+mjx-container[display="true"] > mjx-help {
+  position: sticky;
+  inset: -100% 0 100% 0;
+  margin: -.3em -.5em 0 -.1em;
+  right: 0;
+  top: initial;
+}
+
+mjx-help > svg {
+  stroke: black;
+  width: 100%;
+  height: 100%;
+}
+
+mjx-help > svg > circle {
+  stroke-width: 1.5px;
+  cx: 9px;
+  cy: 9px;
+  r: 9px;
+  fill: white;
+}
+
+mjx-help > svg > circle:nth-child(2) {
+  fill: var(--mjx-bg1-color);
+  r: 7px;
+}
+
+mjx-help > svg > line {
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+}
+
+mjx-help:hover > svg > circle:nth-child(2) {
+  fill: white;
+}
+
+mjx-container.mjx-explorer-active > mjx-help {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (prefers-color-scheme: dark) /* explorer */ {
+  mjx-help > svg {
+    stroke: #E0E0E0;
+  }
+  mjx-help > svg > circle {
+    fill: #404040;
+  }
+  mjx-help > svg > circle:nth-child(2) {
+    fill: rgba(132, 132, 255, .3);
+  }
+  mjx-help:hover > svg > circle:nth-child(2) {
+    stroke: #AAAAAA;
+      fill: #404040;
+  }
+}
+
+mjx-container[jax="CHTML"] > mjx-math.ASNA-N[breakable] > * {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-N;
+}
+
+.ASNA-N {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-N;
+}
+
+.ASNA-B {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-B;
+}
+
+.ASNA-I {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-I;
+}
+
+.ASNA-BI {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-BI;
+}
+
+.ASNA-DS {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-DS;
+}
+
+.ASNA-F {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-F;
+}
+
+.ASNA-FB {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-FB;
+}
+
+.ASNA-S {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-S;
+}
+
+.ASNA-SB {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SB;
+}
+
+.ASNA-SS {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SS;
+}
+
+.ASNA-SSB {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SSB;
+}
+
+.ASNA-SSI {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SSI;
+}
+
+.ASNA-SSBI {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SSBI;
+}
+
+.ASNA-M {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-M;
+}
+
+.ASNA-SO {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-SO;
+}
+
+.ASNA-LO {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-LO;
+}
+
+.ASNA-S3 {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-S3;
+}
+
+.ASNA-S4 {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-S4;
+}
+
+.ASNA-S5 {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-S5;
+}
+
+.ASNA-S6 {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-S6;
+}
+
+.ASNA-MI {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-MI;
+}
+
+.ASNA-C {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-C;
+}
+
+.ASNA-CB {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-CB;
+}
+
+.ASNA-OS {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-OS;
+}
+
+.ASNA-V {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-V;
+}
+
+.ASNA-E {
+  font-family: MJX-ASNA-ZERO, MJX-ASNA-E;
+}
+
+.mjx-c66.ASNA-MI {
+  margin: 0 -.111em;
+}
+
+@font-face /* MJX-ASNA-ZERO */ {
+  font-family: MJX-ASNA-ZERO;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-zero.woff2") format("woff2");
+}
+
+@font-face /* MJX-BRK */ {
+  font-family: MJX-BRK;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-brk.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-N */ {
+  font-family: MJX-ASNA-N;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-n.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-B */ {
+  font-family: MJX-ASNA-B;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-b.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-I */ {
+  font-family: MJX-ASNA-I;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-i.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-BI */ {
+  font-family: MJX-ASNA-BI;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-bi.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-DS */ {
+  font-family: MJX-ASNA-DS;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-ds.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-F */ {
+  font-family: MJX-ASNA-F;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-f.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-FB */ {
+  font-family: MJX-ASNA-FB;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-fb.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-S */ {
+  font-family: MJX-ASNA-S;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-s.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SB */ {
+  font-family: MJX-ASNA-SB;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-sb.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SS */ {
+  font-family: MJX-ASNA-SS;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-ss.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SSB */ {
+  font-family: MJX-ASNA-SSB;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-ssb.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SSI */ {
+  font-family: MJX-ASNA-SSI;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-ssi.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SSBI */ {
+  font-family: MJX-ASNA-SSBI;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-ssbi.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-M */ {
+  font-family: MJX-ASNA-M;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-m.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-SO */ {
+  font-family: MJX-ASNA-SO;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-so.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-LO */ {
+  font-family: MJX-ASNA-LO;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-lo.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-S3 */ {
+  font-family: MJX-ASNA-S3;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-s3.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-S4 */ {
+  font-family: MJX-ASNA-S4;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-s4.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-S5 */ {
+  font-family: MJX-ASNA-S5;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-s5.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-S6 */ {
+  font-family: MJX-ASNA-S6;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-s6.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-MI */ {
+  font-family: MJX-ASNA-MI;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-mi.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-C */ {
+  font-family: MJX-ASNA-C;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-c.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-CB */ {
+  font-family: MJX-ASNA-CB;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-cb.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-OS */ {
+  font-family: MJX-ASNA-OS;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-os.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-V */ {
+  font-family: MJX-ASNA-V;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-v.woff2") format("woff2");
+}
+
+@font-face /* MJX-ASNA-E */ {
+  font-family: MJX-ASNA-E;
+  src: url("https://cdn.jsdelivr.net/npm/@mathjax/mathjax-asana-font@4.1.1/chtml/woff2/mjx-asna-e.woff2") format("woff2");
+}
+</style></head><body id="scribble-racket-lang-org"><div class="tocset"><div class="tocview"><div class="tocviewlist tocviewlisttopspace"><div class="tocviewtitle"><table cellspacing="0" cellpadding="0"><tbody><tr><td style="width: 1em;"><a href="javascript:void(0);" title="Expand/Collapse" class="tocviewtoggle" onclick="TocviewToggle(this,&quot;tocview_0&quot;);">►</a></td><td></td><td><a href="index.html" class="tocviewlink" data-pltdoc="x">Foundations of Class-<wbr>based Program Design</a></td></tr></tbody></table></div><div class="tocviewsublisttop" style="display: none;" id="tocview_0"><table cellspacing="0" cellpadding="0"><tbody><tr><td align="right"></td><td><a href="Lectures.html" class="tocviewlink" data-pltdoc="x">Lectures</a></td></tr><tr><td align="right"></td><td><a href="Syllabus.html" class="tocviewlink" data-pltdoc="x">Syllabus</a></td></tr><tr><td align="right"></td><td><a href="Lab_Materials.html" class="tocviewlink" data-pltdoc="x">Lab Materials</a></td></tr><tr><td align="right"></td><td><a href="Assignments.html" class="tocviewlink" data-pltdoc="x">Assignments</a></td></tr><tr><td align="right"></td><td><a href="Examplar.html" class="tocviewlink" data-pltdoc="x">Examplar</a></td></tr><tr><td align="right"></td><td><a href="pair-programming.html" class="tocviewlink" data-pltdoc="x">Pair Programming Overview</a></td></tr><tr><td align="right"></td><td><a href="Documentation.html" class="tocviewselflink" data-pltdoc="x">Documentation</a></td></tr></tbody></table></div></div><div class="tocviewlist"><table cellspacing="0" cellpadding="0"><tbody><tr><td style="width: 1em;"><a href="javascript:void(0);" title="Expand/Collapse" class="tocviewtoggle" onclick="TocviewToggle(this,&quot;tocview_1&quot;);">▼</a></td><td></td><td><a href="Documentation.html" class="tocviewlink" data-pltdoc="x">Documentation</a></td></tr></tbody></table><div class="tocviewsublist" style="display: block;" id="tocview_1"><table cellspacing="0" cellpadding="0"><tbody><tr><td align="right"></td><td><a href="image-doc.html" class="tocviewlink" data-pltdoc="x">The Image Library</a></td></tr><tr><td align="right"></td><td><a href="" class="tocviewselflink" data-pltdoc="x">The Tester Library</a></td></tr></tbody></table></div></div><div class="tocviewlist"><table cellspacing="0" cellpadding="0"><tbody><tr><td style="width: 1em;"><a href="javascript:void(0);" title="Expand/Collapse" class="tocviewtoggle" onclick="TocviewToggle(this,&quot;tocview_2&quot;);">►</a></td><td></td><td><a href="" class="tocviewselflink" data-pltdoc="x">The Tester Library</a></td></tr></tbody></table><div class="tocviewsublistbottom" style="display: none;" id="tocview_2"><table cellspacing="0" cellpadding="0"><tbody><tr><td align="right">2.1&nbsp;</td><td><a href="#%28part._.Using_the_tester_library%29" class="tocviewlink" data-pltdoc="x">Using the tester library</a></td></tr></tbody></table></div></div></div><div class="tocsub"><div class="tocsubtitle">On this page:</div><table class="tocsublist" cellspacing="0"><tbody><tr><td><span class="tocsublinknumber">2.1<span class="stt">&nbsp;</span></span><a href="#%28part._.Using_the_tester_library%29" class="tocsubseclink" data-pltdoc="x">Using the tester library</a></td></tr><tr><td><span class="tocsublinknumber">2.1.1<span class="stt">&nbsp;</span></span><a href="#%28part._.Naming_test_methods%29" class="tocsubseclink" data-pltdoc="x">Naming test methods</a></td></tr><tr><td><span class="tocsublinknumber">2.1.2<span class="stt">&nbsp;</span></span><a href="#%28part._.Writing_test_methods_with_multiple_tests%29" class="tocsubseclink" data-pltdoc="x">Writing test methods with multiple tests</a></td></tr><tr><td><span class="tocsublinknumber">2.1.3<span class="stt">&nbsp;</span></span><a href="#%28part._.Writing_multiple_test_methods%29" class="tocsubseclink" data-pltdoc="x">Writing multiple test methods</a></td></tr><tr><td><span class="tocsublinknumber">2.1.4<span class="stt">&nbsp;</span></span><a href="#%28part._.The_testing_methods%29" class="tocsubseclink" data-pltdoc="x">The testing methods</a></td></tr><tr><td><span class="tocsublinknumber">2.1.4.1<span class="stt">&nbsp;</span></span><a href="#%28part._.Basic_methods_%29" class="tocsubseclink" data-pltdoc="x">Basic methods:</a></td></tr><tr><td><span class="tocsublinknumber">2.1.4.2<span class="stt">&nbsp;</span></span><a href="#%28part._.Exception_testing%29" class="tocsubseclink" data-pltdoc="x">Exception testing</a></td></tr><tr><td><span class="tocsublinknumber">2.1.4.3<span class="stt">&nbsp;</span></span><a href="#%28part._.Testing_methods_with_randomized_results_%29" class="tocsubseclink" data-pltdoc="x">Testing methods with randomized results:</a></td></tr><tr><td><span class="tocsublinknumber">2.1.4.4<span class="stt">&nbsp;</span></span><a href="#%28part._.Miscellaneous_methods_%29" class="tocsubseclink" data-pltdoc="x">Miscellaneous methods:</a></td></tr><tr><td><span class="tocsublinknumber">2.1.5<span class="stt">&nbsp;</span></span><a href="#%28part._.How_.Check.Expect_compares_for_equality%29" class="tocsubseclink" data-pltdoc="x">How <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Check</span> &nbsp;<span class="cm-variable">Expect</span></code></span> compares for equality</a></td></tr></tbody></table></div></div><div class="maincolumn"><div class="main"><div class="versionbox"><span class="version">8.18</span></div><div class="navsettop"><span class="navleft"><div class="nosearchform"></div>&nbsp;&nbsp;<span class="tocsettoggle">&nbsp;&nbsp;<a href="javascript:void(0);" title="show/hide table of contents" onclick="TocsetToggle();">contents</a></span></span><span class="navright">&nbsp;&nbsp;<a href="image-doc.html" title="backward to &quot;The Image Library&quot;" data-pltdoc="x" rel="prev">← prev</a>&nbsp;&nbsp;<a href="Documentation.html" title="up to &quot;Documentation&quot;" data-pltdoc="x">up</a>&nbsp;&nbsp;<span class="nonavigation">next →</span></span>&nbsp;</div><section class="SsectionLevel3" id="section 0"><h3 class="heading"><a name="(part._tester-doc)"></a>The Tester Library<span class="button-group"><a href="#(part._tester-doc)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h3><p>The tester library provides a mechanism for testing programs, checking that
+their results are as expected.</p><section class="SsectionLevel4" id="section 2.1"><h4 class="heading">2.1<span class="stt">&nbsp;</span><a name="(part._.Using_the_tester_library)"></a>Using the tester library<span class="button-group"><a href="#(part._.Using_the_tester_library)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h4><section class="SsectionLevel5" id="section 2.1.1"><h5 class="heading">2.1.1<span class="stt">&nbsp;</span><a name="(part._.Naming_test_methods)"></a>Naming test methods<span class="button-group"><a href="#(part._.Naming_test_methods)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p></p><div class="SIntrapara">The tester library expects a particular naming convention and signature for
+your test methods, or else it will not find them.  Specifically, it is looking
+for:
+</div><div class="SIntrapara"><ul><li><p>Methods in the class whose name is specified in the run configuration,</p></li><li><p>whose name begins with the four letters <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Test</span></code></span>,</p></li><li><p>whose sole argument is a parameter of type <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Tester</span></code></span>,</p></li><li><p>and whose return type is either <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span></code></span> or <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">void</span></code></span>.</p></li></ul></div><p></p><p>In other words, only the first of the signatures below will be run as a test
+case by the tester library:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">class</span> <span class="cm-variable">ExamplesTesting</span> {
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestSomething</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) { ... } <span class="cm-comment">// good!</span>
+
+  <span class="cm-builtin">bool</span> <span class="cm-variable">tstTypos</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) { ... } <span class="cm-comment">// wrong method name</span>
+
+  <span class="cm-builtin">bool</span> <span class="cm-variable">dontTestThis</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) { ... } <span class="cm-comment">// wrong method name</span>
+
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TesstSomething</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) { ... } <span class="cm-comment">// wrong method name</span>
+
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestSomething</span>() { ... } <span class="cm-comment">// wrong signature</span>
+
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestSomething</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>, <span class="cm-builtin">int</span> <span class="cm-variable">anythingElse</span>) { ... } <span class="cm-comment">// wrong signature</span>
+
+  <span class="cm-builtin">int</span> <span class="cm-variable">testSomething</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) { ... } <span class="cm-comment">// wrong return type</span>
+}</code></pre></div><p></p></section><section class="SsectionLevel5" id="section 2.1.2"><h5 class="heading">2.1.2<span class="stt">&nbsp;</span><a name="(part._.Writing_test_methods_with_multiple_tests)"></a>Writing test methods with multiple tests<span class="button-group"><a href="#(part._.Writing_test_methods_with_multiple_tests)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p>Frequently, you will want to write multiple tests within a single test method.
+Your test methods will probably look something like this:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">class</span> <span class="cm-variable">ExamplesTesting</span> {
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestNumbers</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) {
+    <span class="cm-keyword">return</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(<span class="cm-number">2</span> <span class="cm-operator">+</span> <span class="cm-number">2</span>, <span class="cm-number">4</span>) <span class="cm-comment">// this should pass</span>
+        <span class="cm-operator">&amp;&amp;</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(<span class="cm-number">9000</span>, <span class="cm-number">70</span>) <span class="cm-comment">// this should fail</span>
+        <span class="cm-operator">&amp;&amp;</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(<span class="cm-number">4</span>, <span class="cm-number">4</span>)     <span class="cm-comment">// this should pass</span>
+        <span class="cm-operator">&amp;&amp;</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(<span class="cm-number">4</span>, <span class="cm-number">5</span>);    <span class="cm-comment">// this should fail</span>
+  }
+}</code></pre></div><p></p><p>Be careful!  When you run this test method, you <span class="emph">will not see four tests!</span>
+Instead, you will see only one test passing, and one test failing.  As soon as
+one test fails, because the code is combining the results with logical-and
+(<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-operator">&amp;&amp;</span></code></span>), and logical operators short-circuit, the subsequent tests will not
+be run.  Don’t be fooled into thinking you only have “just one failing test,”
+if that test is in the middle of a block of other test cases.</p><p>Two alternate approaches are to separate each test into its own test method, or
+to separate the tests into individual statements.  If you have not yet seen how
+to do the latter, then stick to the style above and just be careful.</p></section><section class="SsectionLevel5" id="section 2.1.3"><h5 class="heading">2.1.3<span class="stt">&nbsp;</span><a name="(part._.Writing_multiple_test_methods)"></a>Writing multiple test methods<span class="button-group"><a href="#(part._.Writing_multiple_test_methods)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p>If you define multiple test methods in your examples class, e.g.
+</p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">class</span> <span class="cm-variable">ExamplesTesting</span> {
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestScenario1</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) {
+    <span class="cm-keyword">return</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(.......);
+  }
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestScenario2</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) {
+    <span class="cm-keyword">return</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(.......);
+  }
+  <span class="cm-builtin">bool</span> <span class="cm-variable">TestScenario3</span>(<span class="cm-variable">Tester</span> <span class="cm-variable">t</span>) {
+    <span class="cm-keyword">return</span> <span class="cm-variable">t</span>.<span class="cm-variable">CheckExpect</span>(.......);
+  }
+}</code></pre></div><p></p><p>be aware that the tester library <span class="emph">deliberately runs your tests in a random
+order every time</span>.  In other words, there is no guarantee that
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">TestScenario2</span></code></span> will run before <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">TestScenario3</span></code></span> or after
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">TestScenario1</span></code></span>.  This ensures that you’re not subtly relying on your tests
+running in a particular order relative to each other (especially when you rely
+on randomness or other mutable state) in order to pass.  You need to ensure
+that your test cases are standalone, self-consistent, and can pass in whatever
+order they happen to run.</p><p>Within a single test method, tests will run in the sequence you wrote them in,
+like any C# method.  The randomness described here is only at the level of
+independent test methods.</p><p>(This random-order behavior is standard across most testing frameworks, and is
+helpful for "keeping your code honest" about what is being tested.)</p></section><section class="SsectionLevel5" id="section 2.1.4"><h5 class="heading">2.1.4<span class="stt">&nbsp;</span><a name="(part._.The_testing_methods)"></a>The testing methods<span class="button-group"><a href="#(part._.The_testing_methods)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p>The tester library exposes the following methods:</p><section class="SsectionLevel6" id="section 2.1.4.1"><h5 class="heading">2.1.4.1<span class="stt">&nbsp;</span><a name="(part._.Basic_methods_)"></a>Basic methods:<span class="button-group"><a href="#(part._.Basic_methods_)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><ul><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckExpect</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckExpect</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This is the simplest testing form, and it applies to pretty much any type of
+data.  The <span class="emph">first</span> argument is the actual result of the expression that
+you’re trying to test, and the <span class="emph">second</span> result is the expected value you
+intend it to be.</p><p>The <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span> method will compare the two values in different but
+generally intuitive manners, depending on their type.  See below for a more
+detailed description.</p><p><span style="font-weight: bold">Warning:</span> You should <span class="emph">not</span> use this method to compare two
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span> values, because floating-point numbers can’t be compared reliably
+for equality due to rounding error.  (Likewise, you should not use this method
+to compare structured data <span class="emph">containing</span> <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span> values.)  Rather than
+have this method sometimes succeed and sometimes fail depending on the details
+of round-off error, this method deliberately <span class="emph">always</span> will fail to compare
+two <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span> values.  See <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span> below, instead.</p><p>The second form of this method allows specifying a descriptive message to name
+the test and remind any reader of the code what its purpose was.  (Indeed,
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span>(<span class="cm-variable">actual</span>, <span class="cm-variable">expected</span>)</code></span> is just a shorthand for
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span>(<span class="cm-variable">actual</span>, <span class="cm-variable">expected</span>, <span class="cm-string">""</span>)</code></span>, with no test name.)</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexact</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexact</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This method compares two values in the same manner as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>, but
+it handles <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span> values differently.  Rather than hoping that two
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span> values are precisely identical, this test specifies a
+<span class="emph">tolerance</span> within which the test should consider two numbers as equal.
+This is given as a <span class="emph">relative tolerance</span>, meaning a fraction of the input
+values, rather than as an <span class="emph">absolute tolerance</span>, meaning the same rounding
+error regardless of the magnitude of the values.  In other words:</p><p></p><table cellspacing="0" cellpadding="0" class="centered" style="border-collapse: collapse;"><tbody><tr><td style="border-bottom: 1px solid black;"><p>Test</p></td><td style="border-bottom: 1px solid black;"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td style="border-bottom: 1px solid black;"><p>Result</p></td><td style="border-bottom: 1px solid black;"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td style="border-bottom: 1px solid black;"><p>Reason</p></td></tr><tr><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span>(<span class="cm-number">1.001</span>, <span class="cm-number">1.000</span>, <span class="cm-number">0.01</span>)</code></span></p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p>Passes</p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1.001</span></code></span> is
+within 1% of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1.000</span></code></span></p></td></tr><tr><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span>(<span class="cm-number">1001</span>, <span class="cm-number">1000</span>, <span class="cm-number">0.01</span>)</code></span></p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p>Passes</p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1001</span></code></span> is
+within 1% of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1000</span></code></span></p></td></tr><tr><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span>(<span class="cm-number">1.050</span>, <span class="cm-number">1.000</span>, <span class="cm-number">0.01</span>)</code></span></p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p>Fails</p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1.050</span></code></span> is
+not within 1% of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1.000</span></code></span></p></td></tr><tr><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span>(<span class="cm-number">1050</span>, <span class="cm-number">1000</span>, <span class="cm-number">0.01</span>)</code></span></p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p>Fails</p></td><td><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1050</span></code></span> is
+not within 1% of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">1000</span></code></span></p></td></tr></tbody></table><p></p><p>(Specific details: To compute the relative error, the tester library divides
+the <span class="emph">difference</span> between the actual and expected values by the
+<span class="emph">average</span> of the actual and expected values, to remove a slight numerical
+bias in the computation.)</p><p>When either the actual or expected values are precisely <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-number">0.0</span></code></span>, the
+tolerance is treated as an absolute tolerance.</p><p>The second form of this method allows specifying a descriptive test name, just
+as with <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span> above.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFail</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFail</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This method is the opposite of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>: it <span class="emph">passes</span> when the
+two values are <span class="emph">not the same</span>.</p><p>The second form of this method allows specifying a descriptive test name —<wbr> it
+is probably a particularly good idea to supply one when using this form of
+test, since it’s somewhat counterintuitive to describe when it passes!</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactFail</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactFail</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This method is the opposite of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span>: it <span class="emph">passes</span> when the
+two values are <span class="emph">not the same</span>.</p><p>The second form of this method allows specifying a descriptive test name.</p></li></ul></section><section class="SsectionLevel6" id="section 2.1.4.2"><h5 class="heading">2.1.4.2<span class="stt">&nbsp;</span><a name="(part._.Exception_testing)"></a>Exception testing<span class="button-group"><a href="#(part._.Exception_testing)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><ul><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckException</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>, <span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckException</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>, <span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p></p><div class="SIntrapara"><blockquote class="refpara"><blockquote class="refcolumn"><blockquote class="refcontent"><p>In fact, this method has several overloads, for various possible
+method signatures with different numbers of arguments; the exact details do not
+matter here.</p></blockquote></blockquote></blockquote></div><div class="SIntrapara">This testing method checks that invoking a method on a given object with a
+given set of parameters produces the expected exception.  This testing form has
+a rather strange signature (the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">AMethod</span></code></span> type is not an actual type in C#):
+it <span class="emph">mentions the method on an object without calling it</span>, followed by
+whatever <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">args</span></code></span> are needed to invoke the method.  This roundabout mechanism
+is necessary since, by definition, exceptions typically abort the normal
+control flow of the program, which would prevent the tester method from ever
+running.  In other words, while we’d like to write</div><p></p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckException</span>(<span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatThrows</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>), <span class="cm-variable">someException</span>)</code></pre></div><p></p><p>C#’s order of evaluation would mean that
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatThrows</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>)</code></span> will throw an exception before
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckException</span></code></span> gets a chance to run.  As a consequence, we write the
+following:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckException</span>(<span class="cm-variable">someException</span>, <span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatThrows</span>, <span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>)</code></pre></div><p></p><p>and it effectively behaves as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">try</span> {
+  <span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatThrows</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>);
+  <span class="cm-comment">// Should not get here: the method should've thrown an exception!</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">false</span>, <span class="cm-atom">true</span>, <span class="cm-string">"Expected this method to throw an exception, and it didn't"</span>);
+} <span class="cm-keyword">catch</span> (<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>) {
+  <span class="cm-comment">// check that we get the right exception</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-variable">e</span>, <span class="cm-variable">someException</span>);
+}</code></pre></div><p></p><p>The second form of this method allows specifying a descriptive test name.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckNoException</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckNoException</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This testing method is the opposite of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span>: it ensures that a
+given method call does not throw any exception.  It passes regardless of the
+return value of the method, provided no exception was thrown.  Analogous to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span>, we write the following:</p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckNoException</span>(<span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatShouldNotThrow</span>, <span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>)</code></span></p><p>and it effectively behaves as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">try</span> {
+  <span class="cm-variable">myObject</span>.<span class="cm-variable">aMethodThatShouldNotThrow</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>);
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">true</span>, <span class="cm-atom">true</span>, <span class="cm-string">"Expected this method to work without exception, and it did"</span>);
+} <span class="cm-keyword">catch</span> (<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>) {
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">false</span>, <span class="cm-atom">true</span>, <span class="cm-string">"This method threw an unexpected exception"</span>);
+}</code></pre></div><p></p><p>The second form of this method allows specifying a descriptive test name.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorException</span>(<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorException</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">Exception</span> <span class="cm-variable">e</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p>This method allows checking that a class’ constructor throws an expected
+exception.  Analogous to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span>, we need to <span class="emph">mention the
+class</span> to be constructed without actually calling that constructor, and the
+arguments to the constructor.  In other words, we write the following:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckConstructorException</span>(<span class="cm-variable">someException</span>, <span class="cm-keyword">typeof</span>(<span class="cm-variable">MyClass</span>), <span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>)</code></pre></div><p></p><p>and it effectively behaves as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">try</span> {
+  <span class="cm-keyword">new</span> <span class="cm-variable">MyClass</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>);
+  <span class="cm-comment">// Should not get here: the constructor should've thrown an exception!</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">false</span>, <span class="cm-atom">true</span>, <span class="cm-string">"Expected this constructor to throw an exception, and it didn't"</span>);
+} <span class="cm-keyword">catch</span> (<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>) {
+  <span class="cm-comment">// check that we get the right exception</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-variable">e</span>, <span class="cm-variable">someException</span>);
+}</code></pre></div><p></p><p>For now, think of the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">typeof</span>(...)</code></span> syntax as asking C# to provide some
+(runtime) value corresponding to the (compile-time) class.  Likewise, think of
+the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Type</span></code></span> syntax as asserting that this runtime value represents some
+kind of class.</p><p></p><div class="SIntrapara">The second form of this method allows specifying a descriptive test name.
+</div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because this method accepts an arbitrary set of arguments at the
+end, the test name must <span class="emph">come first</span>, unlike all other named test methods.<span class="note-end"></span></p></blockquote></div><p></p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorNoException</span>(<span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorNoException</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p>This testing method is the opposite of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckConstructorException</span></code></span>: it ensures that a
+given constructor call does not throw any exception.  It passes regardless of the
+object produced by the constructor, provided no exception was thrown.  Analogous to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckConstructorException</span></code></span>, we write the following:</p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckConstructorNoException</span>(<span class="cm-string">"name of test"</span>, <span class="cm-keyword">typeof</span>(<span class="cm-variable">ClassNameWhoseConstructorShouldNotThrow</span>), <span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>)</code></span></p><p>and it effectively behaves as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">try</span> {
+  <span class="cm-keyword">new</span> <span class="cm-variable">ClassNameWhoseConstructorShouldNotThrow</span>(<span class="cm-variable">arg1</span>, <span class="cm-variable">arg2</span>);
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">true</span>, <span class="cm-atom">true</span>, <span class="cm-string">"Expected this constructor to work without exception, and it did"</span>);
+} <span class="cm-keyword">catch</span> (<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>) {
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">false</span>, <span class="cm-atom">true</span>, <span class="cm-string">"This constructor threw an unexpected exception"</span>);
+}</code></pre></div><p></p><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because this method accepts an arbitrary set of arguments at the
+end, the test name must <span class="emph">come first</span>, unlike all other named test methods.<span class="note-end"></span></p></blockquote><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>To test constructors on the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">string</span></code></span> class itself, pass an explicit
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">object</span>[]</code></span> array as the last argument, instead of the varargs parameter.
+Otherwise the named-variant of the test method is ambiguous with the unnamed one.<span class="note-end"></span></p></blockquote></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckExceptionType</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">Type</span> <span class="cm-variable">exnType</span>, <span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckExceptionType</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">Type</span> <span class="cm-variable">exnType</span>, <span class="cm-variable">AMethod</span> <span class="cm-variable">method</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>The <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span> method above ensures that the method under test throws precisely the
+desired exception: it must have exactly the same exception type, and exactly the specified message.
+Sometimes, though, this precision is unnecessary or infeasible: the message might be too long,
+or somewhat unpredictable, or the method might throw one of several exception types.  This tester
+method allows checking merely that the method under test throws an exception of the given type
+<span class="emph">or one of its subtypes</span>.  Using this method requires another quirk of C#’s syntax, as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckExceptionType</span>(
+  <span class="cm-comment">// The class of the expected exception</span>
+  <span class="cm-keyword">typeof</span>(<span class="cm-variable">IndexOutOfBounds</span>),
+  <span class="cm-comment">// The method being tested,</span>
+  <span class="cm-variable">myList</span>.<span class="cm-variable">Get</span>,
+  <span class="cm-comment">// Any arguments to the method</span>
+  <span class="cm-operator">-</span><span class="cm-number">1</span>);</code></pre></div><p></p><p>This test behaves effectively as follows:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-keyword">try</span> {
+  <span class="cm-variable">myList</span>.<span class="cm-variable">Get</span>(<span class="cm-operator">-</span><span class="cm-number">1</span>);
+  <span class="cm-comment">// Should not get here: the method should've thrown an exception!</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-atom">false</span>, <span class="cm-atom">true</span>, <span class="cm-string">"Expected this method to throw an exception, and it didn't"</span>);
+} <span class="cm-keyword">catch</span> (<span class="cm-variable">Exception</span> <span class="cm-variable">e</span>) {
+  <span class="cm-comment">// check that we get the right kind of exception</span>
+  <span class="cm-variable">CheckExpect</span>(<span class="cm-variable">e</span> <span class="cm-keyword">is</span> <span class="cm-variable">IndexOutOfBounds</span>, <span class="cm-atom">true</span>);
+}</code></pre></div><p></p><p>Therefore, to check that a method simply throws an exception, of whatever type,
+use a more general exception class:</p><p></p><div class="SCodeFlow sourceCode"><pre data-lang="csharp" class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">t</span>.<span class="cm-variable">CheckExceptionType</span>(
+  <span class="cm-keyword">typeof</span>(<span class="cm-variable">Exception</span>),
+  <span class="cm-variable">myList</span>,
+  <span class="cm-string">"Get"</span>,
+  <span class="cm-operator">-</span><span class="cm-number">1</span>);</code></pre></div><p></p><p>This method invocation will raise an <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">IndexOutOfBounds</span></code></span> exception, and
+since that is a subclass of <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Exception</span></code></span>, this test will
+pass.</p><p>The second form of this test method allows specifying a descriptive test name.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorExceptionType</span>(<span class="cm-variable">Type</span> <span class="cm-variable">exnType</span>, <span class="cm-builtin">string</span> <span class="cm-variable">className</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckConstructorExceptionType</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">Type</span> <span class="cm-variable">exnType</span>, <span class="cm-builtin">string</span> <span class="cm-variable">className</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p>This method is to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckConstructorException</span></code></span> as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExceptionType</span></code></span> is to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span>.</p><p></p><div class="SIntrapara">The second form of this test method allows specifying a descriptive test name.
+</div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because this method accepts an arbitrary set of arguments at the
+end, the test name must <span class="emph">come first</span>, unlike all other named test methods.<span class="note-end"></span></p></blockquote></div><p></p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleExpect</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">object</span> <span class="cm-variable">expected</span>, <span class="cm-variable">T</span> <span class="cm-variable">target</span>, <span class="cm-builtin">string</span> <span class="cm-variable">methodName</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleExpect</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">object</span> <span class="cm-variable">expected</span>, <span class="cm-variable">T</span> <span class="cm-variable">target</span>, <span class="cm-builtin">string</span> <span class="cm-variable">methodName</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>This method is provided to test methods that <span class="emph">might</span> throw exceptions, but
+are not expected to do so.  This method is not strictly required, but is
+provided for completeness.  Its signature behaves similarly to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckException</span></code></span>, but rather than supplying the expected exception, we
+supply the expected result (compared using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>).</p><p>The second form of this method allows specifying a descriptive test name.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleInexact</span>(<span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-builtin">object</span> <span class="cm-variable">expected</span>, <span class="cm-variable">T</span> <span class="cm-variable">target</span>, <span class="cm-builtin">string</span> <span class="cm-variable">methodName</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleInexact</span>(<span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-builtin">object</span> <span class="cm-variable">expected</span>, <span class="cm-variable">T</span> <span class="cm-variable">target</span>, <span class="cm-builtin">string</span> <span class="cm-variable">methodName</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p></p><div class="SIntrapara">These methods are to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckFallibleExpect</span></code></span> as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span> is to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>.  </div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because these methods accept an arbitrary set of
+arguments at the end, the tolerance must <span class="emph">come first</span>, unlike other
+inexact test methods.<span class="note-end"></span></p></blockquote></div><p></p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleConstructor</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>)</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleConstructor</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>)</code></span></p><p></p><div class="SIntrapara">This method is provided to test constructors that <span class="emph">might</span> throw
+exceptions, but are not expected to do so.  This method is not strictly
+required, but is provided for completeness.  Its signature behaves similarly to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckConstructorNoException</span></code></span>, but we supply the expected result (compared
+using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>).  </div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because these methods accept an arbitrary set of
+arguments at the end, the message must <span class="emph">come first</span>, unlike other
+named test methods.<span class="note-end"></span></p></blockquote></div><p></p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleConstructorInexact</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>)</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckFallibleConstructor</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">T</span> <span class="cm-variable">expected</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">Type</span> <span class="cm-variable">objType</span>, <span class="cm-builtin">object</span>... <span class="cm-variable">args</span>)</code></span></p><p></p><div class="SIntrapara">These methods are to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckFallibleConstructor</span></code></span> as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span> is to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>: they behave the same except that they compare the results
+using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span>.  </div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>because these methods accept an arbitrary set of
+arguments at the end, the tolerance must <span class="emph">come first</span>, unlike other
+inexact test methods.<span class="note-end"></span></p></blockquote></div><p></p></li></ul></section><section class="SsectionLevel6" id="section 2.1.4.3"><h5 class="heading">2.1.4.3<span class="stt">&nbsp;</span><a name="(part._.Testing_methods_with_randomized_results_)"></a>Testing methods with randomized results:<span class="button-group"><a href="#(part._.Testing_methods_with_randomized_results_)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p>All the methods described above anticipate that the methods are deterministic.
+Sometimes, we need to test randomized methods instead, that might return one
+among several randomly chosen results.</p><ul><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckOneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckOneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p>This method checks whether the actual result is the same as any one of the
+expected results (using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span> for comparison).</p><p></p><div class="SIntrapara">The second form of this method allows specifying a descriptive test name.
+</div><div class="SIntrapara"><blockquote class="SubFlow"><p><span class="note-start"><span style="font-weight: bold">Note: </span></span>if <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">T</span></code></span> is <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">string</span></code></span>, that is, if you are testing a
+randomized method that returns a <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">string</span></code></span> result, you <span class="emph">must</span> specify
+a test name: otherwise, C# will interpret your <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">actual</span></code></span> result as the
+test name, your <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">expected</span></code></span> result as the <span class="emph">actual</span> result, and then
+have no <span class="emph">expected</span> results!<span class="note-end"></span></p></blockquote></div><p></p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactOneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactOneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p>These methods are to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckOneOf</span></code></span> as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span> is to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>.  Note the reversed argument order: the tolerance and test
+name must come first, before the actual and expected arguments.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckNoneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckNoneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactNoneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckInexactNoneOf</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-builtin">string</span> <span class="cm-variable">testName</span>, <span class="cm-builtin">double</span> <span class="cm-variable">tolerance</span>, <span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span>... <span class="cm-variable">expected</span>);</code></span></p><p>These methods are to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckOneOf</span></code></span> as <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckFail</span></code></span> is to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span>: they <span class="emph">pass</span> if the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">actual</span></code></span> result is not the
+same as any of the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">expected</span></code></span> results.</p><p>The same caveats about testing <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">string</span></code></span>s apply: you must supply the test
+name in such cases.</p></li></ul></section><section class="SsectionLevel6" id="section 2.1.4.4"><h5 class="heading">2.1.4.4<span class="stt">&nbsp;</span><a name="(part._.Miscellaneous_methods_)"></a>Miscellaneous methods:<span class="button-group"><a href="#(part._.Miscellaneous_methods_)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><ul><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">IComparable</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">IComparable</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-builtin">string</span> <span class="cm-variable">name</span>);</code></span></p><p>These methods test that the supplied comparable value is within the semi-open interval
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default">[<span class="cm-variable">low</span>, <span class="cm-variable">high</span>)</code></span> – that is, <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">low</span></code></span> is included, and <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">high</span></code></span> is
+excluded.</p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">IComparable</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">lowIncl</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">highIncl</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">Comparable</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">lowIncl</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">highIncl</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>These methods are similar to the ones above, but allow specifying whether the
+endpoints of the range should be included or not.  In other words,
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckRange</span>(<span class="cm-variable">actual</span>, <span class="cm-variable">low</span>, <span class="cm-variable">high</span>)</code></span> is equivalent to
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckRange</span>(<span class="cm-variable">actual</span>, <span class="cm-variable">low</span>, <span class="cm-variable">high</span>, <span class="cm-atom">true</span>, <span class="cm-atom">false</span>)</code></span>.</p></li><li><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-variable">Comparison</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">comp</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-variable">Comparison</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">comp</span>, <span class="cm-builtin">string</span> <span class="cm-variable">name</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">lowIncl</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">highIncl</span>, <span class="cm-variable">Comparison</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">comp</span>);</code></span></p><p><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">bool</span> <span class="cm-variable">CheckRange</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span>(<span class="cm-variable">T</span> <span class="cm-variable">actual</span>, <span class="cm-variable">T</span> <span class="cm-variable">low</span>, <span class="cm-variable">T</span> <span class="cm-variable">high</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">lowIncl</span>, <span class="cm-builtin">bool</span> <span class="cm-variable">highIncl</span>, <span class="cm-variable">Comparison</span><span class="cm-operator">&lt;</span><span class="cm-variable">T</span><span class="cm-operator">&gt;</span> <span class="cm-variable">comp</span>, <span class="cm-builtin">string</span> <span class="cm-variable">testName</span>);</code></span></p><p>These methods are analogous to <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckRange</span></code></span>, but use the given
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Comparison</span></code></span> instead of the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CompareTo</span></code></span> method on <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">IComparable</span></code></span>s.</p></li></ul></section></section><section class="SsectionLevel5" id="section 2.1.5"><h5 class="heading">2.1.5<span class="stt">&nbsp;</span><a name="(part._.How_.Check.Expect_compares_for_equality)"></a>How <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span> compares for equality<span class="button-group"><a href="#(part._.How_.Check.Expect_compares_for_equality)" class="heading-anchor" title="Link to here">🔗</a><span style="visibility: hidden"> </span></span></h5><p></p><div class="SIntrapara">The <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckExpect</span></code></span> test uses a <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span> algorithm, that considers two values the same when:
+</div><div class="SIntrapara"><ul><li><p>Both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-atom">null</span></code></span></p></li><li><p>Both values are identically the same object (using
+<a href="https://learn.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=net-9.0"><span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">Object</span>.<span class="cm-variable">ReferenceEquals</span></code></span></a>)</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">string</span></code></span>s, and the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Equals</span></code></span> method returns
+true</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">int</span></code></span>s and are equal</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-builtin">double</span></code></span>s <span class="emph">and</span> you are using
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span> (or one of its related variants) and the two doubles are
+equal to within the supplied tolerance —<wbr> if not using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">CheckInexact</span></code></span>, then
+doubles are never equal</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">WorldScene</span></code></span>s or <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">WorldImage</span></code></span>s (see
+<a href="image-doc.html" data-pltdoc="x">The Image Library</a> for more information), and the scenes or images are
+constructed in the same manner: i.e., using the same overlays, besides, etc. to
+construct the intended image.  It does <span class="emph">not</span> compare the scenes in terms
+of their final rendered pixel output.</p></li><li><p>When both values are arrays, and they have the same lengths, and the same
+values at the same indices (using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span> recursively)</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Set</span></code></span>s, and they contain the same elements —<wbr>
+using the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Contains</span></code></span> method on the set values and <span class="emph">not</span> the
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span> algorithm.</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">List</span></code></span>s, and they are contain the same values,
+using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span> to compare the sequence of values in order from both
+inputs.</p></li><li><p>When both values are <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Dictionary</span></code></span>s, in which case they must have the
+same size, the same key set (using the set-comparison algorithm above), and
+corresponding values must be the same (using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span>).</p></li><li><p>For everything else (including all user-defined classes), both values
+must be instances of the same class, and their fields must have the same values
+as compared using <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">sameValue</span></code></span>.</p></li></ul></div><p></p><p>The tester library can handle cycles in the data being compared, and will not
+get stuck in an infinite loop.  (If there are cycles that pass through a
+<span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Array</span></code></span>, <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Set</span></code></span> or <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Dictionary</span></code></span>, however, then the <span class="sourceCode"><code class="language-csharp sourceCode cm-s-default"><span class="cm-variable">Equals</span></code></span> methods
+must not get stuck in an infinite loop.  However, if you are using such data
+structures rather than implementing your own, you are responsible for using
+them correctly.)</p></section></section></section><div class="navsetbottom"><span class="navleft"><div class="nosearchform"></div>&nbsp;&nbsp;<span class="tocsettoggle">&nbsp;&nbsp;<a href="javascript:void(0);" title="show/hide table of contents" onclick="TocsetToggle();">contents</a></span></span><span class="navright">&nbsp;&nbsp;<a href="image-doc.html" title="backward to &quot;The Image Library&quot;" data-pltdoc="x" rel="prev">← prev</a>&nbsp;&nbsp;<a href="Documentation.html" title="up to &quot;Documentation&quot;" data-pltdoc="x">up</a>&nbsp;&nbsp;<span class="nonavigation">next →</span></span>&nbsp;</div></div></div><div id="contextindicator">&nbsp;</div></body></html>
