@@ -2,30 +2,64 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"sync"
-	"time"
+
+	"golang.org/x/tour/tree"
 )
 
-func main() {
-	messages := make(chan string)
-	var wg sync.WaitGroup
-
-	for i := range make([]bool, 10) {
-		wg.Go(func() {
-			time.Sleep(time.Second * time.Duration(rand.Float64()*5))
-			messages <- fmt.Sprintf("goroutine from %v!", i)
-		})
-		time.Sleep(time.Millisecond * 100)
+// Walk walks the tree t sending all values
+// from the tree to the channel ch.
+func Walk(t *tree.Tree, ch chan int) {
+	if t.Left != nil {
+		Walk(t.Left, ch)
 	}
+
+	ch <- t.Value
+
+	if t.Right != nil {
+		Walk(t.Right, ch)
+	}
+}
+
+// Same determines whether the trees
+// t1 and t2 contain the same values.
+func Same(t1, t2 *tree.Tree) bool {
+	ch1 := make(chan int)
+	ch2 := make(chan int)
 
 	go func() {
-		wg.Wait()
-		close(messages)
+		Walk(t1, ch1)
+		close(ch1)
 	}()
 
-	for m := range messages {
-		fmt.Println(m)
-		time.Sleep(time.Millisecond * 100)
+	go func() {
+		Walk(t2, ch2)
+		close(ch2)
+	}()
+
+	for val1 := range ch1 {
+		fmt.Println(val1)
+
+		val2, ok := <-ch2
+
+		if !ok {
+			return false
+		}
+
+		if val1 != val2 {
+			return false
+		}
 	}
+
+	_, ok := <-ch2
+
+	if ok {
+		return false
+	}
+
+	return true
+}
+
+func main() {
+	fmt.Println(Same(tree.New(10), tree.New(10)))
+	fmt.Println(Same(tree.New(10), tree.New(9)))
 }
