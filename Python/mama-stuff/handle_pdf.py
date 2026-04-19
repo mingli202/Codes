@@ -175,6 +175,7 @@ def _extract_products_and_qty_from_blocks(
 
     records: dict[str, float] = {}
     weekly_sales_total: float | None = None
+    best_sales_key: tuple[int, float, float] | None = None
 
     for table in tables:
         hit = _find_header_and_qty_col(table, block_map)
@@ -192,13 +193,20 @@ def _extract_products_and_qty_from_blocks(
         # If we got something meaningful, keep it.
         if table_records:
             records.update(table_records)
-            if weekly_sales_total is None and hit.sales_col is not None:
-                weekly_sales_total = _extract_sales_total_from_table(
-                    table=table,
-                    block_map=block_map,
-                    des_row=hit.des_row,
-                    sales_col=hit.sales_col,
-                )
+
+        # Capture the sales total from the last table (by page, then position).
+        if hit.sales_col is not None:
+            table_sales_total = _extract_sales_total_from_table(
+                table=table,
+                block_map=block_map,
+                des_row=hit.des_row,
+                sales_col=hit.sales_col,
+            )
+            if table_sales_total is not None:
+                sort_key = _table_sort_key(table, hit.page)
+                if best_sales_key is None or sort_key > best_sales_key:
+                    best_sales_key = sort_key
+                    weekly_sales_total = table_sales_total
 
     # If multiple tables matched (rare), you can dedupe here if needed.
     if weekly_sales_total is not None:
@@ -311,6 +319,13 @@ def _extract_sales_total_from_table(
         if num is not None:
             last_num = num
     return last_num
+
+
+def _table_sort_key(table: dict[str, Any], page: int) -> tuple[int, float, float]:
+    bbox = table.get("Geometry", {}).get("BoundingBox", {})
+    top = float(bbox.get("Top", 0.0))
+    left = float(bbox.get("Left", 0.0))
+    return (page, top, left)
 
 
 def _table_to_grid(
